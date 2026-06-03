@@ -1,0 +1,15 @@
+// Logo de FungiPath (hongo dibujado). Color por defecto terracotta de marca.
+export default function Logo({ size = 30, fill = "#a86543" }: { size?: number; fill?: string }) {
+  return (
+    <svg viewBox="0 0 120 130" style={{ width: size, height: Math.round(size * 1.07) }} aria-label="FungiPath">
+      <g fill={fill}>
+        <path d="M60 12 C57 12 54 14 50 19 C40 31 30 46 26 55 C24 59 24 62 28 64 C33 66 42 66 49 65 C52 65 50 68 49 70 C52 68 55 67 58 67 L62 67 C65 67 68 68 71 70 C70 68 68 65 71 65 C78 66 87 66 92 64 C96 62 96 59 94 55 C90 46 80 31 70 19 C66 14 63 12 60 12 Z" />
+        <path d="M54 67 C53 82 52 93 52 101 C51 109 50 115 52 120 C54 124 57 125 60 125 C63 125 66 124 68 120 C70 115 69 109 68 101 C68 93 67 82 66 67 C63 68 57 68 54 67 Z" />
+        <ellipse cx="33" cy="81" rx="3.6" ry="8" transform="rotate(30 33 81)" />
+        <ellipse cx="42" cy="95" rx="3.8" ry="9" transform="rotate(14 42 95)" />
+        <ellipse cx="87" cy="81" rx="3.6" ry="8" transform="rotate(-30 87 81)" />
+        <ellipse cx="78" cy="95" rx="3.8" ry="9" transform="rotate(-14 78 95)" />
+      </g>
+    </svg>
+  );
+}

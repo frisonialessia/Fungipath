@@ -30,6 +30,9 @@ export default function FungiMap({
         L.control.attribution({ prefix: false, position: "bottomright" })
           .addAttribution("© OpenStreetMap").addTo(mapRef.current);
         layerRef.current = L.layerGroup().addTo(mapRef.current);
+      } else {
+        // recentra al cambiar de región
+        mapRef.current.setView(center, zoom);
       }
 
       layerRef.current.clearLayers();
