@@ -15,7 +15,7 @@ const FungiMap = dynamic(() => import("@/components/FungiMap"), { ssr: false });
 const PILLS = ["all", "Boletus edulis", "Cantharellus", "Lactarius"];
 
 export default function Overview({
-  hotspots, selectedIdx, setSelectedIdx, diary, onNewHotspot, onAskGuide,
+  hotspots, selectedIdx, setSelectedIdx, diary, onNewHotspot, onAskGuide, predicting, live,
 }: {
   hotspots: Hotspot[];
   selectedIdx: number;
@@ -23,6 +23,8 @@ export default function Overview({
   diary: DiaryEntry[];
   onNewHotspot: () => void;
   onAskGuide: () => void;
+  predicting?: boolean;
+  live?: boolean;
 }) {
   const toast = useToast();
   const [filter, setFilter] = useState("all");
@@ -37,6 +39,16 @@ export default function Overview({
   const avg = Math.round(hotspots.reduce((s, h) => s + h.prob, 0) / hotspots.length);
   const top = [...hotspots].sort((a, b) => b.prob - a.prob)[0];
   const opening = hotspots.filter((h) => h.prob >= 70).length;
+
+  // Reloj de fructificación con datos reales (Open-Meteo) si están disponibles.
+  const windowDays = sel?.windowDays ?? 4;
+  const daysSinceRain = sel?.daysSinceRain ?? 9;
+  const CIRC = 226; // 2·π·36
+  const progress = Math.max(0, Math.min(1, (13 - windowDays) / 13));
+  const dashOffset = CIRC * (1 - progress);
+  // ventana más próxima entre los hotspots con datos en vivo
+  const windows = hotspots.map((h) => h.windowDays).filter((w): w is number => typeof w === "number");
+  const soonest = windows.length ? Math.min(...windows) : 3;
 
   const mapPoints: MapHotspot[] = visible.map((h) => ({
     id: String(hotspots.indexOf(h)), name: h.name, species: h.species, prob: h.prob, lat: h.lat, lng: h.lng, alt: h.alt,
@@ -53,7 +65,7 @@ export default function Overview({
     <div>
       <div className="topbar">
         <div>
-          <span className="demo-flag">● Datos de demostración</span>
+          <span className="demo-flag">{predicting ? "◷ Calculando clima en vivo…" : live ? "● Clima en vivo · Open-Meteo" : "● Datos de demostración"}</span>
           <h1 className="serif">Buenas, Explorador</h1>
           <p>{opening} hotspots entran en ventana de crecimiento esta semana.</p>
         </div>
@@ -79,7 +91,7 @@ export default function Overview({
       <div className="metrics">
         <div className="card reveal"><div className="k-label">Hotspots activos</div><div className="k-value">{hotspots.length}</div><span className="chip up">▲ 5 esta semana</span></div>
         <div className="card reveal"><div className="k-label">Prob. media</div><div className="k-value">{avg}<span className="u">%</span></div><span className="chip up">▲ 9 pts</span></div>
-        <div className="card reveal"><div className="k-label">Ventana abierta</div><div className="k-value">3<span className="u"> días</span></div><span className="chip warn">cierra pronto</span></div>
+        <div className="card reveal"><div className="k-label">Próxima ventana</div><div className="k-value">{soonest}<span className="u"> días</span></div><span className="chip warn">{soonest <= 0 ? "abierta" : "se acerca"}</span></div>
         <div className="card reveal"><div className="k-label">Humedad acum. 7d</div><div className="k-value">82<span className="u">%</span></div><span className="chip up">óptima</span></div>
       </div>
 
@@ -130,10 +142,10 @@ export default function Overview({
           <div className="panel-head"><h3 className="serif">Reloj de fructificación</h3></div>
           <div className="clock-wrap">
             <div className="clock">
-              <svg width="84" height="84"><circle cx="42" cy="42" r="36" fill="none" stroke="#d6c4ac" strokeWidth="8" /><circle cx="42" cy="42" r="36" fill="none" stroke="#a86543" strokeWidth="8" strokeLinecap="round" strokeDasharray="226" strokeDashoffset="64" /></svg>
-              <div className="cv">~4d</div>
+              <svg width="84" height="84"><circle cx="42" cy="42" r="36" fill="none" stroke="#d6c4ac" strokeWidth="8" /><circle cx="42" cy="42" r="36" fill="none" stroke="#a86543" strokeWidth="8" strokeLinecap="round" strokeDasharray={CIRC} strokeDashoffset={dashOffset} /></svg>
+              <div className="cv">{windowDays <= 0 ? "Ya" : `~${windowDays}d`}</div>
             </div>
-            <div className="clock-info"><h4>{sel?.name}</h4><p>Pasaron 9 días desde la lluvia. La fructificación se abre en ~4 días.</p></div>
+            <div className="clock-info"><h4>{sel?.name}</h4><p>Pasaron {daysSinceRain} días desde la lluvia. {windowDays <= 0 ? "La ventana de fructificación está abierta ahora." : `La fructificación se abre en ~${windowDays} días.`}</p></div>
           </div>
           <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid var(--sand)" }}>
             <div style={{ fontSize: 11, color: "var(--stone)", textTransform: "uppercase", letterSpacing: ".5px", fontWeight: 600, marginBottom: 8 }}>Tendencia · últimos 14 días</div>

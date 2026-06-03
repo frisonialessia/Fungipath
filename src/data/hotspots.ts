@@ -4,11 +4,13 @@ import type { Edibility } from "@/lib/species";
 
 export type Privacy = "private" | "fuzzy" | "shared";
 
+export type Aspect = "N" | "S" | "E" | "O";
+
 export interface Hotspot {
   name: string;
   species: string;
   alt: number;
-  aspect: "N" | "S" | "E" | "O";
+  aspect: Aspect;
   habitat: string;
   prob: number;
   lat: number;
@@ -16,7 +18,15 @@ export interface Hotspot {
   priv: Privacy;
   why: string;
   factors: [string, string][];
+  // Datos de clima en vivo (Open-Meteo), rellenados por la predicción en lote.
+  live?: boolean;
+  rainMm?: number;
+  soilTemp?: number;
+  daysSinceRain?: number;
+  windowDays?: number;
 }
+
+export const ASPECT_NAME: Record<Aspect, string> = { N: "norte", S: "sur", E: "este", O: "oeste" };
 
 export interface DiaryEntry { spot: string; found: boolean; qty: number; }
 

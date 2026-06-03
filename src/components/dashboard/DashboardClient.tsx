@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Logo from "@/components/Logo";
-import { MOCK_HOTSPOTS, MOCK_DIARY, type Hotspot, type DiaryEntry, type Privacy as Priv } from "@/data/hotspots";
+import { MOCK_HOTSPOTS, MOCK_DIARY, ASPECT_NAME, type Hotspot, type DiaryEntry, type Privacy as Priv } from "@/data/hotspots";
 import { ToastProvider } from "./shared";
 import { NAV_ICONS } from "./icons";
 import ForestAgent from "./ForestAgent";
@@ -39,6 +39,51 @@ export default function DashboardClient() {
   const [newModal, setNewModal] = useState(false);
   const [agentOpen, setAgentOpen] = useState(false);
   const [agentAsk, setAgentAsk] = useState<string | null>(null);
+  const [predicting, setPredicting] = useState(true);
+  const [live, setLive] = useState(false);
+
+  // Sprint 2 · Predicción EN LOTE al cargar: clima real de Open-Meteo para todos
+  // los hotspots iniciales, no solo al hacer clic. Si falla, se queda el mock.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const r = await fetch("/api/predict/batch", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ points: MOCK_HOTSPOTS.map((h) => ({ lat: h.lat, lng: h.lng, aspect: h.aspect, species: h.species })) }),
+        });
+        const data = await r.json();
+        if (cancelled || !Array.isArray(data.results)) { setPredicting(false); return; }
+        setHotspots((hs) => hs.map((h, i) => {
+          const res = data.results[i];
+          if (!res) return h; // ese punto falló: conserva el mock
+          return {
+            ...h,
+            prob: res.probability,
+            why: res.explanation,
+            live: true,
+            rainMm: res.factors.rainMm,
+            soilTemp: res.factors.soilTemp,
+            daysSinceRain: res.factors.daysSinceRain,
+            windowDays: res.windowDays,
+            factors: [
+              ["Lluvia", `${res.factors.rainMm}mm`],
+              ["Temp suelo", `${res.factors.soilTemp} °C`],
+              ["Orientación", ASPECT_NAME[h.aspect]],
+              ["Ventana", `~${res.windowDays}d`],
+            ],
+          };
+        }));
+        if (data.results.some((x: unknown) => x)) setLive(true);
+      } catch {
+        // sin red / rate limit: nos quedamos con los datos mock
+      } finally {
+        if (!cancelled) setPredicting(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   // contexto para el agente: resumen de hotspots del usuario
   const agentContext = {
@@ -74,7 +119,7 @@ export default function DashboardClient() {
         </aside>
 
         <main className="main">
-          {active === "overview" && <Overview hotspots={hotspots} selectedIdx={selectedIdx} setSelectedIdx={setSelectedIdx} diary={diary} onNewHotspot={() => setNewModal(true)} onAskGuide={() => askGuide()} />}
+          {active === "overview" && <Overview hotspots={hotspots} selectedIdx={selectedIdx} setSelectedIdx={setSelectedIdx} diary={diary} onNewHotspot={() => setNewModal(true)} onAskGuide={() => askGuide()} predicting={predicting} live={live} />}
           {active === "predict" && <Predictions hotspots={hotspots} />}
           {active === "species" && <Species onAskGuide={askGuide} />}
           {active === "routes" && <Routes hotspots={hotspots} />}
