@@ -19,6 +19,32 @@ import Privacy from "./sections/Privacy";
 
 type SectionId = "overview" | "predict" | "species" | "routes" | "climate" | "soil" | "diary" | "safety" | "privacy";
 
+interface PredResult {
+  probability: number; explanation: string; windowDays: number; elevation: number;
+  factors: { rainMm: number; soilTemp: number; daysSinceRain: number };
+}
+
+// Aplica una predicción real (Open-Meteo + modelo) sobre un hotspot.
+function applyPrediction(h: Hotspot, res: PredResult): Hotspot {
+  return {
+    ...h,
+    prob: res.probability,
+    why: res.explanation,
+    live: true,
+    alt: res.elevation && res.elevation > 0 ? res.elevation : h.alt, // elevación real del terreno
+    rainMm: res.factors.rainMm,
+    soilTemp: res.factors.soilTemp,
+    daysSinceRain: res.factors.daysSinceRain,
+    windowDays: res.windowDays,
+    factors: [
+      ["Lluvia", `${res.factors.rainMm}mm`],
+      ["Temp suelo", `${res.factors.soilTemp} °C`],
+      ["Orientación", ASPECT_NAME[h.aspect]],
+      ["Ventana", `~${res.windowDays}d`],
+    ],
+  };
+}
+
 const NAV: { group: string; items: { id: SectionId; label: string }[] }[] = [
   { group: "Exploración", items: [
     { id: "overview", label: "Mapa de hotspots" }, { id: "predict", label: "Predicciones" },
@@ -37,6 +63,7 @@ export default function DashboardClient() {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [active, setActive] = useState<SectionId>("overview");
   const [newModal, setNewModal] = useState(false);
+  const [pendingCoords, setPendingCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [agentOpen, setAgentOpen] = useState(false);
   const [agentAsk, setAgentAsk] = useState<string | null>(null);
   const [predicting, setPredicting] = useState(true);
@@ -55,27 +82,7 @@ export default function DashboardClient() {
         });
         const data = await r.json();
         if (cancelled || !Array.isArray(data.results)) { setPredicting(false); return; }
-        setHotspots((hs) => hs.map((h, i) => {
-          const res = data.results[i];
-          if (!res) return h; // ese punto falló: conserva el mock
-          return {
-            ...h,
-            prob: res.probability,
-            why: res.explanation,
-            live: true,
-            alt: res.elevation && res.elevation > 0 ? res.elevation : h.alt, // elevación real del terreno
-            rainMm: res.factors.rainMm,
-            soilTemp: res.factors.soilTemp,
-            daysSinceRain: res.factors.daysSinceRain,
-            windowDays: res.windowDays,
-            factors: [
-              ["Lluvia", `${res.factors.rainMm}mm`],
-              ["Temp suelo", `${res.factors.soilTemp} °C`],
-              ["Orientación", ASPECT_NAME[h.aspect]],
-              ["Ventana", `~${res.windowDays}d`],
-            ],
-          };
-        }));
+        setHotspots((hs) => hs.map((h, i) => data.results[i] ? applyPrediction(h, data.results[i]) : h));
         if (data.results.some((x: unknown) => x)) setLive(true);
       } catch {
         // sin red / rate limit: nos quedamos con los datos mock
@@ -95,6 +102,31 @@ export default function DashboardClient() {
   function askGuide(name?: string) {
     if (name) setAgentAsk("Háblame de " + name);
     setAgentOpen(true);
+  }
+
+  // Crear hotspot pinchando el mapa: guarda coordenadas reales y abre el modal.
+  function openMapCreate(lat: number, lng: number) {
+    setPendingCoords({ lat, lng });
+    setNewModal(true);
+  }
+
+  // Añade el hotspot; si viene del mapa, lo enriquece con clima real (Open-Meteo).
+  function handleCreate(h: Hotspot, enrich: boolean) {
+    let newIndex = 0;
+    setHotspots((hs) => { const next = [...hs, h]; newIndex = next.length - 1; return next; });
+    setSelectedIdx(hotspots.length);
+    if (!enrich) return;
+    (async () => {
+      try {
+        const r = await fetch("/api/predict/batch", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ points: [{ lat: h.lat, lng: h.lng, aspect: h.aspect, species: h.species }] }),
+        });
+        const data = await r.json();
+        const res = data?.results?.[0];
+        if (res) { setHotspots((hs) => hs.map((x, i) => i === newIndex ? applyPrediction(x, res) : x)); setLive(true); }
+      } catch { /* sin red: se queda en "calculando" */ }
+    })();
   }
 
   return (
@@ -120,7 +152,7 @@ export default function DashboardClient() {
         </aside>
 
         <main className="main">
-          {active === "overview" && <Overview hotspots={hotspots} selectedIdx={selectedIdx} setSelectedIdx={setSelectedIdx} diary={diary} onNewHotspot={() => setNewModal(true)} onAskGuide={() => askGuide()} predicting={predicting} live={live} />}
+          {active === "overview" && <Overview hotspots={hotspots} selectedIdx={selectedIdx} setSelectedIdx={setSelectedIdx} diary={diary} onNewHotspot={() => { setPendingCoords(null); setNewModal(true); }} onAskGuide={() => askGuide()} onMapCreate={openMapCreate} predicting={predicting} live={live} />}
           {active === "predict" && <Predictions hotspots={hotspots} />}
           {active === "species" && <Species onAskGuide={askGuide} />}
           {active === "routes" && <Routes hotspots={hotspots} />}
@@ -136,8 +168,9 @@ export default function DashboardClient() {
 
       {newModal && (
         <NewHotspotModal
-          onClose={() => setNewModal(false)}
-          onCreate={(h) => { setHotspots((hs) => { const next = [...hs, h]; setSelectedIdx(next.length - 1); return next; }); }}
+          coords={pendingCoords ?? undefined}
+          onClose={() => { setNewModal(false); setPendingCoords(null); }}
+          onCreate={handleCreate}
         />
       )}
     </ToastProvider>

@@ -4,6 +4,7 @@ import { SPECIES, SPECIES_TOTAL, FIELD_GUIDE, type Species as Sp } from "@/lib/s
 import { spIllust } from "@/lib/illustrations";
 import { Illu } from "../shared";
 import GbifBadge from "../GbifBadge";
+import { IconBasket } from "@/components/icons";
 
 const FILTERS: [string, string][] = [
   ["all", "Todas"], ["choice", "Excelentes"], ["edible", "Comestibles"], ["toxic", "Tóxicas"], ["deadly", "Mortales"],
@@ -95,7 +96,7 @@ function SpeciesModal({ s, onClose, onCompare, onAsk }: { s: Sp; onClose: () => 
       <GbifBadge species={s.n} variant="line" />
       {g && (
         <div style={{ margin: "14px 0", padding: 14, background: "var(--cream-2)", borderRadius: 12 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px", color: "var(--terracotta)", marginBottom: 10 }}>🧺 Guía de campo</div>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px", color: "var(--terracotta)", marginBottom: 10, display: "inline-flex", alignItems: "center", gap: 7 }}><IconBasket size={14} /> Guía de campo</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 12.5, lineHeight: 1.45 }}>
             <div><b>Cómo cosechar:</b> {g.harvest}</div><div><b>¿Se puede secar?:</b> {g.dry}</div><div><b>Al tacto:</b> {g.touch}</div><div><b>Dónde está:</b> {g.where}</div><div><b>¿Hay más cerca?:</b> {g.clusters}</div><div><b>Mejores horas:</b> {g.hours}</div><div><b>Posición:</b> {g.aspect}</div>
           </div>

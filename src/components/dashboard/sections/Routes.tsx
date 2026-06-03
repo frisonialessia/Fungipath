@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ZONES, type Zone } from "@/data/zones";
 import type { Hotspot } from "@/data/hotspots";
 import { useToast } from "../shared";
+import { IconCompass } from "@/components/icons";
 
 const SECTOR_NAME: Record<string, string> = { N: "norte", E: "este", S: "sur", O: "oeste" };
 
@@ -81,7 +82,7 @@ export default function Routes({ hotspots }: { hotspots: Hotspot[] }) {
                 <div style={{ marginTop: 12, fontSize: 12, color: "var(--ink-soft)" }}><b>Especies típicas:</b> {zone.sp}</div>
               </>
             ) : (
-              <div className="zone-panel-empty"><div className="zpe-ic">🧭</div><div style={{ fontSize: 13 }}>Toca una zona del mapa para ver su actividad, especies y datos de campo.</div></div>
+              <div className="zone-panel-empty"><div className="zpe-ic" style={{ display: "grid", placeItems: "center", color: "var(--sand)" }}><IconCompass size={34} /></div><div style={{ fontSize: 13 }}>Toca una zona del mapa para ver su actividad, especies y datos de campo.</div></div>
             )}
           </div>
           <div className="card">

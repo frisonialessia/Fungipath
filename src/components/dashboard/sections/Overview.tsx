@@ -9,6 +9,7 @@ import { mushIcon } from "@/lib/illustrations";
 import { Illu, useToast } from "../shared";
 import { INSIGHT_ICON } from "../icons";
 import GbifBadge from "../GbifBadge";
+import { IconPin } from "@/components/icons";
 import type { MapHotspot } from "@/components/FungiMap";
 
 const FungiMap = dynamic(() => import("@/components/FungiMap"), { ssr: false });
@@ -16,7 +17,7 @@ const FungiMap = dynamic(() => import("@/components/FungiMap"), { ssr: false });
 const PILLS = ["all", "Boletus edulis", "Cantharellus", "Lactarius"];
 
 export default function Overview({
-  hotspots, selectedIdx, setSelectedIdx, diary, onNewHotspot, onAskGuide, predicting, live,
+  hotspots, selectedIdx, setSelectedIdx, diary, onNewHotspot, onAskGuide, onMapCreate, predicting, live,
 }: {
   hotspots: Hotspot[];
   selectedIdx: number;
@@ -24,6 +25,7 @@ export default function Overview({
   diary: DiaryEntry[];
   onNewHotspot: () => void;
   onAskGuide: () => void;
+  onMapCreate?: (lat: number, lng: number) => void;
   predicting?: boolean;
   live?: boolean;
 }) {
@@ -105,8 +107,9 @@ export default function Overview({
             </select>
           </div>
           <div className="map">
+            <div className="map-hint"><IconPin size={13} />Pincha el mapa para crear un hotspot</div>
             <div className="map-legend"><span className="lg-dot" />Punto caliente · prob. alta</div>
-            <FungiMap hotspots={mapPoints} center={region.center} zoom={region.zoom} onSelect={(id) => setSelectedIdx(Number(id))} />
+            <FungiMap hotspots={mapPoints} center={region.center} zoom={region.zoom} onSelect={(id) => setSelectedIdx(Number(id))} onMapClick={onMapCreate} />
           </div>
           {sel && (
             <div className="explain">

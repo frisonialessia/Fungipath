@@ -1,5 +1,6 @@
 "use client";
 import { MYCORRHIZA } from "@/data/zones";
+import { treeIcon } from "@/components/icons";
 
 // MOCK (PoC): pH, NDVI y humedad de ejemplo. El NDVI real (Sentinel-2) entra en la Fase 2.
 export default function Soil() {
@@ -15,7 +16,7 @@ export default function Soil() {
         <div className="panel-head"><h3 className="serif">Micorrizas por hábitat</h3><span>Qué árbol favorece qué hongo</span></div>
         <div>
           {MYCORRHIZA.map((m, i) => (
-            <div className="myco-row" key={i}><div className="myco-tree">{m[0]}</div><div><div className="mt">{m[1]}</div></div><span className="myco-arrow">→</span><div className="ms">{m[2]}</div></div>
+            <div className="myco-row" key={i}><div className="myco-tree" style={{ color: "var(--moss)" }}>{treeIcon(m[0], { size: 24 })}</div><div><div className="mt">{m[1]}</div></div><span className="myco-arrow">→</span><div className="ms">{m[2]}</div></div>
           ))}
         </div>
       </div>

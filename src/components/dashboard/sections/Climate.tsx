@@ -2,9 +2,10 @@
 import { useState } from "react";
 import { calcProbability } from "@/lib/model";
 import type { Hotspot } from "@/data/hotspots";
+import { weatherIcon } from "@/components/icons";
 
 const DAYS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
-const IC = ["☁️", "🌧️", "🌧️", "⛅", "☀️", "⛅", "🌧️"];
+const IC = ["cloud", "rain", "rain", "cloud-sun", "sun", "cloud-sun", "rain"];
 const TMP = [13, 12, 14, 15, 17, 16, 14];
 const RAIN = [2, 12, 18, 4, 0, 6, 15];
 const OPT = [0, 0, 1, 1, 0, 0, 0];
@@ -25,7 +26,7 @@ export default function Climate({ hotspots }: { hotspots: Hotspot[] }) {
         <div className="climate-grid">
           {DAYS.map((d, i) => (
             <div className={`day-col${OPT[i] ? " opt" : ""}`} key={d}>
-              <div className="dn">{d}</div><div className="di">{IC[i]}</div><div className="dt">{TMP[i]}°</div><div className="dr">{RAIN[i]}mm</div>
+              <div className="dn">{d}</div><div className="di" style={{ display: "grid", placeItems: "center", color: OPT[i] ? "var(--terracotta)" : "var(--umber)" }}>{weatherIcon(IC[i], { size: 26 })}</div><div className="dt">{TMP[i]}°</div><div className="dr">{RAIN[i]}mm</div>
               {OPT[i] ? <div style={{ fontSize: 9, color: "var(--terracotta)", marginTop: 6, fontWeight: 700 }}>ÓPTIMO</div> : null}
             </div>
           ))}

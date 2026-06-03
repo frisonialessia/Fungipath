@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { IconSpecimen } from "@/components/icons";
 
 interface Summary { total: number; lastYear: number | null; }
 
@@ -39,14 +40,14 @@ export default function GbifBadge({
   if (variant === "line") {
     return (
       <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, color: "var(--ink-soft)", marginTop: 10 }}>
-        <span aria-hidden>🔬</span>
+        <IconSpecimen size={15} style={{ color: "var(--terracotta)", flexShrink: 0 }} />
         <span><b>GBIF:</b> {text}</span>
       </div>
     );
   }
   return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 12, fontSize: 11, color: "#cabdac", background: "rgba(255,255,255,.07)", borderRadius: 8, padding: "6px 10px" }}>
-      <span aria-hidden>🔬</span>{text}
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 7, marginTop: 12, fontSize: 11, color: "#cabdac", background: "rgba(255,255,255,.07)", borderRadius: 8, padding: "6px 10px" }}>
+      <IconSpecimen size={14} style={{ flexShrink: 0 }} />{text}
     </span>
   );
 }

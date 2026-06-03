@@ -1,9 +1,17 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import LandingTools from "@/components/landing/LandingTools";
-import { SPECIES } from "@/lib/species";
+import Reveal from "@/components/landing/Reveal";
+import { SPECIES, SPECIES_TOTAL } from "@/lib/species";
 
 const marquee = SPECIES.slice(0, 8).concat(SPECIES.slice(0, 8));
+const SOURCES = ["Open-Meteo", "GBIF", "Sentinel-2", "OpenStreetMap"];
+const STATS: [string, string][] = [
+  [`${SPECIES_TOTAL}+`, "especies en el catálogo, con sosias tóxicos"],
+  ["En vivo", "clima real cruzado con el modelo en cada punto"],
+  ["6", "regiones del mundo, de Lombardía al Pacífico NW"],
+  ["0 €", "para empezar — predice tu zona gratis"],
+];
 
 export default function Home() {
   return (
@@ -62,6 +70,21 @@ export default function Home() {
         </div>
       </div></header>
 
+      {/* BARRA DE CONFIANZA */}
+      <div className="trust"><div className="wrap">
+        <span className="lab">Cruzamos fuentes abiertas</span>
+        {SOURCES.map((s) => <span className="src" key={s}><span className="dot" />{s}</span>)}
+      </div></div>
+
+      {/* BANDA DE MÉTRICAS */}
+      <section style={{ padding: "64px 0" }}><div className="wrap">
+        <Reveal>
+          <div className="statband">
+            {STATS.map(([v, l]) => <div className="st" key={l}><div className="sv">{v}</div><div className="sl">{l}</div></div>)}
+          </div>
+        </Reveal>
+      </div></section>
+
       {/* MARQUEE */}
       <div className="marquee"><div className="marquee-track">{marquee.map((s, i) => <span key={i}>{s.n}</span>)}</div></div>
 
@@ -72,13 +95,13 @@ export default function Home() {
           <h2>Del <em>espora</em> al hongo:<br />dónde entra FungiPath</h2>
           <p>Un hongo no aparece de la nada. Recorre un ciclo de semanas bajo tierra. Nosotros lo modelamos para anticipar la cosecha antes de que sea visible.</p>
         </div>
-        <div className="cycle-stages">
+        <Reveal><div className="cycle-stages">
           <div className="stage"><div className="disc"><span className="num">1</span><svg viewBox="0 0 62 62"><g fill="#f1e7db"><circle cx="20" cy="24" r="3" /><circle cx="34" cy="18" r="2.4" /><circle cx="44" cy="28" r="3" /><circle cx="28" cy="36" r="2.6" /><circle cx="40" cy="42" r="2.2" /><circle cx="18" cy="40" r="2.4" /></g></svg></div><h3>Espora</h3><p>El hongo libera millones de esporas que caen al sustrato.</p></div>
           <div className="stage"><div className="disc"><span className="num">2</span><svg viewBox="0 0 62 62"><g stroke="#f1e7db" strokeWidth="1.6" fill="none" strokeLinecap="round"><path d="M31 31 L18 18" /><path d="M31 31 L44 16" /><path d="M31 31 L16 38" /><path d="M31 31 L46 40" /><path d="M31 31 L31 14" /></g></svg></div><h3>Micelio</h3><p>Germinan en hifas que se entrelazan y colonizan la madera o el suelo.</p></div>
           <div className="stage key"><div className="disc"><span className="num">3</span><svg viewBox="0 0 62 62"><g fill="#f1e7db"><circle cx="24" cy="40" r="6" /><circle cx="36" cy="38" r="5" /></g></svg></div><h3>Primordio</h3><p>Se forma el &quot;alfiler&quot;, el embrión del hongo. Aún invisible en superficie.</p><span className="pin">◆ Aquí predecimos</span></div>
           <div className="stage"><div className="disc"><span className="num">4</span><svg viewBox="0 0 62 62"><path d="M31 16 C20 16 14 24 14 28 C14 30 18 31 31 31 C44 31 48 30 48 28 C48 24 42 16 31 16 Z" fill="#f1e7db" /><path d="M28 31 Q27 42 28 48 Q31 49 34 48 Q35 42 34 31 Z" fill="#f1e7db" /></svg></div><h3>Fructificación</h3><p>El hongo emerge y madura. La ventana de recolección se abre.</p><span className="pin">◆ Te avisamos</span></div>
           <div className="stage"><div className="disc"><span className="num">5</span><svg viewBox="0 0 62 62"><path d="M31 18 C22 18 17 24 17 27 C17 29 20 30 31 30 C42 30 45 29 45 27 C45 24 40 18 31 18 Z" fill="#f1e7db" /><g fill="#f1e7db" opacity=".7"><circle cx="22" cy="40" r="2" /><circle cx="31" cy="44" r="2" /><circle cx="40" cy="40" r="2" /></g></svg></div><h3>Dispersión</h3><p>Libera nuevas esporas y el ciclo recomienza. Nuestro modelo aprende.</p></div>
-        </div>
+        </div></Reveal>
         <p className="cycle-note">La mayoría de apps te muestran el hongo cuando ya cualquiera lo ve. <b>FungiPath predice la fase de primordio</b> — los días en que el bosque se prepara, antes de que haya nada que recoger.</p>
       </div></section>
 

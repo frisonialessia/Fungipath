@@ -28,10 +28,11 @@ export const REGIONS: Region[] = [
 ];
 
 // Micorrizas: qué árbol favorece qué hongo (vista Suelo).
+// El primer campo es la clave de icono (ver treeIcon en components/icons).
 export const MYCORRHIZA: [string, string, string][] = [
-  ["🌳", "Haya (Fagus)", "Boletus edulis, Craterellus"],
-  ["🌰", "Castaño", "Boletus, Amanita caesarea"],
-  ["🌲", "Pino", "Lactarius deliciosus, Boletus pinophilus"],
-  ["🌿", "Roble (Quercus)", "Boletus aereus, Cantharellus"],
-  ["🪾", "Abedul", "Leccinum, Amanita muscaria"],
+  ["broadleaf", "Haya (Fagus)", "Boletus edulis, Craterellus"],
+  ["acorn", "Castaño", "Boletus, Amanita caesarea"],
+  ["conifer", "Pino", "Lactarius deliciosus, Boletus pinophilus"],
+  ["oak", "Roble (Quercus)", "Boletus aereus, Cantharellus"],
+  ["birch", "Abedul", "Leccinum, Amanita muscaria"],
 ];

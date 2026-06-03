@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { SPECIES } from "@/lib/species";
 import { spIllust } from "@/lib/illustrations";
 import { Illu, useToast } from "../shared";
+import { IconPlay, IconStop, IconPin, IconShare } from "@/components/icons";
 
 // MOCK (PoC): rastreo GPS, SOS, modo offline y registro de hallazgos son simulados.
 // En la Fase 3 (móvil) usarán GPS real, contactos de emergencia y descarga de tiles.
@@ -46,7 +47,7 @@ export default function Safety() {
     const lat = (45.90 + Math.random() * 0.1).toFixed(4), lng = (9.15 + Math.random() * 0.1).toFixed(4);
     const now = new Date();
     setFinds((f) => [{ sp: sp.n, co: `${lat}°N ${lng}°E`, t: now.getHours() + ":" + String(now.getMinutes()).padStart(2, "0") }, ...f]);
-    toast("📍 Hallazgo registrado: " + sp.n);
+    toast("Hallazgo registrado: " + sp.n);
   }
 
   function dl(what: string) {
@@ -70,8 +71,8 @@ export default function Safety() {
               {!pts.length && <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: "var(--stone)", fontSize: 13 }}>Pulsa «Iniciar rastreo» para empezar a guardar tu recorrido</div>}
             </div>
             <div style={{ display: "flex", gap: 10, marginTop: 14, flexWrap: "wrap" }}>
-              <button className="btn" onClick={toggleTrack}>{tracking ? "⏸ Detener rastreo" : "▶ Iniciar rastreo"}</button>
-              <button className="btn-ghost2" style={{ flex: "none", padding: "12px 18px" }} onClick={() => toast("📍 Ubicación compartida con tus contactos")}>Compartir mi ubicación</button>
+              <button className="btn" onClick={toggleTrack} style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>{tracking ? <IconStop size={15} /> : <IconPlay size={15} />}{tracking ? "Detener rastreo" : "Iniciar rastreo"}</button>
+              <button className="btn-ghost2" style={{ flex: "none", padding: "12px 18px", display: "inline-flex", alignItems: "center", gap: 8 }} onClick={() => toast("Ubicación compartida con tus contactos")}><IconShare size={15} />Compartir mi ubicación</button>
             </div>
             <div style={{ display: "flex", gap: 24, marginTop: 14 }}>
               <div><div style={{ fontFamily: "Fraunces", fontWeight: 700, fontSize: 22 }}>{km} km</div><div style={{ fontSize: 11, color: "var(--stone)", textTransform: "uppercase", letterSpacing: ".5px" }}>recorrido</div></div>
@@ -93,7 +94,7 @@ export default function Safety() {
                   </div>
                 ))}
             </div>
-            <button className="btn" style={{ marginTop: 12 }} onClick={addFind}>📍 Marcar hallazgo aquí</button>
+            <button className="btn" style={{ marginTop: 12, display: "inline-flex", alignItems: "center", gap: 8 }} onClick={addFind}><IconPin size={15} />Marcar hallazgo aquí</button>
           </div>
         </div>
         <div>
