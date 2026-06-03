@@ -5,6 +5,7 @@ export interface WeatherSummary {
   rainMm: number;       // lluvia acumulada últimos 10 días
   soilTemp: number;     // temperatura media de suelo reciente (°C)
   daysSinceRain: number;
+  elevation: number;    // elevación real del terreno (m), de Open-Meteo
   daily: { date: string; rain: number; tempMean: number }[];
 }
 
@@ -45,5 +46,8 @@ export async function getWeather(lat: number, lng: number): Promise<WeatherSumma
 
   const daily = dates.map((d, i) => ({ date: d, rain: rain[i], tempMean: temp[i] }));
 
-  return { rainMm: Math.round(recentRain), soilTemp, daysSinceRain, daily };
+  // Open-Meteo devuelve la elevación real del terreno para esas coordenadas.
+  const elevation = typeof data.elevation === "number" ? Math.round(data.elevation) : 0;
+
+  return { rainMm: Math.round(recentRain), soilTemp, daysSinceRain, elevation, daily };
 }

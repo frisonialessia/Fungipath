@@ -63,6 +63,7 @@ export default function DashboardClient() {
             prob: res.probability,
             why: res.explanation,
             live: true,
+            alt: res.elevation && res.elevation > 0 ? res.elevation : h.alt, // elevación real del terreno
             rainMm: res.factors.rainMm,
             soilTemp: res.factors.soilTemp,
             daysSinceRain: res.factors.daysSinceRain,

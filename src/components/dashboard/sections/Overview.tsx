@@ -8,6 +8,7 @@ import { SPECIES } from "@/lib/species";
 import { mushIcon } from "@/lib/illustrations";
 import { Illu, useToast } from "../shared";
 import { INSIGHT_ICON } from "../icons";
+import GbifBadge from "../GbifBadge";
 import type { MapHotspot } from "@/components/FungiMap";
 
 const FungiMap = dynamic(() => import("@/components/FungiMap"), { ssr: false });
@@ -115,6 +116,7 @@ export default function Overview({
               </div>
               <div className="why"><b>Por qué:</b> {sel.why}</div>
               <div className="factors">{sel.factors.map((f, i) => <div className="factor" key={i}><div className="fl">{f[0]}</div><div className="fv">{f[1]}</div></div>)}</div>
+              <GbifBadge species={sel.species} lat={sel.lat} lng={sel.lng} radius={25} />
             </div>
           )}
         </div>

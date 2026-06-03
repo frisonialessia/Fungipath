@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
             probability,
             explanation,
             windowDays,
+            elevation: weather.elevation,
             factors: {
               rainMm: weather.rainMm,
               soilTemp: weather.soilTemp,

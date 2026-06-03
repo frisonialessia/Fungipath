@@ -3,6 +3,7 @@ import { useState } from "react";
 import { SPECIES, SPECIES_TOTAL, FIELD_GUIDE, type Species as Sp } from "@/lib/species";
 import { spIllust } from "@/lib/illustrations";
 import { Illu } from "../shared";
+import GbifBadge from "../GbifBadge";
 
 const FILTERS: [string, string][] = [
   ["all", "Todas"], ["choice", "Excelentes"], ["edible", "Comestibles"], ["toxic", "Tóxicas"], ["deadly", "Mortales"],
@@ -91,6 +92,7 @@ function SpeciesModal({ s, onClose, onCompare, onAsk }: { s: Sp; onClose: () => 
       <div className="sp-meta" style={{ margin: "14px 0", fontSize: 14 }}>
         <b>Hábitat:</b> {s.hab}<br /><b>Temporada:</b> {s.season}<br /><b>Identificación:</b> {s.note}<br /><b>Posible confusión:</b> {s.twin}<br /><b>Por región:</b> {s.region}
       </div>
+      <GbifBadge species={s.n} variant="line" />
       {g && (
         <div style={{ margin: "14px 0", padding: 14, background: "var(--cream-2)", borderRadius: 12 }}>
           <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px", color: "var(--terracotta)", marginBottom: 10 }}>🧺 Guía de campo</div>
