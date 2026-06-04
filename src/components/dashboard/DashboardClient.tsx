@@ -205,7 +205,7 @@ export default function DashboardClient() {
             parcels={parcels} mapMode={mapMode} setMapMode={setMapMode} onParcelComplete={(pts) => setPendingParcel(pts)} selectedParcelId={selectedParcelId} onSelectParcel={setSelectedParcelId} />}
           {active === "predict" && <Predictions hotspots={hotspots} />}
           {active === "species" && <Species onAskGuide={askGuide} />}
-          {active === "routes" && <Routes hotspots={hotspots} />}
+          {active === "routes" && <Routes />}
           {active === "climate" && <Climate hotspots={hotspots} />}
           {active === "soil" && <Soil />}
           {active === "diary" && <Diary diary={diary} hotspots={hotspots} onAddLog={(e) => setDiary((d) => [e, ...d])} />}

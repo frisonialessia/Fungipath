@@ -1,115 +1,125 @@
 "use client";
-import { useState } from "react";
-import { ZONES } from "@/data/zones";
-import type { Hotspot } from "@/data/hotspots";
+import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { FORAGING } from "@/data/foraging";
+import { SPECIES } from "@/lib/species";
 import { useI18n, tx } from "@/lib/i18n";
-import { useToast } from "../shared";
-import { IconCompass } from "@/components/icons";
+import { Illu, useToast } from "../shared";
+import GbifBadge from "../GbifBadge";
+import { mushIcon } from "@/lib/illustrations";
+import type { MapHotspot } from "@/components/FungiMap";
 
-export default function Routes({ hotspots }: { hotspots: Hotspot[] }) {
+const FungiMap = dynamic(() => import("@/components/FungiMap"), { ssr: false });
+
+// vista inicial: Europa con detalle, pero se puede alejar a todo el mundo
+const DEFAULT_VIEW = { center: [46, 7] as [number, number], zoom: 5 };
+
+export default function Routes() {
   const { t, locale } = useI18n();
   const toast = useToast();
-  const [selZone, setSelZone] = useState<string | null>(null);
-  const [selSector, setSelSector] = useState<string | null>(null);
-  const [km, setKm] = useState("12.4");
+  const [probs, setProbs] = useState<Record<string, number>>({});
+  const [predicting, setPredicting] = useState(true);
+  const [selId, setSelId] = useState<string | null>(null);
+  const [view, setView] = useState(DEFAULT_VIEW);
 
-  const zone = ZONES.find((z) => z.id === selZone) || null;
-  const top = [...hotspots].sort((a, b) => b.prob - a.prob).slice(0, 5);
-  const avg = Math.round(top.reduce((s, h) => s + h.prob, 0) / top.length);
+  // Probabilidad EN VIVO (Open-Meteo) para cada región del mundo.
+  useEffect(() => {
+    let cancelled = false;
+    setPredicting(true);
+    (async () => {
+      try {
+        const r = await fetch("/api/predict/batch", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lang: locale, points: FORAGING.map((f) => ({ lat: f.lat, lng: f.lng, aspect: f.aspect, species: f.species })) }),
+        });
+        const data = await r.json();
+        if (cancelled || !Array.isArray(data.results)) { setPredicting(false); return; }
+        const map: Record<string, number> = {};
+        FORAGING.forEach((f, i) => { if (data.results[i]) map[f.id] = data.results[i].probability; });
+        setProbs(map);
+      } catch { /* sin red: prob queda vacía */ }
+      finally { if (!cancelled) setPredicting(false); }
+    })();
+    return () => { cancelled = true; };
+  }, [locale]);
 
-  function setSector(s: string) {
-    const next = selSector === s ? null : s;
-    setSelSector(next);
-    toast(next ? t("toast.filterSlope", { s: t(`aspect.${s}`) }) : t("toast.showAll"));
+  const spots: MapHotspot[] = useMemo(() => FORAGING.map((f) => ({
+    id: f.id, name: f.name, species: f.species, prob: probs[f.id] ?? 0, lat: f.lat, lng: f.lng,
+  })), [probs]);
+
+  const sel = FORAGING.find((f) => f.id === selId) || null;
+  const ranked = [...FORAGING].map((f) => ({ f, prob: probs[f.id] ?? 0 })).sort((a, b) => b.prob - a.prob);
+  const avg = ranked.length ? Math.round(ranked.reduce((s, x) => s + x.prob, 0) / ranked.length) : 0;
+
+  // brújula: centro recentra; flechas desplazan el mapa
+  function recenter() { setView({ ...DEFAULT_VIEW }); toast(t("routes.recenter")); }
+  function pan(dir: "N" | "S" | "E" | "O") {
+    const span = 360 / Math.pow(2, view.zoom) * 0.5;
+    setView((v) => {
+      const [lat, lng] = v.center;
+      const c: [number, number] = dir === "N" ? [Math.min(82, lat + span), lng] : dir === "S" ? [Math.max(-82, lat - span), lng] : dir === "E" ? [lat, lng + span] : [lat, lng - span];
+      return { center: c, zoom: v.zoom };
+    });
   }
-  const needleDeg = selSector ? ({ N: 0, E: 90, S: 180, O: 270 }[selSector] ?? 0) : 0;
 
   return (
     <div>
-      <div className="topbar"><div><h1 className="serif">{t("routes.title")}</h1><p>{t("routes.sub")}</p></div><button className="btn" onClick={() => { setKm((8 + Math.random() * 8).toFixed(1)); toast(t("toast.routeRecalc")); }}>{t("routes.recalc")}</button></div>
+      <div className="topbar">
+        <div>
+          <span className="demo-flag">{predicting ? t("routes.calcWorld") : t("overview.flagLive")}</span>
+          <h1 className="serif">{t("routes.worldTitle")}</h1>
+          <p>{t("routes.worldSub")}</p>
+        </div>
+      </div>
       <div className="grid-2" style={{ gridTemplateColumns: "1.6fr 1fr" }}>
         <div className="card">
-          <div className="panel-head"><h3 className="serif">{t("routes.zonesTitle")}</h3><span>{zone ? zone.name : t("routes.tapZone")}</span></div>
-          <div className="lomb-wrap">
-            <div id="lombMap">
-              <svg viewBox="0 0 1120 760">
-                <defs>
-                  <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#9fc0c9" /><stop offset="100%" stopColor="#7ba3ae" /></linearGradient>
-                  <linearGradient id="lombTerrain" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0%" stopColor="#eef1e7" /><stop offset="55%" stopColor="#e9e1cf" /><stop offset="100%" stopColor="#e2d4bb" /></linearGradient>
-                  <pattern id="lombGrid" width="56" height="56" patternUnits="userSpaceOnUse"><path d="M56 0 H0 V56" fill="none" stroke="#6d482b" strokeWidth="0.6" opacity="0.06" /></pattern>
-                  <filter id="zoneShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="7" floodColor="#2e231b" floodOpacity="0.22" /></filter>
-                </defs>
-                {/* fondo cartográfico: terreno + retícula + curvas de nivel (relieve) */}
-                <rect x="0" y="0" width="1120" height="760" fill="url(#lombTerrain)" />
-                <rect x="0" y="0" width="1120" height="760" fill="url(#lombGrid)" />
-                <g fill="none" stroke="#a8895c" strokeWidth="1" opacity="0.16">
-                  <ellipse cx="440" cy="150" rx="190" ry="125" /><ellipse cx="440" cy="150" rx="128" ry="84" /><ellipse cx="440" cy="150" rx="68" ry="44" />
-                  <ellipse cx="770" cy="410" rx="210" ry="135" /><ellipse cx="770" cy="410" rx="138" ry="88" /><ellipse cx="770" cy="410" rx="72" ry="46" />
-                  <ellipse cx="520" cy="640" rx="150" ry="92" /><ellipse cx="520" cy="640" rx="92" ry="56" />
-                </g>
-                <text x="22" y="34" fontFamily="monospace" fontSize="15" fill="#9c8f7d" opacity="0.7">46°N · 9°E — Lombardia</text>
-                {ZONES.map((z) => {
-                  const lit = !selSector || z.sector === selSector;
-                  const col = z.prob >= 80 ? "#a86543" : z.prob >= 60 ? "#c08a5e" : z.prob >= 45 ? "#cfa988" : "#d8c4a8";
-                  return <path key={z.id} className={`zone${selZone === z.id ? " sel" : ""}`} d={z.d} fill={col} fillOpacity={lit ? 0.9 : 0.28} stroke="#6d482b" strokeWidth={selZone === z.id ? 2.5 : 1} strokeOpacity={lit ? 0.6 : 0.3} filter={selZone === z.id ? "url(#zoneShadow)" : undefined} onClick={() => setSelZone(z.id)} />;
-                })}
-                <ellipse cx="475" cy="235" rx="22" ry="55" fill="url(#lake)" opacity=".85" transform="rotate(-18 475 235)" />
-                <ellipse cx="990" cy="400" rx="18" ry="42" fill="url(#lake)" opacity=".85" transform="rotate(12 990 400)" />
-                <path d="M260,120 L520,40 L640,110" fill="none" stroke="#fff" strokeWidth="2" strokeDasharray="3 4" opacity=".5" />
-                {ZONES.map((z) => {
-                  const lit = !selSector || z.sector === selSector;
-                  return (
-                    <g key={z.id + "d"} className="zone-dot" onClick={() => setSelZone(z.id)} opacity={lit ? 1 : 0.35}>
-                      <circle cx={z.cx} cy={z.cy} r={6 + z.prob / 14} fill="#faf5ec" stroke="#6d482b" strokeWidth="1.5" />
-                      <text x={z.cx} y={z.cy + 4} textAnchor="middle" fontSize="13" fontWeight="700" fill="#6d482b">{z.prob}</text>
-                    </g>
-                  );
-                })}
-                {ZONES.map((z) => <text key={z.id + "t"} x={z.cx} y={z.cy - 18} textAnchor="middle" fontSize="13" fontFamily="Fraunces,serif" fontStyle="italic" fill="#2e231b" opacity={(!selSector || z.sector === selSector) ? 0.85 : 0.3}>{z.name}</text>)}
-              </svg>
-              <div className="compass">
-                <div className="compass-ring">
-                  <span className="cdir n" onClick={() => setSector("N")}>N</span>
-                  <span className="cdir e" onClick={() => setSector("E")}>E</span>
-                  <span className="cdir s" onClick={() => setSector("S")}>S</span>
-                  <span className="cdir w" onClick={() => setSector("O")}>{locale === "en" ? "W" : "O"}</span>
-                  <div className="needle" style={{ transform: `translate(-50%,-100%) rotate(${needleDeg}deg)` }} />
-                  <div className="compass-c" />
-                </div>
-                <div className="compass-lbl">{selSector ? t("routes.slopesOf", { s: t(`aspect.${selSector}`) }) : t("routes.allSlopes")}</div>
+          <div className="panel-head"><h3 className="serif">{t("routes.worldTitle")}</h3><span>{FORAGING.length} {t("nav.routes").toLowerCase()}</span></div>
+          <div className="map" style={{ height: 420 }}>
+            <FungiMap hotspots={spots} center={view.center} zoom={view.zoom} onSelect={(id) => setSelId(id)} />
+            <div className="compass" title={t("routes.recenter")}>
+              <div className="compass-ring">
+                <span className="cdir n" onClick={() => pan("N")}>N</span>
+                <span className="cdir e" onClick={() => pan("E")}>E</span>
+                <span className="cdir s" onClick={() => pan("S")}>S</span>
+                <span className="cdir w" onClick={() => pan("O")}>{locale === "en" ? "W" : "O"}</span>
+                <div className="needle" />
+                <button className="compass-c" onClick={recenter} aria-label={t("routes.recenter")} />
               </div>
+              <div className="compass-lbl">{t("routes.recenter")}</div>
             </div>
           </div>
         </div>
         <div>
           <div className="card" style={{ marginBottom: 15 }}>
-            {zone ? (
+            {sel ? (
               <>
-                <div className="zp-head"><h4>{zone.name}</h4><div className="zp-prob">{zone.prob}%</div></div>
-                <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 14 }}>{tx(zone.hab, locale)}</div>
+                <div className="zp-head"><h4>{sel.name}</h4><div className="zp-prob">{(probs[sel.id] ?? 0) || "…"}{probs[sel.id] ? "%" : ""}</div></div>
+                <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 14 }}>{sel.country}</div>
                 <div className="zp-stats">
-                  <div className="zp-stat"><div className="zl">{t("routes.altitude")}</div><div className="zv">{zone.alt}</div></div>
-                  <div className="zp-stat"><div className="zl">{t("routes.hotspots")}</div><div className="zv">{zone.spots} {t("routes.active")}</div></div>
-                  <div className="zp-stat"><div className="zl">{t("routes.lastRain")}</div><div className="zv">{zone.rain}</div></div>
-                  <div className="zp-stat"><div className="zl">{t("routes.slope")}</div><div className="zv">{t(`aspect.${zone.sector}`)}</div></div>
+                  <div className="zp-stat"><div className="zl">{t("routes.star")}</div><div className="zv" style={{ fontStyle: "italic" }}>{sel.species}</div></div>
+                  <div className="zp-stat"><div className="zl">{t("species.season")}</div><div className="zv">{tx(sel.season, locale)}</div></div>
                 </div>
-                <div style={{ marginTop: 12, fontSize: 12, color: "var(--ink-soft)" }}><b>{t("routes.typicalSp")}</b> {tx(zone.sp, locale)}</div>
+                <div style={{ marginTop: 12, fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.5 }}>{tx(sel.note, locale)}</div>
+                <GbifBadge species={sel.species} lat={sel.lat} lng={sel.lng} radius={50} variant="line" />
               </>
             ) : (
-              <div className="zone-panel-empty"><div className="zpe-ic" style={{ display: "grid", placeItems: "center", color: "var(--sand)" }}><IconCompass size={34} /></div><div style={{ fontSize: 13 }}>{t("routes.empty")}</div></div>
+              <div className="zone-panel-empty"><div className="zpe-ic">🌍</div><div style={{ fontSize: 13 }}>{t("routes.tapSpot")}</div></div>
             )}
           </div>
           <div className="card">
-            <div className="panel-head"><h3 className="serif">{t("routes.routeTitle")}</h3></div>
+            <div className="panel-head"><h3 className="serif">{t("routes.best")}</h3><span>{avg ? `${avg}% ${t("routes.avgProb")}` : ""}</span></div>
             <div>
-              {top.map((h, i) => (
-                <div className="route-stop-item" key={i}><div className="route-num">{i + 1}</div><div><div className="rt">{h.name}</div><div className="rs">{h.species} · {h.alt} m</div></div><div className="rp">{h.prob}%</div></div>
-              ))}
-            </div>
-            <div className="route-info" style={{ marginTop: 16 }}>
-              <div className="route-stat"><div className="rv">{top.length}</div><div className="rl">{t("routes.stops")}</div></div>
-              <div className="route-stat"><div className="rv">{km} km</div><div className="rl">{t("routes.distance")}</div></div>
-              <div className="route-stat"><div className="rv">{avg}%</div><div className="rl">{t("routes.avgProb")}</div></div>
+              {ranked.slice(0, 6).map(({ f, prob }, i) => {
+                const c = SPECIES.find((s) => s.n.includes(f.species.split(" ")[0]))?.cap || "#a86543";
+                return (
+                  <div className="route-stop-item" key={f.id} style={{ cursor: "pointer" }} onClick={() => { setSelId(f.id); setView({ center: [f.lat, f.lng], zoom: 6 }); }}>
+                    <div className="route-num">{i + 1}</div>
+                    <Illu style={{ width: 30, height: 30, display: "grid", placeItems: "center" }} html={mushIcon(f.species, SPECIES, c)} />
+                    <div><div className="rt">{f.name}</div><div className="rs">{f.country} · {f.species}</div></div>
+                    <div className="rp">{prob || "…"}{prob ? "%" : ""}</div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

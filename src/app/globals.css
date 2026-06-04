@@ -317,7 +317,9 @@ footer small { color: var(--ink-soft); font-size: 13px; }
 .cdir.e { right: 4px; top: 50%; transform: translateY(-50%); }
 .cdir.w { left: 4px; top: 50%; transform: translateY(-50%); }
 .needle { position: absolute; top: 50%; left: 50%; width: 3px; height: 32px; background: linear-gradient(to bottom, var(--clay) 50%, var(--sand) 50%); transform-origin: center bottom; transform: translate(-50%, -100%) rotate(0deg); transition: transform .4s cubic-bezier(.2,.8,.2,1); border-radius: 2px; }
-.compass-c { position: absolute; top: 50%; left: 50%; width: 10px; height: 10px; background: var(--umber); border-radius: 50%; transform: translate(-50%, -50%); }
+.compass-c { position: absolute; top: 50%; left: 50%; width: 18px; height: 18px; background: var(--umber); border: 2px solid var(--cream); border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; padding: 0; transition: transform .15s, background .15s; box-shadow: 0 1px 4px rgba(46,35,27,.3); }
+.compass-c:hover { background: var(--clay); transform: translate(-50%, -50%) scale(1.15); }
+.compass { z-index: 1000; }
 .compass-lbl { font-size: 10px; font-weight: 600; color: var(--ink-soft); margin-top: 6px; background: rgba(250,245,236,.9); padding: 3px 8px; border-radius: 20px; }
 .route-stop-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--sand); }
 .route-stop-item:last-child { border-bottom: none }

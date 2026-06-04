@@ -108,6 +108,9 @@ export const MESSAGES = {
       altitude: "Altitude", hotspots: "Hotspots", lastRain: "Last rain", slope: "Slope", typicalSp: "Typical species:", active: "active",
       allSlopes: "All slopes", slopesOf: "{s} slopes",
       routeTitle: "Today's optimal route", stops: "stops", distance: "distance", avgProb: "avg. prob.",
+      worldTitle: "World foraging map", worldSub: "Renowned mushroom regions worldwide, with live probability. Zoom out to explore the planet.",
+      recenter: "Recenter", tapSpot: "Tap a region on the map to see its species and live conditions.", best: "Top regions today",
+      country: "Country", star: "Star species", liveProb: "live probability", calcWorld: "Computing live conditions worldwide…",
     },
     climate: {
       title: "Weather", sub: "7-day forecast for your area. Optimal fruiting days are highlighted.",
@@ -289,6 +292,9 @@ export const MESSAGES = {
       altitude: "Altitud", hotspots: "Hotspots", lastRain: "Última lluvia", slope: "Ladera", typicalSp: "Especies típicas:", active: "activos",
       allSlopes: "Todas las laderas", slopesOf: "Laderas {s}",
       routeTitle: "Ruta óptima de hoy", stops: "paradas", distance: "distancia", avgProb: "prob. media",
+      worldTitle: "Mapa de recolección mundial", worldSub: "Regiones míticas de setas en el mundo, con probabilidad en vivo. Aleja el zoom para explorar el planeta.",
+      recenter: "Recentrar", tapSpot: "Toca una región del mapa para ver sus especies y condiciones en vivo.", best: "Mejores regiones hoy",
+      country: "País", star: "Especie estrella", liveProb: "probabilidad en vivo", calcWorld: "Calculando condiciones en vivo del mundo…",
     },
     climate: {
       title: "Clima", sub: "Previsión a 7 días para tu comarca. Los días óptimos para fructificación se resaltan.",
