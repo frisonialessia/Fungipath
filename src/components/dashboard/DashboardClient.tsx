@@ -105,10 +105,7 @@ export default function DashboardClient() {
     return () => { cancelled = true; };
   }, [locale]);
 
-  const agentContext = {
-    hotspots: hotspots.map((h) => ({ name: h.name, species: h.species, prob: h.prob, alt: h.alt, aspect: h.aspect, why: h.why })),
-    diary,
-  };
+  const agentHotspots = hotspots.map((h) => ({ name: h.name, species: h.species, prob: h.prob, why: h.why, alt: h.alt, aspect: h.aspect }));
 
   function askGuide(name?: string) {
     if (name) setAgentAsk(t("agent.askAbout", { name }));
@@ -187,7 +184,7 @@ export default function DashboardClient() {
         </main>
       </div>
 
-      <ForestAgent context={agentContext} locale={locale} open={agentOpen} setOpen={setAgentOpen} pendingAsk={agentAsk} onAsked={() => setAgentAsk(null)} />
+      <ForestAgent hotspots={agentHotspots} locale={locale} open={agentOpen} setOpen={setAgentOpen} pendingAsk={agentAsk} onAsked={() => setAgentAsk(null)} />
 
       {newModal && (
         <NewHotspotModal coords={pendingCoords ?? undefined} onClose={() => { setNewModal(false); setPendingCoords(null); }} onCreate={handleCreate} />

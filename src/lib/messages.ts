@@ -149,7 +149,7 @@ export const MESSAGES = {
       toggledOn: "{n} enabled", toggledOff: "{n} disabled",
     },
     agent: {
-      title: "Forest guide", status: "AI · always available", placeholder: "Ask the guide...",
+      title: "Forest guide", status: "AI · always available", statusLocal: "Local guide · demo", placeholder: "Ask the guide...",
       greeting: "Hi 👋 I'm your forest guide. I can explain why a spot is active, identify species or suggest where to go. How can I help?",
       s1: "Where should I go tomorrow?", s2: "Why is the beech wood at 91%?", s3: "Is Amanita phalloides deadly?",
       err: "There was a connection problem. Please try again.", noReply: "I couldn't answer right now. Try again.",
@@ -319,7 +319,7 @@ export const MESSAGES = {
       toggledOn: "{n} activado", toggledOff: "{n} desactivado",
     },
     agent: {
-      title: "Guía del bosque", status: "IA · siempre disponible", placeholder: "Pregunta al guía...",
+      title: "Guía del bosque", status: "IA · siempre disponible", statusLocal: "Guía local · demo", placeholder: "Pregunta al guía...",
       greeting: "Hola 👋 Soy tu guía del bosque. Puedo explicarte por qué un sitio está activo, identificar especies o sugerirte dónde ir. ¿En qué te ayudo?",
       s1: "¿Dónde voy mañana?", s2: "¿Por qué el hayedo está al 91%?", s3: "¿Es mortal la Amanita phalloides?",
       err: "Hubo un problema de conexión. Vuelve a intentarlo.", noReply: "No he podido responder ahora mismo. Inténtalo de nuevo.",
