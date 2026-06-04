@@ -10,9 +10,9 @@
    ============================================================ */
 
 :root {
-  --cream: #f1e7db; --cream-2: #e8dccd; --sand: #d6c4ac; --stone: #9c9283;
+  --cream: #f6f1ea; --cream-2: #eee7da; --sand: #dccdb4; --stone: #9c9283;
   --terracotta: #a86543; --clay: #8b3f29; --umber: #6d482b; --ink: #2e231b;
-  --ink-soft: #6d482b; --card: #fbf6ee;
+  --ink-soft: #6d482b; --card: #fefdfa;
   --danger: #8b3f29; --ok: #6d8a4b;
   --moss: #0e9b3d; --leaf: #52c871; --leaf2: #85df42;
   --line: rgba(109, 72, 43, .14);          /* borde hairline de marca */
@@ -466,11 +466,19 @@ footer small { color: var(--ink-soft); font-size: 13px; }
 .sk-line { height: 12px; margin: 8px 0; }
 
 /* Refinos varios */
-.sp-card { border-color: var(--line); }
-.sp-card:hover { box-shadow: var(--shadow); border-color: var(--sand); }
-.sp-ill svg, .row .badge svg { filter: drop-shadow(0 2px 3px rgba(46, 35, 27, .18)); }
-.sp-ill svg { transition: transform .2s; }
-.sp-card:hover .sp-ill svg { transform: translateY(-2px) scale(1.04); }
+/* Ficha de especie tipo lámina de espécimen */
+.sp-card { border-color: var(--line); padding: 0; overflow: hidden; }
+.sp-card:hover { box-shadow: var(--shadow); border-color: var(--sand); transform: translateY(-4px); }
+.sp-plate { position: relative; height: 138px; display: grid; place-items: center; background: radial-gradient(120% 90% at 50% 16%, #fcf8f0, #e9e0cf); border-bottom: 1px solid var(--line); }
+.sp-plate svg { filter: drop-shadow(0 7px 9px rgba(46, 35, 27, .22)); transition: transform .28s cubic-bezier(.2,.8,.2,1); }
+.sp-card:hover .sp-plate svg { transform: translateY(-4px) scale(1.06); }
+.sp-danger { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; border-radius: 50%; background: var(--clay); color: #fff; display: grid; place-items: center; font-size: 12px; font-weight: 700; box-shadow: var(--shadow-sm); }
+.sp-info { padding: 15px 16px 17px; }
+.sp-info h4 { font-family: 'Fraunces'; font-weight: 600; font-size: 16px; font-style: italic; }
+.sp-info .com { font-size: 12px; color: var(--stone); margin-bottom: 12px; }
+.sp-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sp-foot .sp-meta { margin: 0; text-align: right; font-size: 11px; }
+.row .badge svg { filter: drop-shadow(0 2px 3px rgba(46, 35, 27, .18)); }
 .map { box-shadow: inset 0 0 0 1px rgba(255,255,255,.4); }
 .map-hint { position: absolute; top: 12px; left: 12px; z-index: 7; background: rgba(46,35,27,.82); color: var(--cream); font-size: 11px; font-weight: 500; padding: 6px 11px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; backdrop-filter: blur(4px); }
 .tool { border-radius: var(--radius); }

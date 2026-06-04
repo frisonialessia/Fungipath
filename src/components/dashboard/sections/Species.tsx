@@ -38,13 +38,18 @@ export default function Species({ onAskGuide }: { onAskGuide: (name: string) => 
           const danger = s.edib === "deadly" || s.edib === "toxic";
           return (
             <div className="sp-card" key={s.n} onClick={() => setOpen(s)}>
-              <div className="sp-top">
-                <Illu className="sp-ill" html={spIllust(s, 46)} />
-                <div><h4>{s.n}</h4><div className="com">{tx(s.com, locale)}</div></div>
-                {danger && <span style={{ marginLeft: "auto", width: 22, height: 22, borderRadius: "50%", background: "#8b3f29", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, flexShrink: 0 }}>!</span>}
+              <div className="sp-plate">
+                <Illu html={spIllust(s, 76)} />
+                {danger && <span className="sp-danger">!</span>}
               </div>
-              <span className={`edib ${s.edib}`}>{t(`edib.${s.edib}`)}</span>
-              <div className="sp-meta">{tx(s.hab, locale)} · {tx(s.season, locale)}</div>
+              <div className="sp-info">
+                <h4>{s.n}</h4>
+                <div className="com">{tx(s.com, locale)}</div>
+                <div className="sp-foot">
+                  <span className={`edib ${s.edib}`}>{t(`edib.${s.edib}`)}</span>
+                  <span className="sp-meta">{tx(s.hab, locale)} · {tx(s.season, locale)}</span>
+                </div>
+              </div>
             </div>
           );
         })}

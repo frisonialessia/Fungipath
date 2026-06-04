@@ -24,10 +24,19 @@ export interface Region { id: string; label: Loc; center: [number, number]; zoom
 
 export const REGIONS: Region[] = [
   { id: "medit", label: L("Mediterranean Europe", "Europa mediterránea"), center: [45.8, 9.1], zoom: 9 },
-  { id: "central", label: L("Central Europe", "Centroeuropa"), center: [48.2, 11.5], zoom: 8 },
-  { id: "nordic", label: L("Scandinavia", "Escandinavia"), center: [60.3, 15.5], zoom: 7 },
-  { id: "namerica", label: L("North America · Pacific NW", "Norteamérica · Pacífico NW"), center: [45.5, -122.6], zoom: 8 },
-  { id: "japan", label: L("Japan", "Japón"), center: [36.2, 138.2], zoom: 8 },
+  { id: "iberia", label: L("Iberian Peninsula", "Península Ibérica"), center: [41.0, -4.5], zoom: 6 },
+  { id: "alps", label: L("The Alps", "Los Alpes"), center: [46.5, 10.0], zoom: 7 },
+  { id: "central", label: L("Central Europe", "Centroeuropa"), center: [48.2, 11.5], zoom: 7 },
+  { id: "britain", label: L("British Isles", "Islas Británicas"), center: [54.0, -2.5], zoom: 6 },
+  { id: "carpathians", label: L("Carpathians", "Cárpatos"), center: [47.5, 24.5], zoom: 6 },
+  { id: "nordic", label: L("Scandinavia", "Escandinavia"), center: [61.0, 15.0], zoom: 5 },
+  { id: "balkans", label: L("Balkans", "Balcanes"), center: [43.5, 21.0], zoom: 6 },
+  { id: "namerica", label: L("North America · Pacific NW", "Norteamérica · Pacífico NW"), center: [45.5, -122.6], zoom: 7 },
+  { id: "appalachia", label: L("North America · Appalachians", "Norteamérica · Apalaches"), center: [38.5, -80.0], zoom: 6 },
+  { id: "california", label: L("California", "California"), center: [38.6, -122.6], zoom: 7 },
+  { id: "japan", label: L("Japan", "Japón"), center: [36.2, 138.2], zoom: 6 },
+  { id: "korea", label: L("Korea", "Corea"), center: [36.5, 127.9], zoom: 7 },
+  { id: "patagonia", label: L("Patagonia", "Patagonia"), center: [-41.3, -71.5], zoom: 6 },
 ];
 
 // Micorrizas: clave de icono + clave de árbol (texto desde messages) + hongos asociados.
