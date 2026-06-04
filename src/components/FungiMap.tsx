@@ -12,7 +12,7 @@ const TILES = {
   // OpenStreetMap estándar (el de antes).
   osm: { url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", sub: "abc", attr: "© OpenStreetMap", max: 18 },
 };
-const TILE = TILES.voyager; // ← estilo activo
+const TILE = TILES.positron; // ← estilo activo (limpio / minimal)
 
 export interface MapHotspot {
   id: string; name: string; species: string; prob: number;
