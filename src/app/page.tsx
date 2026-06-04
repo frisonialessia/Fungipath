@@ -4,7 +4,7 @@ import Logo from "@/components/Logo";
 import LangToggle from "@/components/LangToggle";
 import LandingTools from "@/components/landing/LandingTools";
 import Reveal from "@/components/landing/Reveal";
-import Specimen from "@/components/landing/Specimen";
+import Specimen, { SpecimenCell } from "@/components/landing/Specimen";
 import { useT } from "@/lib/i18n";
 import { SPECIES } from "@/lib/species";
 import { SPECIMENS, HERO_SPECIMENS } from "@/data/specimens";
@@ -106,8 +106,8 @@ export default function Home() {
           <p>{t("landing.specSub")}</p>
         </div>
         <Reveal>
-          <div className="spec-masonry">
-            {SPECIMENS.map((s, i) => <div className="spec-item" key={i}><Specimen src={s} /></div>)}
+          <div className="spec-grid">
+            {SPECIMENS.map((s) => <SpecimenCell key={s} src={s} />)}
           </div>
         </Reveal>
       </div></section>
