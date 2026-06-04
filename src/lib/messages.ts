@@ -6,7 +6,7 @@ export const MESSAGES = {
     nav: {
       explore: "Exploration", data: "Data",
       overview: "Hotspot map", predict: "Predictions", species: "Species", identify: "Identify", routes: "Best routes",
-      climate: "Weather", soil: "Soil & terrain", diary: "Harvest journal", safety: "Trail safety", privacy: "Privacy",
+      climate: "Weather", soil: "Soil & terrain", calendar: "Season & rules", diary: "Harvest journal", safety: "Trail safety", privacy: "Privacy",
       user: "Explorer", plan: "Demo plan", back: "← Back to landing", account: "Account", settings: "Settings",
     },
     aspect: { N: "north", S: "south", E: "east", O: "west" },
@@ -109,6 +109,15 @@ export const MESSAGES = {
       cmpTitle: "Look-alike comparator", cmpSub: "Learn to tell the edible from its dangerous twin.",
       cmpKey: "Safety key", cmpKeyBody: "At the slightest doubt, do NOT eat it. The difference can be subtle and the mistake fatal. Always confirm with an expert.",
       cmpBack: "Back to sheet",
+    },
+    calendar: {
+      title: "Season & rules", sub: "When each species fruits and what's legal to forage, by region.",
+      monthsCsv: "J,F,M,A,M,J,J,A,S,O,N,D",
+      inSeasonNow: "In peak season now", none: "Nothing in peak season this month.",
+      calTitle: "Fruiting calendar", calAside: "Active months per species",
+      regTitle: "Foraging rules", regAside: "Orientative — always verify locally",
+      license: "Permit", licenseYes: "Required", licenseNo: "Free access", quota: "Daily quota", protected: "Watch / protected",
+      disclaimer: "Regulations vary and change. This is educational guidance only — always check the current local law and protected-species lists before foraging or selling.",
     },
     routes: {
       title: "Map of Lombardy", sub: "Browse zones, orient with the compass and plot your optimal route.",
@@ -220,7 +229,7 @@ export const MESSAGES = {
     nav: {
       explore: "Exploración", data: "Datos",
       overview: "Mapa de hotspots", predict: "Predicciones", species: "Especies", identify: "Identificar", routes: "Rutas óptimas",
-      climate: "Clima", soil: "Suelo & terreno", diary: "Diario de cosecha", safety: "Seguridad en ruta", privacy: "Privacidad",
+      climate: "Clima", soil: "Suelo & terreno", calendar: "Temporada y normas", diary: "Diario de cosecha", safety: "Seguridad en ruta", privacy: "Privacidad",
       user: "Explorador", plan: "Plan Demo", back: "← Volver a la landing", account: "Cuenta", settings: "Ajustes",
     },
     aspect: { N: "norte", S: "sur", E: "este", O: "oeste" },
@@ -323,6 +332,15 @@ export const MESSAGES = {
       cmpTitle: "Comparador de sosias", cmpSub: "Aprende a distinguir el comestible de su gemelo peligroso.",
       cmpKey: "Clave de seguridad", cmpKeyBody: "Ante la más mínima duda, NO consumas. La diferencia puede ser sutil y el error, mortal. Confirma siempre con un experto.",
       cmpBack: "Volver a la ficha",
+    },
+    calendar: {
+      title: "Temporada y normas", sub: "Cuándo fructifica cada especie y qué es legal recolectar, por región.",
+      monthsCsv: "E,F,M,A,M,J,J,A,S,O,N,D",
+      inSeasonNow: "En plena temporada", none: "Nada en plena temporada este mes.",
+      calTitle: "Calendario de fructificación", calAside: "Meses activos por especie",
+      regTitle: "Normas de recolección", regAside: "Orientativo — verifica siempre localmente",
+      license: "Permiso", licenseYes: "Requerido", licenseNo: "Acceso libre", quota: "Cupo diario", protected: "Vigila / protegidas",
+      disclaimer: "La normativa varía y cambia. Esto es solo orientación educativa — comprueba siempre la ley local vigente y las especies protegidas antes de recolectar o vender.",
     },
     routes: {
       title: "Mapa de Lombardía", sub: "Navega por zonas, orienta con la brújula y traza tu ruta óptima.",

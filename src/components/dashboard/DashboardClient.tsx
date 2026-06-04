@@ -18,16 +18,17 @@ import Identify from "./sections/Identify";
 import Routes from "./sections/Routes";
 import Climate from "./sections/Climate";
 import Soil from "./sections/Soil";
+import Calendar from "./sections/Calendar";
 import Diary from "./sections/Diary";
 import Safety from "./sections/Safety";
 import Privacy from "./sections/Privacy";
 import Settings from "./sections/Settings";
 
-type SectionId = "overview" | "predict" | "species" | "identify" | "routes" | "climate" | "soil" | "diary" | "safety" | "privacy" | "settings";
+type SectionId = "overview" | "predict" | "species" | "identify" | "routes" | "climate" | "soil" | "calendar" | "diary" | "safety" | "privacy" | "settings";
 
 const NAV: { group: "explore" | "data" | "account"; items: SectionId[] }[] = [
   { group: "explore", items: ["overview", "predict", "species", "identify", "routes"] },
-  { group: "data", items: ["climate", "soil", "diary", "safety", "privacy"] },
+  { group: "data", items: ["climate", "soil", "calendar", "diary", "safety", "privacy"] },
   { group: "account", items: ["settings"] },
 ];
 
@@ -214,6 +215,7 @@ export default function DashboardClient() {
           {active === "routes" && <Routes />}
           {active === "climate" && <Climate hotspots={hotspots} />}
           {active === "soil" && <Soil hotspots={hotspots} />}
+          {active === "calendar" && <Calendar />}
           {active === "diary" && <Diary diary={diary} hotspots={hotspots} onAddLog={(e) => setDiary((d) => [e, ...d])} />}
           {active === "safety" && <Safety />}
           {active === "privacy" && <Privacy hotspots={hotspots} onSetPriv={(i, v: Priv) => setHotspots((hs) => hs.map((h, idx) => idx === i ? { ...h, priv: v } : h))} />}

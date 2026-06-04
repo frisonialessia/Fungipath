@@ -9,6 +9,7 @@ export const NAV_ICONS: Record<string, ReactNode> = {
   routes: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><path d="M3 14 L3 5 L7 3 L11 5 L15 3 L15 12 L11 14 L7 12 Z" /></svg>,
   climate: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><path d="M3 13 Q6 7 9 10 T15 6" /><circle cx="9" cy="4" r="2" /></svg>,
   soil: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><path d="M3 6 L15 6 M3 10 L15 10 M3 14 L15 14" /><path d="M6 6 L6 14 M11 6 L11 14" opacity=".5" /></svg>,
+  calendar: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round"><rect x="3" y="4" width="12" height="11" rx="2" /><path d="M3 7.5 H15 M6 2.5 V5 M12 2.5 V5" /><circle cx="7" cy="11" r="1" fill="currentColor" stroke="none" /><circle cx="11" cy="11" r="1" fill="currentColor" stroke="none" /></svg>,
   diary: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><rect x="3" y="3" width="12" height="12" rx="2" /><path d="M3 7 L15 7 M7 7 L7 15" /></svg>,
   safety: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><path d="M9 2 L15 5 V9 C15 13 12 15 9 16 C6 15 3 13 3 9 V5 Z" /><path d="M9 7 V11 M9 13 h.01" strokeLinecap="round" /></svg>,
   privacy: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><rect x="4" y="8" width="10" height="7" rx="1.5" /><path d="M6 8 V6 A3 3 0 0 1 12 6 V8" /></svg>,
