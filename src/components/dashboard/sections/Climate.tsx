@@ -1,21 +1,50 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { calcProbability } from "@/lib/model";
 import type { Hotspot } from "@/data/hotspots";
 import { weatherIcon } from "@/components/icons";
 import { useI18n } from "@/lib/i18n";
 
-const IC = ["cloud", "rain", "rain", "cloud-sun", "sun", "cloud-sun", "rain"];
-const TMP = [13, 12, 14, 15, 17, 16, 14];
-const RAIN = [2, 12, 18, 4, 0, 6, 15];
-const OPT = [0, 0, 1, 1, 0, 0, 0];
+interface Day { date: string; rain: number; temp: number; }
 
-// MOCK (PoC): previsión de 7 días de ejemplo. El clima real (Open-Meteo) llega
-// a través de /api/predict; aquí mostramos una semana de demostración + simulador.
+function iconFor(rain: number, temp: number) {
+  if (rain >= 8) return "rain";
+  if (rain >= 2) return "cloud";
+  if (temp >= 19) return "sun";
+  return "cloud-sun";
+}
+// día óptimo para fructificación: lluvia útil + temperatura templada
+const isOptimal = (d: Day) => d.rain >= 5 && d.rain <= 35 && d.temp >= 9 && d.temp <= 18;
+
+// Previsión de ejemplo (fallback si Open-Meteo no responde).
+const MOCK: Day[] = [
+  { date: "", rain: 2, temp: 13 }, { date: "", rain: 12, temp: 12 }, { date: "", rain: 18, temp: 14 },
+  { date: "", rain: 4, temp: 15 }, { date: "", rain: 0, temp: 17 }, { date: "", rain: 6, temp: 16 }, { date: "", rain: 15, temp: 14 },
+];
+
 export default function Climate({ hotspots }: { hotspots: Hotspot[] }) {
-  const { t } = useI18n();
-  const DAYS = t("climate.daysCsv").split(",");
-  const base = Math.round(hotspots.reduce((s, h) => s + h.prob, 0) / hotspots.length);
+  const { t, locale } = useI18n();
+  const spot = hotspots[0];
+  const [days, setDays] = useState<Day[]>(MOCK);
+  const [live, setLive] = useState(false);
+
+  // Clima REAL a 7 días (Open-Meteo) para el primer hotspot.
+  useEffect(() => {
+    if (!spot) return;
+    let cancelled = false;
+    fetch(`/api/forecast?lat=${spot.lat}&lng=${spot.lng}`)
+      .then((r) => r.json())
+      .then((d) => { if (!cancelled && Array.isArray(d.daily) && d.daily.length) { setDays(d.daily); setLive(true); } })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [spot?.lat, spot?.lng]);
+
+  const dayName = (d: Day, i: number) => {
+    if (d.date) { try { return new Date(d.date).toLocaleDateString(locale === "en" ? "en-US" : "es-ES", { weekday: "short" }); } catch { /* noop */ } }
+    return t("climate.daysCsv").split(",")[i] || "";
+  };
+
+  const base = Math.round(hotspots.reduce((s, h) => s + h.prob, 0) / hotspots.length) || 60;
   const [rain, setRain] = useState(0);
   const [temp, setTemp] = useState(14);
   const sim = calcProbability({ rainMm: rain, soilTemp: temp, aspect: "N" });
@@ -23,13 +52,18 @@ export default function Climate({ hotspots }: { hotspots: Hotspot[] }) {
 
   return (
     <div>
-      <div className="topbar"><div><h1 className="serif">{t("climate.title")}</h1><p>{t("climate.sub")}</p></div></div>
+      <div className="topbar"><div>
+        <span className="demo-flag">{live ? t("overview.flagLive") : t("overview.flagDemo")}</span>
+        <h1 className="serif">{t("climate.title")}</h1><p>{t("climate.sub")}</p>
+      </div></div>
       <div className="card" style={{ marginBottom: 15 }}>
         <div className="climate-grid">
-          {DAYS.map((d, i) => (
-            <div className={`day-col${OPT[i] ? " opt" : ""}`} key={i}>
-              <div className="dn">{d}</div><div className="di" style={{ display: "grid", placeItems: "center", color: OPT[i] ? "var(--terracotta)" : "var(--umber)" }}>{weatherIcon(IC[i], { size: 26 })}</div><div className="dt">{TMP[i]}°</div><div className="dr">{RAIN[i]}mm</div>
-              {OPT[i] ? <div style={{ fontSize: 9, color: "var(--terracotta)", marginTop: 6, fontWeight: 700 }}>{t("climate.optimal")}</div> : null}
+          {days.map((d, i) => (
+            <div className={`day-col${isOptimal(d) ? " opt" : ""}`} key={i}>
+              <div className="dn">{dayName(d, i)}</div>
+              <div className="di" style={{ display: "grid", placeItems: "center", color: isOptimal(d) ? "var(--terracotta)" : "var(--umber)" }}>{weatherIcon(iconFor(d.rain, d.temp), { size: 26 })}</div>
+              <div className="dt">{d.temp}°</div><div className="dr">{d.rain}mm</div>
+              {isOptimal(d) ? <div style={{ fontSize: 9, color: "var(--terracotta)", marginTop: 6, fontWeight: 700 }}>{t("climate.optimal")}</div> : null}
             </div>
           ))}
         </div>

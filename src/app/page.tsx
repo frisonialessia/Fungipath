@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import Logo from "@/components/Logo";
 import LangToggle from "@/components/LangToggle";
 import LandingTools from "@/components/landing/LandingTools";
@@ -8,6 +9,13 @@ import Specimen, { SpecimenCell } from "@/components/landing/Specimen";
 import { useT } from "@/lib/i18n";
 import { SPECIES } from "@/lib/species";
 import { SPECIMENS, HERO_SPECIMENS } from "@/data/specimens";
+
+const HeroMap = dynamic(() => import("@/components/FungiMap"), { ssr: false });
+const HERO_PINS = [
+  { id: "1", name: "Hayedo del norte", species: "Boletus edulis", prob: 91, lat: 45.95, lng: 9.14 },
+  { id: "2", name: "Robledal del río", species: "Cantharellus cibarius", prob: 74, lat: 45.86, lng: 9.27 },
+  { id: "3", name: "Pinar alto", species: "Lactarius deliciosus", prob: 58, lat: 45.90, lng: 9.20 },
+];
 
 const marquee = SPECIES.slice(0, 8).concat(SPECIES.slice(0, 8));
 const SOURCES = ["Open-Meteo", "GBIF", "Sentinel-2", "OpenStreetMap"];
@@ -48,25 +56,7 @@ export default function Home() {
               <div className="mock-bar"><span className="md r" /><span className="md y" /><span className="md g" /><span className="mock-title">{t("landing.mockTitle")}</span></div>
               <div className="mock-body">
                 <div className="mock-map">
-                  <svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
-                    {/* relieve topográfico */}
-                    <g fill="none" stroke="#a8895c" strokeWidth="0.8" opacity="0.22">
-                      <ellipse cx="92" cy="64" rx="58" ry="40" /><ellipse cx="92" cy="64" rx="40" ry="27" /><ellipse cx="92" cy="64" rx="22" ry="15" />
-                      <ellipse cx="244" cy="138" rx="56" ry="38" /><ellipse cx="244" cy="138" rx="38" ry="25" /><ellipse cx="244" cy="138" rx="20" ry="13" />
-                    </g>
-                    {/* masas forestales sutiles */}
-                    <path d="M50,40 Q90,28 130,45 Q140,78 100,92 Q56,88 40,60 Z" fill="#52c871" opacity="0.12" />
-                    <path d="M200,112 Q250,100 286,122 Q280,156 234,164 Q198,142 200,112 Z" fill="#52c871" opacity="0.11" />
-                    {/* retícula */}
-                    <g stroke="#6d482b" strokeWidth="0.4" opacity="0.1"><line x1="40" y1="0" x2="40" y2="200" /><line x1="120" y1="0" x2="120" y2="200" /><line x1="200" y1="0" x2="200" y2="200" /><line x1="280" y1="0" x2="280" y2="200" /><line x1="0" y1="50" x2="320" y2="50" /><line x1="0" y1="120" x2="320" y2="120" /></g>
-                    {/* río + sendero */}
-                    <path d="M30,20 Q70,70 60,110 Q50,150 90,190" fill="none" stroke="#7ba8b0" strokeWidth="2.4" opacity="0.55" />
-                    <path d="M10,150 Q90,132 160,156 Q240,178 312,140" fill="none" stroke="#8b6b45" strokeWidth="1.2" strokeDasharray="2 5" opacity="0.5" />
-                    <text x="10" y="15" fontFamily="monospace" fontSize="7" fill="#9c8f7d" opacity="0.75">45°48&apos;N 9°12&apos;E</text>
-                  </svg>
-                  <div className="mpin" style={{ top: "42%", left: "28%" }}><div className="mpin-h" style={{ background: "#8b3f29" }}><span>91</span></div></div>
-                  <div className="mpin" style={{ top: "70%", left: "68%" }}><div className="mpin-h" style={{ background: "#a86543" }}><span>74</span></div></div>
-                  <div className="mpin" style={{ top: "54%", left: "48%" }}><div className="mpin-h" style={{ background: "#c08a5e" }}><span>58</span></div></div>
+                  <HeroMap hotspots={HERO_PINS} center={[45.9, 9.2]} zoom={11} />
                   <div className="mock-legend">● {t("landing.mockHotspot")}</div>
                 </div>
                 <div className="mock-explain">

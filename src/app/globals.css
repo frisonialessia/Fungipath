@@ -78,7 +78,7 @@ nav.land .wrap { display: flex; align-items: center; justify-content: space-betw
 
 .hero-visual { position: relative; height: 560px; display: grid; place-items: center; }
 .hero-visual::before { content: ''; position: absolute; width: 90%; height: 80%; border-radius: 50%; background: radial-gradient(circle, rgba(168,101,67,.16), transparent 70%); filter: blur(30px); z-index: 0; }
-.hero-mockup { position: relative; z-index: 1; width: 100%; max-width: 540px; animation: floaty 8s ease-in-out infinite; }
+.hero-mockup { position: relative; z-index: 1; width: 100%; max-width: 540px; }
 .mock-window { background: var(--card); border: 1px solid var(--sand); border-radius: 18px; overflow: hidden; box-shadow: 0 30px 70px rgba(46,35,27,.22); }
 .mock-bar { display: flex; align-items: center; gap: 6px; padding: 12px 16px; background: #efe6d8; border-bottom: 1px solid var(--sand); }
 .md { width: 10px; height: 10px; border-radius: 50%; } .md.r { background: #c87a5e } .md.y { background: #d9b06a } .md.g { background: #a3b487 }
@@ -88,7 +88,7 @@ nav.land .wrap { display: flex; align-items: center; justify-content: space-betw
 .mpin { position: absolute; transform: translate(-50%, -100%); }
 .mpin-h { width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: grid; place-items: center; border: 2px solid #faf5ec; box-shadow: 0 3px 8px rgba(46,35,27,.25); }
 .mpin-h span { transform: rotate(45deg); color: #fff; font-size: 10px; font-weight: 700; }
-.mock-legend { position: absolute; bottom: 10px; left: 10px; background: rgba(250,245,236,.92); border: 1px solid var(--sand); border-radius: 8px; padding: 5px 10px; font-size: 10.5px; font-weight: 600; color: var(--terracotta); }
+.mock-legend { position: absolute; bottom: 10px; left: 10px; z-index: 500; background: rgba(250,245,236,.92); border: 1px solid var(--sand); border-radius: 8px; padding: 5px 10px; font-size: 10.5px; font-weight: 600; color: var(--terracotta); pointer-events: none; }
 .mock-explain { background: var(--ink); color: var(--cream); border-radius: 12px; padding: 16px; }
 .me-top { display: flex; justify-content: space-between; align-items: flex-start; }
 .me-sp { font-family: 'Fraunces'; font-style: italic; font-size: 15px; }

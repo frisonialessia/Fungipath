@@ -16,7 +16,7 @@ export interface Hotspot {
   live?: boolean; rainMm?: number; soilTemp?: number; daysSinceRain?: number; windowDays?: number;
 }
 
-export interface DiaryEntry { spot: string; found: boolean; qty: number; }
+export interface DiaryEntry { spot: string; found: boolean; qty: number; date?: string; species?: string; notes?: string; weather?: string; }
 export const ASPECT_NAME: Record<Aspect, string> = { N: "norte", S: "sur", E: "este", O: "oeste" };
 
 const L = (en: string, es: string): Loc => ({ en, es });
@@ -42,6 +42,33 @@ const SEED: Seed[] = [
   { name: L("Old chestnut wood", "Castañar viejo"), species: "Boletus edulis", alt: 780, aspect: "N", habitat: L("Chestnut wood", "Castañar"), prob: 35, lat: 45.85, lng: 9.55, priv: "shared",
     why: L("Chestnut wood with favorable acidic soil, but the last rain was scarce. Low probability until new rainfall.", "castañar con suelo ácido favorable, pero la última lluvia fue escasa. Probabilidad baja hasta nuevas precipitaciones."),
     factors: [["rain", "9mm · T-13d"], ["soilTemp", "15 °C"], ["aspect", "N"], ["ndvi", "0.69"]] },
+  { name: L("Valtellina larch", "Alerce de Valtellina"), species: "Boletus pinophilus", alt: 1320, aspect: "N", habitat: L("Larch wood", "Alerzal"), prob: 63, lat: 46.17, lng: 9.87, priv: "private",
+    why: L("High alpine larch, cool and damp — pine bolete territory.", "Alerzal alpino, fresco y húmedo — territorio de boleto de pino."),
+    factors: [["rain", "30mm · T-7d"], ["soilTemp", "12 °C"], ["aspect", "N"], ["ndvi", "0.72"]] },
+  { name: L("Bergamo chestnut", "Castañar de Bérgamo"), species: "Boletus aereus", alt: 700, aspect: "E", habitat: L("Chestnut wood", "Castañar"), prob: 68, lat: 45.84, lng: 9.78, priv: "private",
+    why: L("Warm chestnut slopes, ideal for the bronze bolete.", "Laderas cálidas de castaño, ideales para el boleto negro."),
+    factors: [["rain", "26mm · T-8d"], ["soilTemp", "17 °C"], ["aspect", "E"], ["ndvi", "0.70"]] },
+  { name: L("Garda holm-oak", "Encinar del Garda"), species: "Amanita caesarea", alt: 320, aspect: "S", habitat: L("Holm-oak wood", "Encinar"), prob: 47, lat: 45.62, lng: 10.62, priv: "private",
+    why: L("Mediterranean lake microclimate favours Caesar's mushroom.", "Microclima lacustre mediterráneo que favorece la oronja."),
+    factors: [["rain", "16mm · T-9d"], ["soilTemp", "20 °C"], ["aspect", "S"], ["ndvi", "0.60"]] },
+  { name: L("Ticino riverbank", "Ribera del Ticino"), species: "Morchella esculenta", alt: 180, aspect: "E", habitat: L("Riverbank", "Ribera"), prob: 52, lat: 45.42, lng: 8.78, priv: "fuzzy",
+    why: L("Damp ash and poplar flats — classic spring morel ground.", "Llanos húmedos de fresno y chopo — terreno clásico de colmenilla."),
+    factors: [["rain", "24mm · T-5d"], ["soilTemp", "13 °C"], ["aspect", "E"], ["ndvi", "0.66"]] },
+  { name: L("Brianza oak", "Robledal de Brianza"), species: "Cantharellus cibarius", alt: 360, aspect: "O", habitat: L("Oak wood", "Robledal"), prob: 71, lat: 45.70, lng: 9.27, priv: "private",
+    why: L("Mossy oak hills with steady shade — chanterelle colonies.", "Colinas de roble musgosas con sombra constante — colonias de rebozuelo."),
+    factors: [["rain", "30mm · T-6d"], ["soilTemp", "16 °C"], ["aspect", "O"], ["ndvi", "0.74"]] },
+  { name: L("Adamello pine", "Pinar del Adamello"), species: "Lactarius deliciosus", alt: 1450, aspect: "N", habitat: L("Pine wood", "Pinar"), prob: 55, lat: 46.15, lng: 10.50, priv: "private",
+    why: L("High pine grassland, the saffron milk cap's home.", "Pasto de alta montaña bajo pinos, hogar del níscalo."),
+    factors: [["rain", "22mm · T-8d"], ["soilTemp", "10 °C"], ["aspect", "N"], ["ndvi", "0.63"]] },
+  { name: L("Oltrepò hills", "Colinas del Oltrepò"), species: "Boletus aereus", alt: 540, aspect: "S", habitat: L("Oak wood", "Robledal"), prob: 49, lat: 44.98, lng: 9.25, priv: "shared",
+    why: L("Apennine oak ridges, drier but warming up nicely.", "Cordales de roble apeninos, más secos pero calentando bien."),
+    factors: [["rain", "18mm · T-9d"], ["soilTemp", "18 °C"], ["aspect", "S"], ["ndvi", "0.61"]] },
+  { name: L("Orobie beech", "Hayedo de las Orobie"), species: "Craterellus cornucopioides", alt: 1100, aspect: "N", habitat: L("Beech wood", "Hayedo"), prob: 66, lat: 46.00, lng: 9.90, priv: "private",
+    why: L("Shaded beech north face holding moisture — horn of plenty.", "Cara norte de hayedo sombría que retiene humedad — trompeta de los muertos."),
+    factors: [["rain", "34mm · T-7d"], ["soilTemp", "13 °C"], ["aspect", "N"], ["ndvi", "0.76"]] },
+  { name: L("Pavia meadow", "Pradera de Pavía"), species: "Macrolepiota procera", alt: 90, aspect: "S", habitat: L("Meadow", "Pradera"), prob: 44, lat: 45.18, lng: 9.16, priv: "private",
+    why: L("Open lowland pastures where parasols pop after rain.", "Pastos abiertos de llanura donde brotan parasoles tras la lluvia."),
+    factors: [["rain", "20mm · T-6d"], ["soilTemp", "19 °C"], ["aspect", "S"], ["ndvi", "0.55"]] },
 ];
 
 // Construye los hotspots localizados al idioma activo.

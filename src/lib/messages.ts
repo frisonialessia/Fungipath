@@ -132,6 +132,8 @@ export const MESSAGES = {
       learning: "Model learning:", learningBody: "with {n} confirmed finds, FungiPath has recalibrated your beech-wood prediction +6% this season.",
       mTitle: "Log a trip", mSub: "What did you find? This helps the model learn your terrain.",
       fSpot: "Hotspot", fFound: "Did you find any?", fYes: "Yes, I found some", fNo: "Nothing there", fQty: "Quantity (kg)",
+      fDate: "Date", fSpecies: "Species found", fAny: "— any —", fNotes: "Notes", fNotesPh: "weather, soil, companions…",
+      fWeather: "Conditions", wSun: "Sunny", wCloud: "Cloudy", wRain: "Rainy",
       cancel: "Cancel", save: "Save", saved: "✓ Trip logged · the model learns",
     },
     safety: {
@@ -316,6 +318,8 @@ export const MESSAGES = {
       learning: "Aprendizaje del modelo:", learningBody: "con {n} hallazgos confirmados, FungiPath ha recalibrado la predicción de tus hayedos +6% esta temporada.",
       mTitle: "Registrar salida", mSub: "¿Qué encontraste? Esto ayuda al modelo a aprender de tu terreno.",
       fSpot: "Hotspot", fFound: "¿Encontraste?", fYes: "Sí, encontré", fNo: "No había nada", fQty: "Cantidad (kg)",
+      fDate: "Fecha", fSpecies: "Especie encontrada", fAny: "— cualquiera —", fNotes: "Notas", fNotesPh: "clima, suelo, acompañantes…",
+      fWeather: "Condiciones", wSun: "Soleado", wCloud: "Nublado", wRain: "Lluvioso",
       cancel: "Cancelar", save: "Guardar", saved: "✓ Salida registrada · el modelo aprende",
     },
     safety: {
