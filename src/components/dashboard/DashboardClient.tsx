@@ -185,17 +185,19 @@ export default function DashboardClient() {
         {navOpen && <div className="nav-scrim" onClick={() => setNavOpen(false)} />}
         <aside className={`sidebar${navOpen ? " open" : ""}`}>
           <div className="brand"><Logo /><b>FungiPath</b></div>
-          {NAV.map((g) => (
-            <div key={g.group}>
-              <div className="nav-label">{t(`nav.${g.group}`)}</div>
-              {g.items.map((id) => (
-                <button key={id} className={`nav-item${active === id ? " active" : ""}`} onClick={() => go(id)}>
-                  <span className="ic">{NAV_ICONS[id]}</span>{t(`nav.${id}`)}
-                </button>
-              ))}
-            </div>
-          ))}
-          <div style={{ marginTop: 16 }}><LangToggle variant="dark" /></div>
+          <div className="nav-scroll">
+            {NAV.map((g) => (
+              <div key={g.group}>
+                <div className="nav-label">{t(`nav.${g.group}`)}</div>
+                {g.items.map((id) => (
+                  <button key={id} className={`nav-item${active === id ? " active" : ""}`} onClick={() => go(id)}>
+                    <span className="ic">{NAV_ICONS[id]}</span>{t(`nav.${id}`)}
+                  </button>
+                ))}
+              </div>
+            ))}
+            <div style={{ marginTop: 16 }}><LangToggle variant="dark" /></div>
+          </div>
           <div className="sidebar-foot" style={{ cursor: "pointer" }} onClick={() => go("settings")} title={t("nav.settings")}>
             <div className="avatar">{t("nav.user").charAt(0)}</div>
             <div><strong style={{ fontSize: 13 }}>{t("nav.user")}</strong><small>{t("nav.plan")}</small></div>

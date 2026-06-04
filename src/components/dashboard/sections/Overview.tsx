@@ -14,8 +14,6 @@ import { IconPin, IconParcel } from "@/components/icons";
 import type { MapHotspot, MapParcel } from "@/components/FungiMap";
 
 const FungiMap = dynamic(() => import("@/components/FungiMap"), { ssr: false });
-const PILLS = ["all", "Boletus edulis", "Cantharellus", "Lactarius"];
-
 export default function Overview({
   hotspots, selectedIdx, setSelectedIdx, diary, onNewHotspot, onAskGuide, onMapCreate, predicting, live, source,
   parcels = [], mapMode = "pin", setMapMode, onParcelComplete, selectedParcelId, onSelectParcel,
@@ -31,7 +29,8 @@ export default function Overview({
   const [filter, setFilter] = useState("all");
   const [region, setRegion] = useState(REGIONS[0]);
 
-  const visible = useMemo(() => (filter === "all" ? hotspots : hotspots.filter((h) => h.species.includes(filter))), [filter, hotspots]);
+  const filterOptions = useMemo(() => ["all", ...Array.from(new Set(hotspots.map((h) => h.species.split(" ")[0])))], [hotspots]);
+  const visible = useMemo(() => (filter === "all" ? hotspots : hotspots.filter((h) => h.species.split(" ")[0] === filter)), [filter, hotspots]);
   const sel = hotspots[selectedIdx] ?? hotspots[0];
   const avg = Math.round(hotspots.reduce((s, h) => s + h.prob, 0) / hotspots.length);
   const top = [...hotspots].sort((a, b) => b.prob - a.prob)[0];
@@ -71,7 +70,7 @@ export default function Overview({
       </div>
 
       <div className="pills">
-        {PILLS.map((s) => (
+        {filterOptions.map((s) => (
           <button key={s} className={`pill${filter === s ? " on" : ""}`} onClick={() => { setFilter(s); toast(s === "all" ? t("toast.filterAll") : t("toast.filter", { s })); }}>
             {s === "all" ? t("overview.allSpecies") : s}
           </button>
@@ -133,9 +132,9 @@ export default function Overview({
           )}
         </div>
 
-        <div className="card">
+        <div className="card" style={{ display: "flex", flexDirection: "column" }}>
           <div className="panel-head"><h3 className="serif">{t("overview.yourHotspots")}</h3><span>{t("overview.sites", { n: visible.length })}</span></div>
-          <div>
+          <div style={{ flex: 1, overflowY: "auto", maxHeight: 560, marginRight: -6, paddingRight: 6 }}>
             {visible.map((h) => {
               const i = hotspots.indexOf(h);
               const c = SPECIES.find((s) => s.n.includes(h.species.split(" ")[0]))?.cap || "#a86543";

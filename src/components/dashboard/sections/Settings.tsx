@@ -37,7 +37,7 @@ export default function Settings({ hotspots }: { hotspots: Hotspot[] }) {
     <div>
       <div className="topbar"><div><h1 className="serif">{t("settings.title")}</h1><p>{t("settings.sub")}</p></div><button className="btn" onClick={save}>{t("settings.save")}</button></div>
 
-      <div className="grid-2" style={{ gridTemplateColumns: "1fr 1fr", alignItems: "start" }}>
+      <div className="settings-grid">
         {/* PERFIL */}
         <div className="card">
           <div className="panel-head"><h3 className="serif">{t("settings.profile")}</h3></div>
