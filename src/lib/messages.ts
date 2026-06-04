@@ -5,7 +5,7 @@ export const MESSAGES = {
   en: {
     nav: {
       explore: "Exploration", data: "Data",
-      overview: "Hotspot map", predict: "Predictions", species: "Species", identify: "Identify", routes: "Best routes",
+      overview: "Hotspot map", predict: "Predictions", species: "Species", identify: "Identify", routes: "Best routes", model: "Learning model",
       climate: "Weather", soil: "Soil & terrain", calendar: "Season & rules", diary: "Harvest journal", safety: "Trail safety", privacy: "Privacy",
       user: "Explorer", plan: "Demo plan", back: "← Back to landing", account: "Account", settings: "Settings", business: "Business", traceability: "Traceability",
     },
@@ -89,6 +89,15 @@ export const MESSAGES = {
       ndviReady: "✓ live",
     },
     predict: { title: "Predictions", sub: "Appearance probability per hotspot, next 7 days.", why: "Why:" },
+    model: {
+      title: "The model that learns", sub: "Your field validations recalibrate the prediction. The more you log, the better it predicts — and that data is yours.",
+      mVal: "Field validations", mPred: "Active predictions", mAcc: "Model accuracy", mData: "Data points",
+      curveTitle: "Learning curve", curveAside: "Accuracy vs. validations",
+      recalTitle: "Recalibration by hotspot", base: "Base", learned: "Learned", reasonH: "Why",
+      rFound: "{found}/{total} finds logged here", rNone: "no validations yet — log trips to teach it",
+      moat: "Your defensive moat", moatBody: "Every logged trip trains a model that predicts better — and those data are yours and your community's. Harder to copy with each user.",
+      demo: "Simulated learning (PoC) — recalibration runs locally from your harvest journal, no API, no cost.",
+    },
     identify: {
       title: "Identify a mushroom", sub: "Upload a photo and FungiPath suggests candidates — always shown with their toxic look-alikes. Never eat on a guess.",
       drop: "Drop a photo here, or click to upload", pick: "Choose photo", analyzing: "Analyzing the specimen…",
@@ -239,7 +248,7 @@ export const MESSAGES = {
   es: {
     nav: {
       explore: "Exploración", data: "Datos",
-      overview: "Mapa de hotspots", predict: "Predicciones", species: "Especies", identify: "Identificar", routes: "Rutas óptimas",
+      overview: "Mapa de hotspots", predict: "Predicciones", species: "Especies", identify: "Identificar", routes: "Rutas óptimas", model: "Modelo que aprende",
       climate: "Clima", soil: "Suelo & terreno", calendar: "Temporada y normas", diary: "Diario de cosecha", safety: "Seguridad en ruta", privacy: "Privacidad",
       user: "Explorador", plan: "Plan Demo", back: "← Volver a la landing", account: "Cuenta", settings: "Ajustes", business: "Negocio", traceability: "Trazabilidad",
     },
@@ -323,6 +332,15 @@ export const MESSAGES = {
       ndviReady: "✓ en vivo",
     },
     predict: { title: "Predicciones", sub: "Probabilidad de aparición por hotspot, próximos 7 días.", why: "Por qué:" },
+    model: {
+      title: "El modelo que aprende", sub: "Tus validaciones de campo recalibran la predicción. Cuanto más registras, mejor predice — y esos datos son tuyos.",
+      mVal: "Validaciones de campo", mPred: "Predicciones activas", mAcc: "Precisión del modelo", mData: "Puntos de datos",
+      curveTitle: "Curva de aprendizaje", curveAside: "Precisión vs. validaciones",
+      recalTitle: "Recalibración por hotspot", base: "Base", learned: "Aprendido", reasonH: "Por qué",
+      rFound: "{found}/{total} hallazgos registrados aquí", rNone: "sin validaciones aún — registra salidas para enseñarle",
+      moat: "Tu foso defensivo", moatBody: "Cada salida registrada entrena un modelo que predice mejor — y esos datos son tuyos y de tu comunidad. Más difícil de copiar con cada usuario.",
+      demo: "Aprendizaje simulado (PoC) — la recalibración corre localmente desde tu diario de cosecha, sin API ni coste.",
+    },
     identify: {
       title: "Identificar una seta", sub: "Sube una foto y FungiPath sugiere candidatas — siempre junto a sus sosias tóxicos. Nunca comas por intuición.",
       drop: "Arrastra una foto aquí, o haz clic para subir", pick: "Elegir foto", analyzing: "Analizando el espécimen…",

@@ -13,6 +13,7 @@ import ParcelModal from "./ParcelModal";
 import { centroid, type Parcel } from "@/data/parcels";
 import Overview from "./sections/Overview";
 import Predictions from "./sections/Predictions";
+import Model from "./sections/Model";
 import Species from "./sections/Species";
 import Identify from "./sections/Identify";
 import Routes from "./sections/Routes";
@@ -25,10 +26,10 @@ import Privacy from "./sections/Privacy";
 import Business from "./sections/Business";
 import Settings from "./sections/Settings";
 
-type SectionId = "overview" | "predict" | "species" | "identify" | "routes" | "climate" | "soil" | "calendar" | "diary" | "safety" | "privacy" | "traceability" | "settings";
+type SectionId = "overview" | "predict" | "model" | "species" | "identify" | "routes" | "climate" | "soil" | "calendar" | "diary" | "safety" | "privacy" | "traceability" | "settings";
 
 const NAV: { group: "explore" | "data" | "business" | "account"; items: SectionId[] }[] = [
-  { group: "explore", items: ["overview", "predict", "species", "identify", "routes"] },
+  { group: "explore", items: ["overview", "predict", "model", "species", "identify", "routes"] },
   { group: "data", items: ["climate", "soil", "calendar", "diary", "safety", "privacy"] },
   { group: "business", items: ["traceability"] },
   { group: "account", items: ["settings"] },
@@ -212,6 +213,7 @@ export default function DashboardClient() {
           {active === "overview" && <Overview hotspots={hotspots} selectedIdx={selectedIdx} setSelectedIdx={(i) => { setSelectedIdx(i); setSelectedParcelId(null); }} diary={diary} onNewHotspot={() => { setPendingCoords(null); setNewModal(true); }} onAskGuide={() => askGuide()} onMapCreate={openMapCreate} predicting={predicting} live={live} source={source}
             parcels={parcels} mapMode={mapMode} setMapMode={setMapMode} onParcelComplete={(pts) => setPendingParcel(pts)} selectedParcelId={selectedParcelId} onSelectParcel={setSelectedParcelId} />}
           {active === "predict" && <Predictions hotspots={hotspots} />}
+          {active === "model" && <Model hotspots={hotspots} diary={diary} />}
           {active === "species" && <Species onAskGuide={askGuide} />}
           {active === "identify" && <Identify onAskGuide={askGuide} />}
           {active === "routes" && <Routes />}

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 export const NAV_ICONS: Record<string, ReactNode> = {
   overview: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><path d="M2 5 L7 3 L11 5 L16 3 L16 13 L11 15 L7 13 L2 15 Z" /><path d="M7 3 L7 13 M11 5 L11 15" /></svg>,
   predict: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><circle cx="9" cy="9" r="7" /><path d="M9 5 L9 9 L12 11" /></svg>,
+  model: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round"><path d="M2 13 L6 8 L9 10 L16 3" /><path d="M12 3 H16 V7" /></svg>,
   species: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><path d="M9 2 Q13 6 13 10 A4 4 0 0 1 5 10 Q5 6 9 2 Z" /></svg>,
   identify: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round"><path d="M2 6 V4 A2 2 0 0 1 4 2 H6 M12 2 H14 A2 2 0 0 1 16 4 V6 M16 12 V14 A2 2 0 0 1 14 16 H12 M6 16 H4 A2 2 0 0 1 2 14 V12" /><circle cx="9" cy="9" r="2.6" /></svg>,
   routes: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><path d="M3 14 L3 5 L7 3 L11 5 L15 3 L15 12 L11 14 L7 12 Z" /></svg>,
