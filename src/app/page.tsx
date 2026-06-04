@@ -49,11 +49,20 @@ export default function Home() {
               <div className="mock-body">
                 <div className="mock-map">
                   <svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
-                    <polygon points="50,40 90,30 130,45 135,80 100,95 55,85 38,60" fill="#52c871" opacity="0.16" />
-                    <polygon points="200,110 250,100 285,120 280,155 235,165 198,140" fill="#52c871" opacity="0.15" />
-                    <ellipse cx="55" cy="135" rx="26" ry="16" fill="#0e9b3d" opacity="0.12" />
-                    <g stroke="#cbbf9c" strokeWidth="0.5" opacity="0.22"><line x1="40" y1="0" x2="40" y2="200" /><line x1="120" y1="0" x2="120" y2="200" /><line x1="200" y1="0" x2="200" y2="200" /><line x1="280" y1="0" x2="280" y2="200" /><line x1="0" y1="40" x2="320" y2="40" /><line x1="0" y1="120" x2="320" y2="120" /></g>
-                    <path d="M30,20 Q70,70 60,110 Q50,150 90,190" fill="none" stroke="#7ba8b0" strokeWidth="2.5" opacity="0.55" />
+                    {/* relieve topográfico */}
+                    <g fill="none" stroke="#a8895c" strokeWidth="0.8" opacity="0.22">
+                      <ellipse cx="92" cy="64" rx="58" ry="40" /><ellipse cx="92" cy="64" rx="40" ry="27" /><ellipse cx="92" cy="64" rx="22" ry="15" />
+                      <ellipse cx="244" cy="138" rx="56" ry="38" /><ellipse cx="244" cy="138" rx="38" ry="25" /><ellipse cx="244" cy="138" rx="20" ry="13" />
+                    </g>
+                    {/* masas forestales sutiles */}
+                    <path d="M50,40 Q90,28 130,45 Q140,78 100,92 Q56,88 40,60 Z" fill="#52c871" opacity="0.12" />
+                    <path d="M200,112 Q250,100 286,122 Q280,156 234,164 Q198,142 200,112 Z" fill="#52c871" opacity="0.11" />
+                    {/* retícula */}
+                    <g stroke="#6d482b" strokeWidth="0.4" opacity="0.1"><line x1="40" y1="0" x2="40" y2="200" /><line x1="120" y1="0" x2="120" y2="200" /><line x1="200" y1="0" x2="200" y2="200" /><line x1="280" y1="0" x2="280" y2="200" /><line x1="0" y1="50" x2="320" y2="50" /><line x1="0" y1="120" x2="320" y2="120" /></g>
+                    {/* río + sendero */}
+                    <path d="M30,20 Q70,70 60,110 Q50,150 90,190" fill="none" stroke="#7ba8b0" strokeWidth="2.4" opacity="0.55" />
+                    <path d="M10,150 Q90,132 160,156 Q240,178 312,140" fill="none" stroke="#8b6b45" strokeWidth="1.2" strokeDasharray="2 5" opacity="0.5" />
+                    <text x="10" y="15" fontFamily="monospace" fontSize="7" fill="#9c8f7d" opacity="0.75">45°48&apos;N 9°12&apos;E</text>
                   </svg>
                   <div className="mpin" style={{ top: "42%", left: "28%" }}><div className="mpin-h" style={{ background: "#8b3f29" }}><span>91</span></div></div>
                   <div className="mpin" style={{ top: "70%", left: "68%" }}><div className="mpin-h" style={{ background: "#a86543" }}><span>74</span></div></div>
@@ -144,11 +153,15 @@ export default function Home() {
         </div>
       </div></section>
 
-      <section className="final"><div className="wrap">
-        <h2>{t("landing.finalA")}<br /><em>{t("landing.finalEm")}</em> {t("landing.finalB")}</h2>
-        <p>{t("landing.finalSub")}</p>
-        <Link href="/dashboard" className="btn-p">{t("landing.finalCta")}</Link>
-      </div></section>
+      <section className="final">
+        <Specimen className="hero-spec" src={SPECIMENS[5]} style={{ bottom: -10, left: "6%", width: 130, opacity: 0.9, animationDelay: ".3s" }} />
+        <Specimen className="hero-spec" src={SPECIMENS[9]} style={{ top: 10, right: "7%", width: 110, opacity: 0.9, animationDelay: ".7s" }} />
+        <div className="wrap">
+          <h2>{t("landing.finalA")}<br /><em>{t("landing.finalEm")}</em> {t("landing.finalB")}</h2>
+          <p>{t("landing.finalSub")}</p>
+          <Link href="/dashboard" className="btn-p">{t("landing.finalCta")}</Link>
+        </div>
+      </section>
 
       <footer><div className="wrap">
         <div className="brand"><Logo /><b>FungiPath</b></div>

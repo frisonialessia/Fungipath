@@ -9,6 +9,8 @@ import { ToastProvider } from "./shared";
 import { NAV_ICONS } from "./icons";
 import ForestAgent from "./ForestAgent";
 import NewHotspotModal from "./NewHotspotModal";
+import ParcelModal from "./ParcelModal";
+import { centroid, type Parcel } from "@/data/parcels";
 import Overview from "./sections/Overview";
 import Predictions from "./sections/Predictions";
 import Species from "./sections/Species";
@@ -68,6 +70,10 @@ export default function DashboardClient() {
   const [live, setLive] = useState(false);
   const [source, setSource] = useState<"db" | "mock">("mock");
   const [navOpen, setNavOpen] = useState(false); // drawer móvil
+  const [parcels, setParcels] = useState<Parcel[]>([]);
+  const [mapMode, setMapMode] = useState<"pin" | "parcel">("pin");
+  const [pendingParcel, setPendingParcel] = useState<[number, number][] | null>(null);
+  const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
 
   // Motor de datos + predicción. Al cargar y al cambiar idioma:
   // 1) intenta leer hotspots de Supabase; si no hay, cae al seed mock localizado.
@@ -136,6 +142,29 @@ export default function DashboardClient() {
     })();
   }
 
+  // Crear parcela dibujada: centroide → predicción real (Open-Meteo).
+  function handleCreateParcel(name: string, species: string, notes: string) {
+    if (!pendingParcel || pendingParcel.length < 3) { setPendingParcel(null); return; }
+    const [lat, lng] = centroid(pendingParcel);
+    const id = "p" + Date.now();
+    const parcel: Parcel = { id, name, species, notes, points: pendingParcel, lat, lng, aspect: "N", prob: 0, why: t("modal.calcReal"), live: false };
+    setParcels((ps) => [...ps, parcel]);
+    setSelectedParcelId(id);
+    setPendingParcel(null);
+    setMapMode("pin");
+    (async () => {
+      try {
+        const r = await fetch("/api/predict/batch", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lang: locale, points: [{ lat, lng, aspect: "N", species }] }),
+        });
+        const data = await r.json();
+        const res = data?.results?.[0];
+        if (res) setParcels((ps) => ps.map((x) => x.id === id ? { ...x, prob: res.probability, why: res.explanation, live: true, rainMm: res.factors.rainMm, soilTemp: res.factors.soilTemp, daysSinceRain: res.factors.daysSinceRain, windowDays: res.windowDays } : x));
+      } catch { /* sin red */ }
+    })();
+  }
+
   function go(id: SectionId) { setActive(id); setNavOpen(false); window.scrollTo(0, 0); }
 
   return (
@@ -172,7 +201,8 @@ export default function DashboardClient() {
         </aside>
 
         <main className="main">
-          {active === "overview" && <Overview hotspots={hotspots} selectedIdx={selectedIdx} setSelectedIdx={setSelectedIdx} diary={diary} onNewHotspot={() => { setPendingCoords(null); setNewModal(true); }} onAskGuide={() => askGuide()} onMapCreate={openMapCreate} predicting={predicting} live={live} source={source} />}
+          {active === "overview" && <Overview hotspots={hotspots} selectedIdx={selectedIdx} setSelectedIdx={(i) => { setSelectedIdx(i); setSelectedParcelId(null); }} diary={diary} onNewHotspot={() => { setPendingCoords(null); setNewModal(true); }} onAskGuide={() => askGuide()} onMapCreate={openMapCreate} predicting={predicting} live={live} source={source}
+            parcels={parcels} mapMode={mapMode} setMapMode={setMapMode} onParcelComplete={(pts) => setPendingParcel(pts)} selectedParcelId={selectedParcelId} onSelectParcel={setSelectedParcelId} />}
           {active === "predict" && <Predictions hotspots={hotspots} />}
           {active === "species" && <Species onAskGuide={askGuide} />}
           {active === "routes" && <Routes hotspots={hotspots} />}
@@ -188,6 +218,9 @@ export default function DashboardClient() {
 
       {newModal && (
         <NewHotspotModal coords={pendingCoords ?? undefined} onClose={() => { setNewModal(false); setPendingCoords(null); }} onCreate={handleCreate} />
+      )}
+      {pendingParcel && (
+        <ParcelModal points={pendingParcel} onClose={() => setPendingParcel(null)} onCreate={handleCreateParcel} />
       )}
     </ToastProvider>
   );

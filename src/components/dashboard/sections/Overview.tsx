@@ -2,6 +2,7 @@
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import type { Hotspot, DiaryEntry } from "@/data/hotspots";
+import { type Parcel, areaHa } from "@/data/parcels";
 import { REGIONS } from "@/data/zones";
 import { SPECIES } from "@/lib/species";
 import { mushIcon } from "@/lib/illustrations";
@@ -9,18 +10,21 @@ import { useI18n, tx } from "@/lib/i18n";
 import { Illu, useToast } from "../shared";
 import { INSIGHT_ICON } from "../icons";
 import GbifBadge from "../GbifBadge";
-import { IconPin } from "@/components/icons";
-import type { MapHotspot } from "@/components/FungiMap";
+import { IconPin, IconParcel } from "@/components/icons";
+import type { MapHotspot, MapParcel } from "@/components/FungiMap";
 
 const FungiMap = dynamic(() => import("@/components/FungiMap"), { ssr: false });
 const PILLS = ["all", "Boletus edulis", "Cantharellus", "Lactarius"];
 
 export default function Overview({
   hotspots, selectedIdx, setSelectedIdx, diary, onNewHotspot, onAskGuide, onMapCreate, predicting, live, source,
+  parcels = [], mapMode = "pin", setMapMode, onParcelComplete, selectedParcelId, onSelectParcel,
 }: {
   hotspots: Hotspot[]; selectedIdx: number; setSelectedIdx: (i: number) => void; diary: DiaryEntry[];
   onNewHotspot: () => void; onAskGuide: () => void; onMapCreate?: (lat: number, lng: number) => void;
   predicting?: boolean; live?: boolean; source?: "db" | "mock";
+  parcels?: Parcel[]; mapMode?: "pin" | "parcel"; setMapMode?: (m: "pin" | "parcel") => void;
+  onParcelComplete?: (pts: [number, number][]) => void; selectedParcelId?: string | null; onSelectParcel?: (id: string) => void;
 }) {
   const { t, locale } = useI18n();
   const toast = useToast();
@@ -42,6 +46,8 @@ export default function Overview({
   const soonest = windows.length ? Math.min(...windows) : 3;
 
   const mapPoints: MapHotspot[] = visible.map((h) => ({ id: String(hotspots.indexOf(h)), name: h.name, species: h.species, prob: h.prob, lat: h.lat, lng: h.lng, alt: h.alt }));
+  const mapParcels: MapParcel[] = parcels.map((p) => ({ id: p.id, name: p.name, prob: p.prob, points: p.points }));
+  const selParcel = parcels.find((p) => p.id === selectedParcelId) || null;
 
   const base = [42, 40, 38, 44, 52, 49, 55, 61, 58, 66, 72, 68, 82, 91];
   const W = 260, H = 60, MAX = 100;
@@ -94,11 +100,27 @@ export default function Overview({
             </select>
           </div>
           <div className="map">
-            <div className="map-hint"><IconPin size={13} />{t("overview.mapHint")}</div>
+            <div className="map-toolbar">
+              <button className={mapMode === "pin" ? "on" : ""} onClick={() => setMapMode?.("pin")}><IconPin size={13} />{t("overview.modePin")}</button>
+              <button className={mapMode === "parcel" ? "on" : ""} onClick={() => setMapMode?.("parcel")}><IconParcel size={13} />{t("overview.modeParcel")}</button>
+            </div>
+            <div className="map-hint">{mapMode === "parcel" ? t("overview.drawHint") : t("overview.mapHint")}</div>
             <div className="map-legend"><span className="lg-dot" />{t("overview.legend")}</div>
-            <FungiMap hotspots={mapPoints} center={region.center} zoom={region.zoom} onSelect={(id) => setSelectedIdx(Number(id))} onMapClick={onMapCreate} />
+            <FungiMap hotspots={mapPoints} parcels={mapParcels} center={region.center} zoom={region.zoom}
+              onSelect={(id) => setSelectedIdx(Number(id))} onMapClick={onMapCreate}
+              drawMode={mapMode === "parcel"} onParcelComplete={onParcelComplete} onSelectParcel={onSelectParcel} />
           </div>
-          {sel && (
+          {selParcel ? (
+            <div className="explain">
+              <div className="top">
+                <div><div className="sp">{selParcel.species}</div><div className="hb">{t("overview.selParcel")} · {selParcel.name} · {areaHa(selParcel.points)} ha</div></div>
+                <div className="big">{selParcel.prob || "…"}{selParcel.prob ? "%" : ""}</div>
+              </div>
+              <div className="why"><b>{t("overview.why")}</b> {selParcel.why}</div>
+              {selParcel.notes && <div className="factors"><div className="factor" style={{ flex: 1 }}><div className="fl">{t("overview.parcelNotes")}</div><div className="fv">{selParcel.notes}</div></div></div>}
+              <GbifBadge species={selParcel.species} lat={selParcel.lat} lng={selParcel.lng} radius={25} />
+            </div>
+          ) : sel && (
             <div className="explain">
               <div className="top">
                 <div><div className="sp">{sel.species}</div><div className="hb">{sel.habitat} · {sel.alt} m · {t("factor.aspect").toLowerCase()} {t(`aspect.${sel.aspect}`)}</div></div>

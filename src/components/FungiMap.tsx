@@ -5,63 +5,108 @@ export interface MapHotspot {
   id: string; name: string; species: string; prob: number;
   lat: number; lng: number; alt?: number;
 }
+export interface MapParcel {
+  id: string; name: string; prob: number; points: [number, number][];
+}
 
 export default function FungiMap({
-  hotspots, center = [45.85, 9.15], zoom = 10, onSelect, onMapClick,
+  hotspots, parcels = [], center = [45.85, 9.15], zoom = 10,
+  onSelect, onMapClick, drawMode = false, onParcelComplete, onSelectParcel,
 }: {
   hotspots: MapHotspot[];
+  parcels?: MapParcel[];
   center?: [number, number];
   zoom?: number;
   onSelect?: (id: string) => void;
   onMapClick?: (lat: number, lng: number) => void;
+  drawMode?: boolean;
+  onParcelComplete?: (points: [number, number][]) => void;
+  onSelectParcel?: (id: string) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
-  const layerRef = useRef<any>(null);
-  // ref viva para el callback de clic (evita re-bind del listener en cada render)
-  const clickRef = useRef(onMapClick);
-  clickRef.current = onMapClick;
+  const layerRef = useRef<any>(null);       // marcadores (pines)
+  const parcelLayerRef = useRef<any>(null); // polígonos guardados
+  const tempLayerRef = useRef<any>(null);   // dibujo en curso
+  const LRef = useRef<any>(null);
+
+  // refs vivas para callbacks/estado (sin re-bind de listeners)
+  const drawRef = useRef(drawMode); drawRef.current = drawMode;
+  const onMapClickRef = useRef(onMapClick); onMapClickRef.current = onMapClick;
+  const onParcelCompleteRef = useRef(onParcelComplete); onParcelCompleteRef.current = onParcelComplete;
+  const drawPtsRef = useRef<[number, number][]>([]);
+
+  function redrawTemp() {
+    const L = LRef.current; if (!L || !tempLayerRef.current) return;
+    tempLayerRef.current.clearLayers();
+    const pts = drawPtsRef.current;
+    if (pts.length) {
+      L.polyline(pts, { color: "#8b3f29", weight: 2, dashArray: "4 5" }).addTo(tempLayerRef.current);
+      pts.forEach((p) => L.circleMarker(p, { radius: 4, color: "#8b3f29", fillColor: "#fff", fillOpacity: 1, weight: 2 }).addTo(tempLayerRef.current));
+    }
+  }
+  function resetTemp() { drawPtsRef.current = []; if (tempLayerRef.current) tempLayerRef.current.clearLayers(); }
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       const L = (await import("leaflet")).default;
+      LRef.current = L;
       if (cancelled || !ref.current) return;
 
       if (!mapRef.current) {
         mapRef.current = L.map(ref.current, { zoomControl: true, attributionControl: false }).setView(center, zoom);
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18 }).addTo(mapRef.current);
-        L.control.attribution({ prefix: false, position: "bottomright" })
-          .addAttribution("© OpenStreetMap").addTo(mapRef.current);
+        L.control.attribution({ prefix: false, position: "bottomright" }).addAttribution("© OpenStreetMap").addTo(mapRef.current);
         layerRef.current = L.layerGroup().addTo(mapRef.current);
-        // crear hotspot pinchando el mapa (coordenadas reales)
-        mapRef.current.on("click", (e: { latlng: { lat: number; lng: number } }) => {
-          clickRef.current?.(+e.latlng.lat.toFixed(5), +e.latlng.lng.toFixed(5));
+        parcelLayerRef.current = L.layerGroup().addTo(mapRef.current);
+        tempLayerRef.current = L.layerGroup().addTo(mapRef.current);
+
+        mapRef.current.on("click", (e: any) => {
+          const lat = +e.latlng.lat.toFixed(5), lng = +e.latlng.lng.toFixed(5);
+          if (drawRef.current) { drawPtsRef.current = [...drawPtsRef.current, [lat, lng]]; redrawTemp(); }
+          else onMapClickRef.current?.(lat, lng);
+        });
+        mapRef.current.on("dblclick", (e: any) => {
+          if (!drawRef.current) return;
+          e.originalEvent?.preventDefault?.();
+          if (drawPtsRef.current.length >= 3) { onParcelCompleteRef.current?.(drawPtsRef.current); resetTemp(); }
         });
       } else {
-        // recentra al cambiar de región
         mapRef.current.setView(center, zoom);
       }
 
-      // cursor de cruz cuando se puede crear pinchando
+      // cursor + doble-clic-zoom según modo
       const container = mapRef.current.getContainer();
-      container.classList.toggle("clickable", !!onMapClick);
+      container.classList.toggle("clickable", !!onMapClick || drawMode);
+      if (drawMode) mapRef.current.doubleClickZoom.disable(); else mapRef.current.doubleClickZoom.enable();
 
+      // pines
       layerRef.current.clearLayers();
       hotspots.forEach((h) => {
         const col = h.prob >= 80 ? "#8b3f29" : h.prob >= 55 ? "#a86543" : "#c08a5e";
-        const icon = L.divIcon({
-          className: "",
-          html: `<div class="lpin" style="background:${col}"><span>${h.prob}</span></div>`,
-          iconSize: [34, 34], iconAnchor: [17, 34],
-        });
+        const icon = L.divIcon({ className: "", html: `<div class="lpin" style="background:${col}"><span>${h.prob}</span></div>`, iconSize: [34, 34], iconAnchor: [17, 34] });
         const m = L.marker([h.lat, h.lng], { icon }).addTo(layerRef.current);
         m.bindTooltip(`<b>${h.name}</b> · ${h.prob}%<br>${h.species}${h.alt ? " · " + h.alt + "m" : ""}`, { direction: "top", offset: [0, -30] });
-        if (onSelect) m.on("click", (ev: { originalEvent?: Event }) => { ev.originalEvent && (ev as any).originalEvent.stopPropagation?.(); onSelect(h.id); });
+        if (onSelect) m.on("click", () => onSelect(h.id));
+      });
+
+      // parcelas (polígonos)
+      parcelLayerRef.current.clearLayers();
+      parcels.forEach((p) => {
+        const col = p.prob >= 80 ? "#8b3f29" : p.prob >= 55 ? "#a86543" : "#c08a5e";
+        const poly = L.polygon(p.points, { color: col, weight: 2, fillColor: col, fillOpacity: 0.25 }).addTo(parcelLayerRef.current);
+        if (onSelectParcel) poly.on("click", (ev: any) => { ev.originalEvent?.stopPropagation?.(); onSelectParcel(p.id); });
+        const c = poly.getBounds().getCenter();
+        const label = L.divIcon({ className: "", html: `<div class="parcel-label" style="border-color:${col}"><b>${p.prob}%</b> ${p.name}</div>`, iconSize: [0, 0] });
+        L.marker(c, { icon: label, interactive: false }).addTo(parcelLayerRef.current);
       });
     })();
     return () => { cancelled = true; };
-  }, [hotspots, center, zoom, onSelect, onMapClick]);
+  }, [hotspots, parcels, center, zoom, onSelect, onMapClick, drawMode, onSelectParcel]);
+
+  // al salir del modo dibujo, limpia el trazo en curso
+  useEffect(() => { if (!drawMode) resetTemp(); }, [drawMode]);
 
   return <div ref={ref} style={{ position: "absolute", inset: 0, borderRadius: 14 }} />;
 }

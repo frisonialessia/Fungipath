@@ -69,6 +69,9 @@ export function IconShare({ size, className, style, stroke = 1.6 }: P) {
 export function IconBasket({ size, className, style, stroke = 1.6 }: P) {
   return <svg {...base(size)} className={className} style={style} stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round"><path d="M4 9h16l-1.5 10.5a1.5 1.5 0 0 1-1.5 1.5H7a1.5 1.5 0 0 1-1.5-1.5L4 9Z" /><path d="M8.5 9 12 3l3.5 6M9 13v4M15 13v4" /></svg>;
 }
+export function IconParcel({ size, className, style, stroke = 1.6 }: P) {
+  return <svg {...base(size)} className={className} style={style} stroke="currentColor" strokeWidth={stroke} strokeLinejoin="round"><path d="M4 8 L9 4 L15 6 L20 5 L19 16 L13 20 L7 18 L4 19 Z" /><circle cx="9" cy="4" r="1.3" fill="currentColor" /><circle cx="20" cy="5" r="1.3" fill="currentColor" /><circle cx="13" cy="20" r="1.3" fill="currentColor" /><circle cx="4" cy="19" r="1.3" fill="currentColor" /></svg>;
+}
 export function IconLens({ size, className, style, stroke = 1.6 }: P) {
   return <svg {...base(size)} className={className} style={style} stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="6" /><path d="M15.5 15.5 20 20" /></svg>;
 }

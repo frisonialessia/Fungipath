@@ -33,11 +33,25 @@ export default function Routes({ hotspots }: { hotspots: Hotspot[] }) {
           <div className="lomb-wrap">
             <div id="lombMap">
               <svg viewBox="0 0 1120 760">
-                <defs><linearGradient id="lake" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#9fc0c9" /><stop offset="100%" stopColor="#7ba3ae" /></linearGradient></defs>
+                <defs>
+                  <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#9fc0c9" /><stop offset="100%" stopColor="#7ba3ae" /></linearGradient>
+                  <linearGradient id="lombTerrain" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0%" stopColor="#eef1e7" /><stop offset="55%" stopColor="#e9e1cf" /><stop offset="100%" stopColor="#e2d4bb" /></linearGradient>
+                  <pattern id="lombGrid" width="56" height="56" patternUnits="userSpaceOnUse"><path d="M56 0 H0 V56" fill="none" stroke="#6d482b" strokeWidth="0.6" opacity="0.06" /></pattern>
+                  <filter id="zoneShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="7" floodColor="#2e231b" floodOpacity="0.22" /></filter>
+                </defs>
+                {/* fondo cartográfico: terreno + retícula + curvas de nivel (relieve) */}
+                <rect x="0" y="0" width="1120" height="760" fill="url(#lombTerrain)" />
+                <rect x="0" y="0" width="1120" height="760" fill="url(#lombGrid)" />
+                <g fill="none" stroke="#a8895c" strokeWidth="1" opacity="0.16">
+                  <ellipse cx="440" cy="150" rx="190" ry="125" /><ellipse cx="440" cy="150" rx="128" ry="84" /><ellipse cx="440" cy="150" rx="68" ry="44" />
+                  <ellipse cx="770" cy="410" rx="210" ry="135" /><ellipse cx="770" cy="410" rx="138" ry="88" /><ellipse cx="770" cy="410" rx="72" ry="46" />
+                  <ellipse cx="520" cy="640" rx="150" ry="92" /><ellipse cx="520" cy="640" rx="92" ry="56" />
+                </g>
+                <text x="22" y="34" fontFamily="monospace" fontSize="15" fill="#9c8f7d" opacity="0.7">46°N · 9°E — Lombardia</text>
                 {ZONES.map((z) => {
                   const lit = !selSector || z.sector === selSector;
                   const col = z.prob >= 80 ? "#a86543" : z.prob >= 60 ? "#c08a5e" : z.prob >= 45 ? "#cfa988" : "#d8c4a8";
-                  return <path key={z.id} className={`zone${selZone === z.id ? " sel" : ""}`} d={z.d} fill={col} fillOpacity={lit ? 0.92 : 0.3} stroke="#6d482b" strokeWidth="1" onClick={() => setSelZone(z.id)} />;
+                  return <path key={z.id} className={`zone${selZone === z.id ? " sel" : ""}`} d={z.d} fill={col} fillOpacity={lit ? 0.9 : 0.28} stroke="#6d482b" strokeWidth={selZone === z.id ? 2.5 : 1} strokeOpacity={lit ? 0.6 : 0.3} filter={selZone === z.id ? "url(#zoneShadow)" : undefined} onClick={() => setSelZone(z.id)} />;
                 })}
                 <ellipse cx="475" cy="235" rx="22" ry="55" fill="url(#lake)" opacity=".85" transform="rotate(-18 475 235)" />
                 <ellipse cx="990" cy="400" rx="18" ry="42" fill="url(#lake)" opacity=".85" transform="rotate(12 990 400)" />
