@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "FungiPath · Inteligencia forestal predictiva",
-  description: "Sabe dónde y cuándo brotará el bosque. Predicción de hongos cruzando clima, satélite y tu terreno.",
+  title: "FungiPath · Predictive forest intelligence",
+  description: "Know where and when the forest will bloom. Mushroom prediction crossing weather, satellite and your terrain.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
+    <html lang="en">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -17,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
       </head>
-      <body>{children}</body>
+      <body><Providers>{children}</Providers></body>
     </html>
   );
 }

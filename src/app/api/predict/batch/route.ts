@@ -10,7 +10,8 @@ export const runtime = "edge";
 // Devuelve { results: [...] } en el mismo orden; null en los que fallen (offline / rate limit).
 export async function POST(req: NextRequest) {
   try {
-    const { points } = await req.json();
+    const { points, lang } = await req.json();
+    const locale = lang === "es" ? "es" : "en";
     if (!Array.isArray(points)) {
       return NextResponse.json({ error: "points[] requerido" }, { status: 400 });
     }
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest) {
           const weather = await getWeather(p.lat, p.lng);
           const input = { rainMm: weather.rainMm, soilTemp: weather.soilTemp, aspect, species: p.species };
           const probability = calcProbability(input);
-          const explanation = buildExplanation(input, probability);
+          const explanation = buildExplanation(input, probability, locale);
           // ventana de fructificación: pico aprox. a los 10-14 días tras la lluvia útil
           const windowDays = Math.max(0, 13 - weather.daysSinceRain);
           return {

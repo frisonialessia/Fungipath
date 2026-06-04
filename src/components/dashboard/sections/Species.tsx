@@ -2,23 +2,25 @@
 import { useState } from "react";
 import { SPECIES, SPECIES_TOTAL, FIELD_GUIDE, type Species as Sp } from "@/lib/species";
 import { spIllust } from "@/lib/illustrations";
+import { useI18n, tx } from "@/lib/i18n";
 import { Illu } from "../shared";
 import GbifBadge from "../GbifBadge";
 import { IconBasket } from "@/components/icons";
 
-const FILTERS: [string, string][] = [
-  ["all", "Todas"], ["choice", "Excelentes"], ["edible", "Comestibles"], ["toxic", "Tóxicas"], ["deadly", "Mortales"],
-];
+const FILTERS = ["all", "choice", "edible", "toxic", "deadly"] as const;
 
 export default function Species({ onAskGuide }: { onAskGuide: (name: string) => void }) {
-  const [filter, setFilter] = useState("all");
+  const { t, locale } = useI18n();
+  const [filter, setFilter] = useState<string>("all");
   const [open, setOpen] = useState<Sp | null>(null);
   const [compare, setCompare] = useState<[Sp, Sp] | null>(null);
 
   const list = filter === "all" ? SPECIES : SPECIES.filter((s) => s.edib === filter);
+  const filterLabel: Record<string, string> = { all: t("species.fAll"), choice: t("species.fChoice"), edible: t("species.fEdible"), toxic: t("species.fToxic"), deadly: t("species.fDeadly") };
 
   function openTwin(s: Sp) {
-    const twin = SPECIES.find((t) => s.twin && t.n.split(" ")[0] === s.twin.split(" ")[0] && t.n !== s.n);
+    const twinKey = s.twin.en.split(" ")[0];
+    const twin = SPECIES.find((x) => x.n.split(" ")[0] === twinKey && x.n !== s.n);
     if (!twin) return;
     const safe = s.edib === "choice" || s.edib === "edible" ? s : twin;
     const danger = safe === s ? twin : s;
@@ -27,9 +29,9 @@ export default function Species({ onAskGuide }: { onAskGuide: (name: string) => 
 
   return (
     <div>
-      <div className="topbar"><div><h1 className="serif">Especies</h1><p>{SPECIES.length} especies ilustradas de un catálogo de {SPECIES_TOTAL}+. Toca una para ver su ficha, comestibilidad y sosias.</p></div></div>
+      <div className="topbar"><div><h1 className="serif">{t("species.title")}</h1><p>{t("species.sub", { n: SPECIES.length, total: SPECIES_TOTAL })}</p></div></div>
       <div className="pills" style={{ marginBottom: 20 }}>
-        {FILTERS.map(([f, label]) => <button key={f} className={`pill${filter === f ? " on" : ""}`} onClick={() => setFilter(f)}>{label}</button>)}
+        {FILTERS.map((f) => <button key={f} className={`pill${filter === f ? " on" : ""}`} onClick={() => setFilter(f)}>{filterLabel[f]}</button>)}
       </div>
       <div className="sp-grid">
         {list.map((s) => {
@@ -38,40 +40,38 @@ export default function Species({ onAskGuide }: { onAskGuide: (name: string) => 
             <div className="sp-card" key={s.n} onClick={() => setOpen(s)}>
               <div className="sp-top">
                 <Illu className="sp-ill" html={spIllust(s, 46)} />
-                <div><h4>{s.n}</h4><div className="com">{s.com}</div></div>
+                <div><h4>{s.n}</h4><div className="com">{tx(s.com, locale)}</div></div>
                 {danger && <span style={{ marginLeft: "auto", width: 22, height: 22, borderRadius: "50%", background: "#8b3f29", color: "#fff", display: "grid", placeItems: "center", fontSize: 12, flexShrink: 0 }}>!</span>}
               </div>
-              <span className={`edib ${s.edib}`}>{s.el}</span>
-              <div className="sp-meta">{s.hab} · {s.season}</div>
+              <span className={`edib ${s.edib}`}>{t(`edib.${s.edib}`)}</span>
+              <div className="sp-meta">{tx(s.hab, locale)} · {tx(s.season, locale)}</div>
             </div>
           );
         })}
       </div>
 
-      {/* Modal ficha */}
       {open && !compare && (
         <div className="modal-bg show" onClick={(e) => { if (e.target === e.currentTarget) setOpen(null); }}>
           <SpeciesModal s={open} onClose={() => setOpen(null)} onCompare={() => openTwin(open)} onAsk={() => { onAskGuide(open.n); setOpen(null); }} />
         </div>
       )}
 
-      {/* Comparador de sosias */}
       {compare && (
         <div className="modal-bg show" onClick={(e) => { if (e.target === e.currentTarget) { setCompare(null); setOpen(null); } }}>
           <div className="modal">
-            <h3 className="serif">Comparador de sosias</h3>
-            <p className="sub">Aprende a distinguir el comestible de su gemelo peligroso.</p>
+            <h3 className="serif">{t("species.cmpTitle")}</h3>
+            <p className="sub">{t("species.cmpSub")}</p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, margin: "16px 0" }}>
               <div style={{ background: "rgba(109,138,75,.12)", borderRadius: 14, padding: 16, textAlign: "center", border: "1.5px solid rgba(109,138,75,.3)" }}>
-                <Illu html={spIllust(compare[0], 54)} /><div style={{ fontFamily: "Fraunces", fontStyle: "italic", fontSize: 15, marginTop: 8 }}>{compare[0].n}</div><span className={`edib ${compare[0].edib}`} style={{ marginTop: 8 }}>{compare[0].el}</span>
+                <Illu html={spIllust(compare[0], 54)} /><div style={{ fontFamily: "Fraunces", fontStyle: "italic", fontSize: 15, marginTop: 8 }}>{compare[0].n}</div><span className={`edib ${compare[0].edib}`} style={{ marginTop: 8 }}>{t(`edib.${compare[0].edib}`)}</span>
               </div>
               <div style={{ background: "rgba(139,63,41,.1)", borderRadius: 14, padding: 16, textAlign: "center", border: "1.5px solid rgba(139,63,41,.3)" }}>
-                <Illu html={spIllust(compare[1], 54)} /><div style={{ fontFamily: "Fraunces", fontStyle: "italic", fontSize: 15, marginTop: 8 }}>{compare[1].n}</div><span className={`edib ${compare[1].edib}`} style={{ marginTop: 8 }}>{compare[1].el}</span>
+                <Illu html={spIllust(compare[1], 54)} /><div style={{ fontFamily: "Fraunces", fontStyle: "italic", fontSize: 15, marginTop: 8 }}>{compare[1].n}</div><span className={`edib ${compare[1].edib}`} style={{ marginTop: 8 }}>{t(`edib.${compare[1].edib}`)}</span>
               </div>
             </div>
-            <div className="sp-meta" style={{ fontSize: 13 }}><b>{compare[0].com}:</b> {compare[0].note}<br /><br /><b>{compare[1].com}:</b> {compare[1].note}</div>
-            <div className="warn-box"><b>⚠️ Clave de seguridad</b>Ante la más mínima duda, NO consumas. La diferencia puede ser sutil y el error, mortal. Confirma siempre con un experto.</div>
-            <div className="modal-actions"><button className="btn-ghost2" onClick={() => { setCompare(null); setOpen(null); }}>Cerrar</button><button className="btn" onClick={() => setCompare(null)}>Volver a la ficha</button></div>
+            <div className="sp-meta" style={{ fontSize: 13 }}><b>{tx(compare[0].com, locale)}:</b> {tx(compare[0].note, locale)}<br /><br /><b>{tx(compare[1].com, locale)}:</b> {tx(compare[1].note, locale)}</div>
+            <div className="warn-box"><b>⚠️ {t("species.cmpKey")}</b>{t("species.cmpKeyBody")}</div>
+            <div className="modal-actions"><button className="btn-ghost2" onClick={() => { setCompare(null); setOpen(null); }}>{t("species.close")}</button><button className="btn" onClick={() => setCompare(null)}>{t("species.cmpBack")}</button></div>
           </div>
         </div>
       )}
@@ -80,36 +80,37 @@ export default function Species({ onAskGuide }: { onAskGuide: (name: string) => 
 }
 
 function SpeciesModal({ s, onClose, onCompare, onAsk }: { s: Sp; onClose: () => void; onCompare: () => void; onAsk: () => void }) {
+  const { t, locale } = useI18n();
   const danger = s.edib === "deadly" || s.edib === "toxic";
-  const hasTwin = SPECIES.some((t) => s.twin && t.n.split(" ")[0] === s.twin.split(" ")[0] && t.n !== s.n);
+  const twinKey = s.twin.en.split(" ")[0];
+  const hasTwin = SPECIES.some((x) => x.n.split(" ")[0] === twinKey && x.n !== s.n);
   const g = FIELD_GUIDE[s.n];
   return (
     <div className="modal">
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}>
         <Illu style={{ flexShrink: 0 }} html={spIllust(s, 56)} />
-        <div><h3 className="serif" style={{ fontStyle: "italic" }}>{s.n}</h3><p className="sub" style={{ margin: 0 }}>{s.com}</p></div>
+        <div><h3 className="serif" style={{ fontStyle: "italic" }}>{s.n}</h3><p className="sub" style={{ margin: 0 }}>{tx(s.com, locale)}</p></div>
       </div>
-      <span className={`edib ${s.edib}`}>{s.el}</span>
+      <span className={`edib ${s.edib}`}>{t(`edib.${s.edib}`)}</span>
       <div className="sp-meta" style={{ margin: "14px 0", fontSize: 14 }}>
-        <b>Hábitat:</b> {s.hab}<br /><b>Temporada:</b> {s.season}<br /><b>Identificación:</b> {s.note}<br /><b>Posible confusión:</b> {s.twin}<br /><b>Por región:</b> {s.region}
+        <b>{t("species.habitat")}</b> {tx(s.hab, locale)}<br /><b>{t("species.season")}</b> {tx(s.season, locale)}<br /><b>{t("species.id")}</b> {tx(s.note, locale)}<br /><b>{t("species.confusion")}</b> {tx(s.twin, locale)}<br /><b>{t("species.byRegion")}</b> {tx(s.region, locale)}
       </div>
-      <GbifBadge species={s.n} variant="line" />
       {g && (
         <div style={{ margin: "14px 0", padding: 14, background: "var(--cream-2)", borderRadius: 12 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px", color: "var(--terracotta)", marginBottom: 10, display: "inline-flex", alignItems: "center", gap: 7 }}><IconBasket size={14} /> Guía de campo</div>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px", color: "var(--terracotta)", marginBottom: 10, display: "inline-flex", alignItems: "center", gap: 7 }}><IconBasket size={14} /> {t("species.fieldGuide")}</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 12.5, lineHeight: 1.45 }}>
-            <div><b>Cómo cosechar:</b> {g.harvest}</div><div><b>¿Se puede secar?:</b> {g.dry}</div><div><b>Al tacto:</b> {g.touch}</div><div><b>Dónde está:</b> {g.where}</div><div><b>¿Hay más cerca?:</b> {g.clusters}</div><div><b>Mejores horas:</b> {g.hours}</div><div><b>Posición:</b> {g.aspect}</div>
+            <div><b>{t("species.gHarvest")}</b> {tx(g.harvest, locale)}</div><div><b>{t("species.gDry")}</b> {tx(g.dry, locale)}</div><div><b>{t("species.gTouch")}</b> {tx(g.touch, locale)}</div><div><b>{t("species.gWhere")}</b> {tx(g.where, locale)}</div><div><b>{t("species.gClusters")}</b> {tx(g.clusters, locale)}</div><div><b>{t("species.gHours")}</b> {tx(g.hours, locale)}</div><div><b>{t("species.gPos")}</b> {tx(g.aspect, locale)}</div>
           </div>
         </div>
       )}
       {danger
-        ? <div className="warn-box"><b>⚠️ {s.edib === "deadly" ? "ESPECIE MORTAL" : "ESPECIE TÓXICA"}</b>No consumir bajo ningún concepto. Mostrada con fines educativos y de identificación de sosias peligrosos.</div>
-        : <div className="warn-box"><b>Antes de consumir</b>Verifica SIEMPRE con un micólogo o experto local. FungiPath educa, no autoriza el consumo.</div>}
+        ? <div className="warn-box"><b>⚠️ {s.edib === "deadly" ? t("species.warnDeadly") : t("species.warnToxic")}</b>{t("species.warnDangerBody")}</div>
+        : <div className="warn-box"><b>{t("species.warnSafe")}</b>{t("species.warnSafeBody")}</div>}
       <div className="modal-actions">
-        {hasTwin && <button className="btn-ghost2" onClick={onCompare}>Comparar sosias</button>}
-        <button className="btn" onClick={onAsk}>Preguntar al guía</button>
+        {hasTwin && <button className="btn-ghost2" onClick={onCompare}>{t("species.compare")}</button>}
+        <button className="btn" onClick={onAsk}>{t("species.ask")}</button>
       </div>
-      <button className="back-link" style={{ color: "var(--stone)", marginTop: 8 }} onClick={onClose}>Cerrar</button>
+      <button className="back-link" style={{ color: "var(--stone)", marginTop: 8 }} onClick={onClose}>{t("species.close")}</button>
     </div>
   );
 }

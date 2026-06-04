@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
   const lng = parseFloat(sp.get("lng") || "");
   const aspect = (sp.get("aspect") || "N") as Aspect;
   const species = sp.get("species") || undefined;
+  const locale = sp.get("lang") === "es" ? "es" : "en";
 
   if (Number.isNaN(lat) || Number.isNaN(lng)) {
     return NextResponse.json({ error: "lat y lng requeridos" }, { status: 400 });
@@ -20,7 +21,7 @@ export async function GET(req: NextRequest) {
     const weather = await getWeather(lat, lng);
     const input = { rainMm: weather.rainMm, soilTemp: weather.soilTemp, aspect, species };
     const probability = calcProbability(input);
-    const explanation = buildExplanation(input, probability);
+    const explanation = buildExplanation(input, probability, locale);
 
     // ventana de fructificación: tras lluvia útil, pico aprox. a los 10-14 días
     const windowDays = Math.max(0, 13 - weather.daysSinceRain);

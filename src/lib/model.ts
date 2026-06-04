@@ -18,8 +18,16 @@ export function calcProbability({ rainMm, soilTemp, aspect }: PredictInput): num
   return Math.max(8, Math.min(97, Math.round(rainScore * tempScore * 95 * aspectBonus)));
 }
 
-// Genera la explicación en lenguaje llano (sin jerga técnica).
-export function buildExplanation(input: PredictInput, prob: number): string {
+// Genera la explicación en lenguaje llano (sin jerga técnica). Bilingüe.
+export function buildExplanation(input: PredictInput, prob: number, locale: "en" | "es" = "en"): string {
+  if (locale === "en") {
+    const slope = { N: "north", S: "south", E: "east", O: "west" }[input.aspect];
+    const cond =
+      prob >= 70 ? "Very favorable conditions." :
+      prob >= 45 ? "Moderate conditions, watch how they evolve." :
+      "Still far from optimal; it needs more rain or a temperature rise.";
+    return `With ${input.rainMm} mm of recent rain and the soil at ${input.soilTemp} °C on a ${slope}-facing slope, the model estimates a ${prob}% probability. ${cond}`;
+  }
   const ladera = { N: "norte", S: "sur", E: "este", O: "oeste" }[input.aspect];
   const cond =
     prob >= 70 ? "Condiciones muy favorables." :

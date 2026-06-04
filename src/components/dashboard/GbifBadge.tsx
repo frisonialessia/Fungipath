@@ -1,16 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 import { IconSpecimen } from "@/components/icons";
 
 interface Summary { total: number; lastYear: number | null; }
 
 // Muestra registros reales de GBIF para una especie (global o cerca de un punto).
-// variant "chip": píldora oscura para el panel del mapa. variant "line": línea para la ficha.
 export default function GbifBadge({
   species, lat, lng, radius, variant = "chip",
 }: {
   species: string; lat?: number; lng?: number; radius?: number; variant?: "chip" | "line";
 }) {
+  const { t, locale } = useI18n();
   const [data, setData] = useState<Summary | null>(null);
   const [state, setState] = useState<"loading" | "ok" | "err">("loading");
 
@@ -27,15 +28,17 @@ export default function GbifBadge({
   }, [species, lat, lng, radius]);
 
   const near = lat != null && lng != null;
-  const fmt = (n: number) => n.toLocaleString("es-ES");
+  const r = radius ?? 25;
+  const fmt = (n: number) => n.toLocaleString(locale === "en" ? "en-US" : "es-ES");
 
   let text: string;
-  if (state === "loading") text = "Consultando registros reales (GBIF)…";
-  else if (state === "err") text = "Registros GBIF no disponibles ahora";
-  else if (!data || data.total === 0) text = near ? `Sin avistamientos GBIF en ${radius ?? 25} km` : "Sin registros en GBIF";
-  else text = near
-    ? `${fmt(data.total)} avistamientos en ${radius ?? 25} km${data.lastYear ? ` · último ${data.lastYear}` : ""}`
-    : `${fmt(data.total)} observaciones mundiales${data.lastYear ? ` · último registro ${data.lastYear}` : ""}`;
+  if (state === "loading") text = t("gbif.loading");
+  else if (state === "err") text = t("gbif.err");
+  else if (!data || data.total === 0) text = near ? t("gbif.noneNear", { r }) : t("gbif.noneGlobal");
+  else {
+    const last = data.lastYear ? (near ? t("gbif.lastNear", { y: data.lastYear }) : t("gbif.lastGlobal", { y: data.lastYear })) : "";
+    text = (near ? t("gbif.near", { n: fmt(data.total), r }) : t("gbif.global", { n: fmt(data.total) })) + last;
+  }
 
   if (variant === "line") {
     return (

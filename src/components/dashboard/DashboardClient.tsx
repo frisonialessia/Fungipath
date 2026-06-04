@@ -2,7 +2,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Logo from "@/components/Logo";
-import { MOCK_HOTSPOTS, MOCK_DIARY, ASPECT_NAME, type Hotspot, type DiaryEntry, type Privacy as Priv } from "@/data/hotspots";
+import LangToggle from "@/components/LangToggle";
+import { localizedHotspots, localizedDiary, type Hotspot, type DiaryEntry, type Privacy as Priv } from "@/data/hotspots";
+import { useI18n } from "@/lib/i18n";
 import { ToastProvider } from "./shared";
 import { NAV_ICONS } from "./icons";
 import ForestAgent from "./ForestAgent";
@@ -19,6 +21,11 @@ import Privacy from "./sections/Privacy";
 
 type SectionId = "overview" | "predict" | "species" | "routes" | "climate" | "soil" | "diary" | "safety" | "privacy";
 
+const NAV: { group: "explore" | "data"; items: SectionId[] }[] = [
+  { group: "explore", items: ["overview", "predict", "species", "routes"] },
+  { group: "data", items: ["climate", "soil", "diary", "safety", "privacy"] },
+];
+
 interface PredResult {
   probability: number; explanation: string; windowDays: number; elevation: number;
   factors: { rainMm: number; soilTemp: number; daysSinceRain: number };
@@ -28,38 +35,23 @@ interface PredResult {
 function applyPrediction(h: Hotspot, res: PredResult): Hotspot {
   return {
     ...h,
-    prob: res.probability,
-    why: res.explanation,
-    live: true,
-    alt: res.elevation && res.elevation > 0 ? res.elevation : h.alt, // elevación real del terreno
-    rainMm: res.factors.rainMm,
-    soilTemp: res.factors.soilTemp,
-    daysSinceRain: res.factors.daysSinceRain,
-    windowDays: res.windowDays,
+    prob: res.probability, why: res.explanation, live: true,
+    alt: res.elevation && res.elevation > 0 ? res.elevation : h.alt,
+    rainMm: res.factors.rainMm, soilTemp: res.factors.soilTemp,
+    daysSinceRain: res.factors.daysSinceRain, windowDays: res.windowDays,
     factors: [
-      ["Lluvia", `${res.factors.rainMm}mm`],
-      ["Temp suelo", `${res.factors.soilTemp} °C`],
-      ["Orientación", ASPECT_NAME[h.aspect]],
-      ["Ventana", `~${res.windowDays}d`],
+      ["rain", `${res.factors.rainMm}mm`],
+      ["soilTemp", `${res.factors.soilTemp} °C`],
+      ["aspect", h.aspect],
+      ["window", `~${res.windowDays}d`],
     ],
   };
 }
 
-const NAV: { group: string; items: { id: SectionId; label: string }[] }[] = [
-  { group: "Exploración", items: [
-    { id: "overview", label: "Mapa de hotspots" }, { id: "predict", label: "Predicciones" },
-    { id: "species", label: "Especies" }, { id: "routes", label: "Rutas óptimas" },
-  ] },
-  { group: "Datos", items: [
-    { id: "climate", label: "Clima" }, { id: "soil", label: "Suelo & terreno" },
-    { id: "diary", label: "Diario de cosecha" }, { id: "safety", label: "Seguridad en ruta" },
-    { id: "privacy", label: "Privacidad" },
-  ] },
-];
-
 export default function DashboardClient() {
-  const [hotspots, setHotspots] = useState<Hotspot[]>(MOCK_HOTSPOTS); // MOCK (PoC): luego desde Supabase
-  const [diary, setDiary] = useState<DiaryEntry[]>(MOCK_DIARY);       // MOCK (PoC)
+  const { locale, t } = useI18n();
+  const [hotspots, setHotspots] = useState<Hotspot[]>(() => localizedHotspots(locale));
+  const [diary, setDiary] = useState<DiaryEntry[]>(() => localizedDiary(locale));
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [active, setActive] = useState<SectionId>("overview");
   const [newModal, setNewModal] = useState(false);
@@ -68,49 +60,42 @@ export default function DashboardClient() {
   const [agentAsk, setAgentAsk] = useState<string | null>(null);
   const [predicting, setPredicting] = useState(true);
   const [live, setLive] = useState(false);
+  const [navOpen, setNavOpen] = useState(false); // drawer móvil
 
-  // Sprint 2 · Predicción EN LOTE al cargar: clima real de Open-Meteo para todos
-  // los hotspots iniciales, no solo al hacer clic. Si falla, se queda el mock.
+  // Localiza los datos y predice EN LOTE con clima real al cargar y al cambiar idioma.
   useEffect(() => {
     let cancelled = false;
+    const base = localizedHotspots(locale);
+    setHotspots(base);
+    setDiary(localizedDiary(locale));
+    setPredicting(true);
     (async () => {
       try {
         const r = await fetch("/api/predict/batch", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ points: MOCK_HOTSPOTS.map((h) => ({ lat: h.lat, lng: h.lng, aspect: h.aspect, species: h.species })) }),
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lang: locale, points: base.map((h) => ({ lat: h.lat, lng: h.lng, aspect: h.aspect, species: h.species })) }),
         });
         const data = await r.json();
         if (cancelled || !Array.isArray(data.results)) { setPredicting(false); return; }
         setHotspots((hs) => hs.map((h, i) => data.results[i] ? applyPrediction(h, data.results[i]) : h));
         if (data.results.some((x: unknown) => x)) setLive(true);
-      } catch {
-        // sin red / rate limit: nos quedamos con los datos mock
-      } finally {
-        if (!cancelled) setPredicting(false);
-      }
+      } catch { /* sin red: se queda el mock */ }
+      finally { if (!cancelled) setPredicting(false); }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [locale]);
 
-  // contexto para el agente: resumen de hotspots del usuario
   const agentContext = {
     hotspots: hotspots.map((h) => ({ name: h.name, species: h.species, prob: h.prob, alt: h.alt, aspect: h.aspect, why: h.why })),
     diary,
   };
 
   function askGuide(name?: string) {
-    if (name) setAgentAsk("Háblame de " + name);
+    if (name) setAgentAsk(t("agent.askAbout", { name }));
     setAgentOpen(true);
   }
+  function openMapCreate(lat: number, lng: number) { setPendingCoords({ lat, lng }); setNewModal(true); }
 
-  // Crear hotspot pinchando el mapa: guarda coordenadas reales y abre el modal.
-  function openMapCreate(lat: number, lng: number) {
-    setPendingCoords({ lat, lng });
-    setNewModal(true);
-  }
-
-  // Añade el hotspot; si viene del mapa, lo enriquece con clima real (Open-Meteo).
   function handleCreate(h: Hotspot, enrich: boolean) {
     let newIndex = 0;
     setHotspots((hs) => { const next = [...hs, h]; newIndex = next.length - 1; return next; });
@@ -120,35 +105,48 @@ export default function DashboardClient() {
       try {
         const r = await fetch("/api/predict/batch", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ points: [{ lat: h.lat, lng: h.lng, aspect: h.aspect, species: h.species }] }),
+          body: JSON.stringify({ lang: locale, points: [{ lat: h.lat, lng: h.lng, aspect: h.aspect, species: h.species }] }),
         });
         const data = await r.json();
         const res = data?.results?.[0];
         if (res) { setHotspots((hs) => hs.map((x, i) => i === newIndex ? applyPrediction(x, res) : x)); setLive(true); }
-      } catch { /* sin red: se queda en "calculando" */ }
+      } catch { /* sin red */ }
     })();
   }
+
+  function go(id: SectionId) { setActive(id); setNavOpen(false); window.scrollTo(0, 0); }
 
   return (
     <ToastProvider>
       <div className="shell">
-        <aside className="sidebar">
+        {/* Top bar móvil */}
+        <div className="mobile-bar">
+          <button className="hamburger" onClick={() => setNavOpen((v) => !v)} aria-label="Menu">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+          </button>
+          <div className="brand"><Logo size={26} /><b>FungiPath</b></div>
+          <LangToggle variant="dark" />
+        </div>
+
+        {navOpen && <div className="nav-scrim" onClick={() => setNavOpen(false)} />}
+        <aside className={`sidebar${navOpen ? " open" : ""}`}>
           <div className="brand"><Logo /><b>FungiPath</b></div>
           {NAV.map((g) => (
             <div key={g.group}>
-              <div className="nav-label">{g.group}</div>
-              {g.items.map((it) => (
-                <button key={it.id} className={`nav-item${active === it.id ? " active" : ""}`} onClick={() => { setActive(it.id); window.scrollTo(0, 0); }}>
-                  <span className="ic">{NAV_ICONS[it.id]}</span>{it.label}
+              <div className="nav-label">{t(`nav.${g.group}`)}</div>
+              {g.items.map((id) => (
+                <button key={id} className={`nav-item${active === id ? " active" : ""}`} onClick={() => go(id)}>
+                  <span className="ic">{NAV_ICONS[id]}</span>{t(`nav.${id}`)}
                 </button>
               ))}
             </div>
           ))}
+          <div style={{ marginTop: 16 }}><LangToggle variant="dark" /></div>
           <div className="sidebar-foot">
-            <div className="avatar">E</div>
-            <div><strong style={{ fontSize: 13 }}>Explorador</strong><small>Plan Demo</small></div>
+            <div className="avatar">{t("nav.user").charAt(0)}</div>
+            <div><strong style={{ fontSize: 13 }}>{t("nav.user")}</strong><small>{t("nav.plan")}</small></div>
           </div>
-          <Link href="/" className="back-link">← Volver a la landing</Link>
+          <Link href="/" className="back-link">{t("nav.back")}</Link>
         </aside>
 
         <main className="main">
@@ -164,14 +162,10 @@ export default function DashboardClient() {
         </main>
       </div>
 
-      <ForestAgent context={agentContext} open={agentOpen} setOpen={setAgentOpen} pendingAsk={agentAsk} onAsked={() => setAgentAsk(null)} />
+      <ForestAgent context={agentContext} locale={locale} open={agentOpen} setOpen={setAgentOpen} pendingAsk={agentAsk} onAsked={() => setAgentAsk(null)} />
 
       {newModal && (
-        <NewHotspotModal
-          coords={pendingCoords ?? undefined}
-          onClose={() => { setNewModal(false); setPendingCoords(null); }}
-          onCreate={handleCreate}
-        />
+        <NewHotspotModal coords={pendingCoords ?? undefined} onClose={() => { setNewModal(false); setPendingCoords(null); }} onCreate={handleCreate} />
       )}
     </ToastProvider>
   );

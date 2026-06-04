@@ -1,17 +1,17 @@
 "use client";
 import { useState } from "react";
-import { ZONES, type Zone } from "@/data/zones";
+import { ZONES } from "@/data/zones";
 import type { Hotspot } from "@/data/hotspots";
+import { useI18n, tx } from "@/lib/i18n";
 import { useToast } from "../shared";
 import { IconCompass } from "@/components/icons";
 
-const SECTOR_NAME: Record<string, string> = { N: "norte", E: "este", S: "sur", O: "oeste" };
-
 export default function Routes({ hotspots }: { hotspots: Hotspot[] }) {
+  const { t, locale } = useI18n();
   const toast = useToast();
   const [selZone, setSelZone] = useState<string | null>(null);
   const [selSector, setSelSector] = useState<string | null>(null);
-  const [km, setKm] = useState("12,4 km");
+  const [km, setKm] = useState("12.4");
 
   const zone = ZONES.find((z) => z.id === selZone) || null;
   const top = [...hotspots].sort((a, b) => b.prob - a.prob).slice(0, 5);
@@ -20,16 +20,16 @@ export default function Routes({ hotspots }: { hotspots: Hotspot[] }) {
   function setSector(s: string) {
     const next = selSector === s ? null : s;
     setSelSector(next);
-    toast(next ? "Filtrando ladera " + s : "Mostrando todas");
+    toast(next ? t("toast.filterSlope", { s: t(`aspect.${s}`) }) : t("toast.showAll"));
   }
   const needleDeg = selSector ? ({ N: 0, E: 90, S: 180, O: 270 }[selSector] ?? 0) : 0;
 
   return (
     <div>
-      <div className="topbar"><div><h1 className="serif">Mapa de Lombardía</h1><p>Navega por zonas, orienta con la brújula y traza tu ruta óptima.</p></div><button className="btn" onClick={() => { setKm((8 + Math.random() * 8).toFixed(1).replace(".", ",") + " km"); toast("✓ Ruta recalculada"); }}>↻ Recalcular ruta</button></div>
+      <div className="topbar"><div><h1 className="serif">{t("routes.title")}</h1><p>{t("routes.sub")}</p></div><button className="btn" onClick={() => { setKm((8 + Math.random() * 8).toFixed(1)); toast(t("toast.routeRecalc")); }}>{t("routes.recalc")}</button></div>
       <div className="grid-2" style={{ gridTemplateColumns: "1.6fr 1fr" }}>
         <div className="card">
-          <div className="panel-head"><h3 className="serif">Lombardía · zonas de bosque</h3><span>{zone ? zone.name : "Toca una zona"}</span></div>
+          <div className="panel-head"><h3 className="serif">{t("routes.zonesTitle")}</h3><span>{zone ? zone.name : t("routes.tapZone")}</span></div>
           <div className="lomb-wrap">
             <div id="lombMap">
               <svg viewBox="0 0 1120 760">
@@ -37,7 +37,7 @@ export default function Routes({ hotspots }: { hotspots: Hotspot[] }) {
                 {ZONES.map((z) => {
                   const lit = !selSector || z.sector === selSector;
                   const col = z.prob >= 80 ? "#a86543" : z.prob >= 60 ? "#c08a5e" : z.prob >= 45 ? "#cfa988" : "#d8c4a8";
-                  return <path key={z.id} className={`zone${selZone === z.id ? " sel" : ""}`} d={z.d} fill={col} fillOpacity={lit ? 0.92 : 0.3} stroke="#6d482b" strokeWidth="1" onClick={() => { setSelZone(z.id); }} />;
+                  return <path key={z.id} className={`zone${selZone === z.id ? " sel" : ""}`} d={z.d} fill={col} fillOpacity={lit ? 0.92 : 0.3} stroke="#6d482b" strokeWidth="1" onClick={() => setSelZone(z.id)} />;
                 })}
                 <ellipse cx="475" cy="235" rx="22" ry="55" fill="url(#lake)" opacity=".85" transform="rotate(-18 475 235)" />
                 <ellipse cx="990" cy="400" rx="18" ry="42" fill="url(#lake)" opacity=".85" transform="rotate(12 990 400)" />
@@ -58,11 +58,11 @@ export default function Routes({ hotspots }: { hotspots: Hotspot[] }) {
                   <span className="cdir n" onClick={() => setSector("N")}>N</span>
                   <span className="cdir e" onClick={() => setSector("E")}>E</span>
                   <span className="cdir s" onClick={() => setSector("S")}>S</span>
-                  <span className="cdir w" onClick={() => setSector("O")}>O</span>
+                  <span className="cdir w" onClick={() => setSector("O")}>{locale === "en" ? "W" : "O"}</span>
                   <div className="needle" style={{ transform: `translate(-50%,-100%) rotate(${needleDeg}deg)` }} />
                   <div className="compass-c" />
                 </div>
-                <div className="compass-lbl">{selSector ? "Laderas " + SECTOR_NAME[selSector] : "Todas las laderas"}</div>
+                <div className="compass-lbl">{selSector ? t("routes.slopesOf", { s: t(`aspect.${selSector}`) }) : t("routes.allSlopes")}</div>
               </div>
             </div>
           </div>
@@ -72,30 +72,30 @@ export default function Routes({ hotspots }: { hotspots: Hotspot[] }) {
             {zone ? (
               <>
                 <div className="zp-head"><h4>{zone.name}</h4><div className="zp-prob">{zone.prob}%</div></div>
-                <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 14 }}>{zone.hab}</div>
+                <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 14 }}>{tx(zone.hab, locale)}</div>
                 <div className="zp-stats">
-                  <div className="zp-stat"><div className="zl">Altitud</div><div className="zv">{zone.alt}</div></div>
-                  <div className="zp-stat"><div className="zl">Hotspots</div><div className="zv">{zone.spots} activos</div></div>
-                  <div className="zp-stat"><div className="zl">Última lluvia</div><div className="zv">{zone.rain}</div></div>
-                  <div className="zp-stat"><div className="zl">Ladera</div><div className="zv">{SECTOR_NAME[zone.sector]}</div></div>
+                  <div className="zp-stat"><div className="zl">{t("routes.altitude")}</div><div className="zv">{zone.alt}</div></div>
+                  <div className="zp-stat"><div className="zl">{t("routes.hotspots")}</div><div className="zv">{zone.spots} {t("routes.active")}</div></div>
+                  <div className="zp-stat"><div className="zl">{t("routes.lastRain")}</div><div className="zv">{zone.rain}</div></div>
+                  <div className="zp-stat"><div className="zl">{t("routes.slope")}</div><div className="zv">{t(`aspect.${zone.sector}`)}</div></div>
                 </div>
-                <div style={{ marginTop: 12, fontSize: 12, color: "var(--ink-soft)" }}><b>Especies típicas:</b> {zone.sp}</div>
+                <div style={{ marginTop: 12, fontSize: 12, color: "var(--ink-soft)" }}><b>{t("routes.typicalSp")}</b> {tx(zone.sp, locale)}</div>
               </>
             ) : (
-              <div className="zone-panel-empty"><div className="zpe-ic" style={{ display: "grid", placeItems: "center", color: "var(--sand)" }}><IconCompass size={34} /></div><div style={{ fontSize: 13 }}>Toca una zona del mapa para ver su actividad, especies y datos de campo.</div></div>
+              <div className="zone-panel-empty"><div className="zpe-ic" style={{ display: "grid", placeItems: "center", color: "var(--sand)" }}><IconCompass size={34} /></div><div style={{ fontSize: 13 }}>{t("routes.empty")}</div></div>
             )}
           </div>
           <div className="card">
-            <div className="panel-head"><h3 className="serif">Ruta óptima de hoy</h3></div>
+            <div className="panel-head"><h3 className="serif">{t("routes.routeTitle")}</h3></div>
             <div>
               {top.map((h, i) => (
                 <div className="route-stop-item" key={i}><div className="route-num">{i + 1}</div><div><div className="rt">{h.name}</div><div className="rs">{h.species} · {h.alt} m</div></div><div className="rp">{h.prob}%</div></div>
               ))}
             </div>
             <div className="route-info" style={{ marginTop: 16 }}>
-              <div className="route-stat"><div className="rv">{top.length}</div><div className="rl">paradas</div></div>
-              <div className="route-stat"><div className="rv">{km}</div><div className="rl">distancia</div></div>
-              <div className="route-stat"><div className="rv">{avg}%</div><div className="rl">prob. media</div></div>
+              <div className="route-stat"><div className="rv">{top.length}</div><div className="rl">{t("routes.stops")}</div></div>
+              <div className="route-stat"><div className="rv">{km} km</div><div className="rl">{t("routes.distance")}</div></div>
+              <div className="route-stat"><div className="rv">{avg}%</div><div className="rl">{t("routes.avgProb")}</div></div>
             </div>
           </div>
         </div>
