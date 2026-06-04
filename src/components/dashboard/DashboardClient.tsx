@@ -14,6 +14,7 @@ import { centroid, type Parcel } from "@/data/parcels";
 import Overview from "./sections/Overview";
 import Predictions from "./sections/Predictions";
 import Species from "./sections/Species";
+import Identify from "./sections/Identify";
 import Routes from "./sections/Routes";
 import Climate from "./sections/Climate";
 import Soil from "./sections/Soil";
@@ -21,10 +22,10 @@ import Diary from "./sections/Diary";
 import Safety from "./sections/Safety";
 import Privacy from "./sections/Privacy";
 
-type SectionId = "overview" | "predict" | "species" | "routes" | "climate" | "soil" | "diary" | "safety" | "privacy";
+type SectionId = "overview" | "predict" | "species" | "identify" | "routes" | "climate" | "soil" | "diary" | "safety" | "privacy";
 
 const NAV: { group: "explore" | "data"; items: SectionId[] }[] = [
-  { group: "explore", items: ["overview", "predict", "species", "routes"] },
+  { group: "explore", items: ["overview", "predict", "species", "identify", "routes"] },
   { group: "data", items: ["climate", "soil", "diary", "safety", "privacy"] },
 ];
 
@@ -205,6 +206,7 @@ export default function DashboardClient() {
             parcels={parcels} mapMode={mapMode} setMapMode={setMapMode} onParcelComplete={(pts) => setPendingParcel(pts)} selectedParcelId={selectedParcelId} onSelectParcel={setSelectedParcelId} />}
           {active === "predict" && <Predictions hotspots={hotspots} />}
           {active === "species" && <Species onAskGuide={askGuide} />}
+          {active === "identify" && <Identify onAskGuide={askGuide} />}
           {active === "routes" && <Routes />}
           {active === "climate" && <Climate hotspots={hotspots} />}
           {active === "soil" && <Soil />}

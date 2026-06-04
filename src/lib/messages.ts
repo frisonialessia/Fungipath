@@ -5,7 +5,7 @@ export const MESSAGES = {
   en: {
     nav: {
       explore: "Exploration", data: "Data",
-      overview: "Hotspot map", predict: "Predictions", species: "Species", routes: "Best routes",
+      overview: "Hotspot map", predict: "Predictions", species: "Species", identify: "Identify", routes: "Best routes",
       climate: "Weather", soil: "Soil & terrain", diary: "Harvest journal", safety: "Trail safety", privacy: "Privacy",
       user: "Explorer", plan: "Demo plan", back: "← Back to landing",
     },
@@ -89,6 +89,14 @@ export const MESSAGES = {
       ndviReady: "✓ live",
     },
     predict: { title: "Predictions", sub: "Appearance probability per hotspot, next 7 days.", why: "Why:" },
+    identify: {
+      title: "Identify a mushroom", sub: "Upload a photo and FungiPath suggests candidates — always shown with their toxic look-alikes. Never eat on a guess.",
+      drop: "Drop a photo here, or click to upload", pick: "Choose photo", analyzing: "Analyzing the specimen…",
+      best: "Best visual match", also: "Could also be", confidence: "confidence",
+      lookalike: "⚠️ Watch its dangerous look-alike", ask: "Ask the guide about this", again: "Try another photo",
+      demo: "Demo identification (visual color match). Plug a vision model (Claude Vision, a classifier) for real accuracy — the code seam is marked in /api/identify.",
+      safety: "Educational only and NEVER a confirmation. A photo is not enough to identify safely — confirm with a mycologist before any consumption.",
+    },
     species: {
       title: "Species", sub: "{n} illustrated species from a catalog of {total}+. Tap one for its sheet, edibility and look-alikes.",
       fAll: "All", fChoice: "Choice", fEdible: "Edible", fToxic: "Toxic", fDeadly: "Deadly",
@@ -191,7 +199,7 @@ export const MESSAGES = {
   es: {
     nav: {
       explore: "Exploración", data: "Datos",
-      overview: "Mapa de hotspots", predict: "Predicciones", species: "Especies", routes: "Rutas óptimas",
+      overview: "Mapa de hotspots", predict: "Predicciones", species: "Especies", identify: "Identificar", routes: "Rutas óptimas",
       climate: "Clima", soil: "Suelo & terreno", diary: "Diario de cosecha", safety: "Seguridad en ruta", privacy: "Privacidad",
       user: "Explorador", plan: "Plan Demo", back: "← Volver a la landing",
     },
@@ -275,6 +283,14 @@ export const MESSAGES = {
       ndviReady: "✓ en vivo",
     },
     predict: { title: "Predicciones", sub: "Probabilidad de aparición por hotspot, próximos 7 días.", why: "Por qué:" },
+    identify: {
+      title: "Identificar una seta", sub: "Sube una foto y FungiPath sugiere candidatas — siempre junto a sus sosias tóxicos. Nunca comas por intuición.",
+      drop: "Arrastra una foto aquí, o haz clic para subir", pick: "Elegir foto", analyzing: "Analizando el espécimen…",
+      best: "Mejor coincidencia visual", also: "También podría ser", confidence: "confianza",
+      lookalike: "⚠️ Cuidado con su sosias peligroso", ask: "Preguntar al guía sobre esto", again: "Probar otra foto",
+      demo: "Identificación de demostración (coincidencia visual por color). Conecta un modelo de visión (Claude Vision, un clasificador) para precisión real — la costura está marcada en /api/identify.",
+      safety: "Solo educativo y NUNCA una confirmación. Una foto no basta para identificar con seguridad — confirma con un micólogo antes de cualquier consumo.",
+    },
     species: {
       title: "Especies", sub: "{n} especies ilustradas de un catálogo de {total}+. Toca una para ver su ficha, comestibilidad y sosias.",
       fAll: "Todas", fChoice: "Excelentes", fEdible: "Comestibles", fToxic: "Tóxicas", fDeadly: "Mortales",
