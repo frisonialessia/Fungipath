@@ -48,6 +48,12 @@ function applyPrediction(h: Hotspot, res: PredResult): Hotspot {
   };
 }
 
+// Mapea una fila de Supabase (demo_hotspots) a un Hotspot del cliente.
+interface DbRow { name: string; species: string; altitude: number | null; aspect: Hotspot["aspect"]; habitat: string | null; lat: number; lng: number; privacy: Priv; }
+function dbToHotspot(r: DbRow): Hotspot {
+  return { name: r.name, species: r.species, alt: r.altitude ?? 0, aspect: r.aspect, habitat: r.habitat ?? "", prob: 0, lat: r.lat, lng: r.lng, priv: r.privacy ?? "private", why: "", factors: [] };
+}
+
 export default function DashboardClient() {
   const { locale, t } = useI18n();
   const [hotspots, setHotspots] = useState<Hotspot[]>(() => localizedHotspots(locale));
@@ -60,16 +66,30 @@ export default function DashboardClient() {
   const [agentAsk, setAgentAsk] = useState<string | null>(null);
   const [predicting, setPredicting] = useState(true);
   const [live, setLive] = useState(false);
+  const [source, setSource] = useState<"db" | "mock">("mock");
   const [navOpen, setNavOpen] = useState(false); // drawer móvil
 
-  // Localiza los datos y predice EN LOTE con clima real al cargar y al cambiar idioma.
+  // Motor de datos + predicción. Al cargar y al cambiar idioma:
+  // 1) intenta leer hotspots de Supabase; si no hay, cae al seed mock localizado.
+  // 2) predice EN LOTE con clima real de Open-Meteo en el idioma activo.
   useEffect(() => {
     let cancelled = false;
-    const base = localizedHotspots(locale);
-    setHotspots(base);
-    setDiary(localizedDiary(locale));
     setPredicting(true);
     (async () => {
+      // 1) Supabase (motor de datos)
+      let base: Hotspot[] | null = null;
+      try {
+        const hr = await fetch("/api/hotspots");
+        const hd = await hr.json();
+        if (hd.configured && Array.isArray(hd.hotspots) && hd.hotspots.length) {
+          base = hd.hotspots.map(dbToHotspot); setSource("db");
+        }
+      } catch { /* sin red: fallback abajo */ }
+      if (!base) { base = localizedHotspots(locale); setSource("mock"); }
+      if (cancelled) return;
+      setHotspots(base);
+      setDiary(localizedDiary(locale));
+      // 2) predicción en lote con clima real
       try {
         const r = await fetch("/api/predict/batch", {
           method: "POST", headers: { "Content-Type": "application/json" },
@@ -79,7 +99,7 @@ export default function DashboardClient() {
         if (cancelled || !Array.isArray(data.results)) { setPredicting(false); return; }
         setHotspots((hs) => hs.map((h, i) => data.results[i] ? applyPrediction(h, data.results[i]) : h));
         if (data.results.some((x: unknown) => x)) setLive(true);
-      } catch { /* sin red: se queda el mock */ }
+      } catch { /* sin red: se queda sin predicción en vivo */ }
       finally { if (!cancelled) setPredicting(false); }
     })();
     return () => { cancelled = true; };
@@ -100,6 +120,11 @@ export default function DashboardClient() {
     let newIndex = 0;
     setHotspots((hs) => { const next = [...hs, h]; newIndex = next.length - 1; return next; });
     setSelectedIdx(hotspots.length);
+    // Persistir en Supabase (best-effort; si no está configurado, no pasa nada)
+    fetch("/api/hotspots", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: h.name, species: h.species, altitude: h.alt, aspect: h.aspect, habitat: h.habitat, lat: h.lat, lng: h.lng, privacy: h.priv }),
+    }).catch(() => {});
     if (!enrich) return;
     (async () => {
       try {
@@ -150,7 +175,7 @@ export default function DashboardClient() {
         </aside>
 
         <main className="main">
-          {active === "overview" && <Overview hotspots={hotspots} selectedIdx={selectedIdx} setSelectedIdx={setSelectedIdx} diary={diary} onNewHotspot={() => { setPendingCoords(null); setNewModal(true); }} onAskGuide={() => askGuide()} onMapCreate={openMapCreate} predicting={predicting} live={live} />}
+          {active === "overview" && <Overview hotspots={hotspots} selectedIdx={selectedIdx} setSelectedIdx={setSelectedIdx} diary={diary} onNewHotspot={() => { setPendingCoords(null); setNewModal(true); }} onAskGuide={() => askGuide()} onMapCreate={openMapCreate} predicting={predicting} live={live} source={source} />}
           {active === "predict" && <Predictions hotspots={hotspots} />}
           {active === "species" && <Species onAskGuide={askGuide} />}
           {active === "routes" && <Routes hotspots={hotspots} />}

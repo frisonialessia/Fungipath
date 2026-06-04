@@ -16,11 +16,11 @@ const FungiMap = dynamic(() => import("@/components/FungiMap"), { ssr: false });
 const PILLS = ["all", "Boletus edulis", "Cantharellus", "Lactarius"];
 
 export default function Overview({
-  hotspots, selectedIdx, setSelectedIdx, diary, onNewHotspot, onAskGuide, onMapCreate, predicting, live,
+  hotspots, selectedIdx, setSelectedIdx, diary, onNewHotspot, onAskGuide, onMapCreate, predicting, live, source,
 }: {
   hotspots: Hotspot[]; selectedIdx: number; setSelectedIdx: (i: number) => void; diary: DiaryEntry[];
   onNewHotspot: () => void; onAskGuide: () => void; onMapCreate?: (lat: number, lng: number) => void;
-  predicting?: boolean; live?: boolean;
+  predicting?: boolean; live?: boolean; source?: "db" | "mock";
 }) {
   const { t, locale } = useI18n();
   const toast = useToast();
@@ -51,7 +51,7 @@ export default function Overview({
 
   const factorLabel = (k: string) => t(`factor.${k}`);
   const factorValue = (k: string, v: string) => (k === "aspect" ? t(`aspect.${v}`) : v);
-  const flag = predicting ? t("overview.flagCalc") : live ? t("overview.flagLive") : t("overview.flagDemo");
+  const flag = (predicting ? t("overview.flagCalc") : live ? t("overview.flagLive") : t("overview.flagDemo")) + (source === "db" ? " · Supabase" : "");
 
   return (
     <div>

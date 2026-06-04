@@ -117,3 +117,41 @@ returns setof hotspots as $$
   select * from hotspots
   where st_dwithin(geom, st_makepoint(lng, lat)::geography, radius_m);
 $$ language sql stable;
+
+-- ============================================================
+-- DEMO (PoC) · tabla aislada para la prueba de concepto SIN auth.
+-- Lectura pública (anon) para enseñar el flujo. Las inserciones se hacen
+-- desde el servidor con service_role. Sin PostGIS: lat/lng simples.
+-- Cuando haya auth real, migrar a la tabla `hotspots` de arriba.
+-- ============================================================
+create table if not exists demo_hotspots (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  species text not null,
+  altitude int,
+  aspect text check (aspect in ('N','S','E','O')),
+  habitat text,
+  lat double precision not null,
+  lng double precision not null,
+  privacy text default 'private' check (privacy in ('private','fuzzy','shared')),
+  created_at timestamptz default now()
+);
+create index if not exists demo_hotspots_created_idx on demo_hotspots (created_at);
+
+alter table demo_hotspots enable row level security;
+-- Lectura pública para el PoC (no hay datos sensibles, son de demostración).
+drop policy if exists "demo read" on demo_hotspots;
+create policy "demo read" on demo_hotspots for select using (true);
+
+-- Seed: 6 hotspots de ejemplo en Lombardía (idempotente).
+insert into demo_hotspots (name, species, altitude, aspect, habitat, lat, lng, privacy)
+select * from (values
+  ('North beech wood',   'Boletus edulis',         920,  'N', 'Beech wood',     45.92, 9.18, 'private'),
+  ('Riverside oak wood', 'Cantharellus cibarius',  640,  'E', 'Oak wood',       45.78, 9.32, 'fuzzy'),
+  ('High pine wood',     'Lactarius deliciosus',   1150, 'O', 'Pine wood',      46.05, 9.45, 'private'),
+  ('South holm-oak wood','Amanita caesarea',       480,  'S', 'Holm-oak wood',  45.70, 9.05, 'private'),
+  ('Old chestnut wood',  'Boletus edulis',         780,  'N', 'Chestnut wood',  45.85, 9.55, 'shared'),
+  ('Valtellina larch',   'Boletus pinophilus',     1320, 'N', 'Larch wood',     46.17, 9.87, 'private')
+) as v(name, species, altitude, aspect, habitat, lat, lng, privacy)
+where not exists (select 1 from demo_hotspots);
+
