@@ -213,7 +213,7 @@ export default function DashboardClient() {
           {active === "identify" && <Identify onAskGuide={askGuide} />}
           {active === "routes" && <Routes />}
           {active === "climate" && <Climate hotspots={hotspots} />}
-          {active === "soil" && <Soil />}
+          {active === "soil" && <Soil hotspots={hotspots} />}
           {active === "diary" && <Diary diary={diary} hotspots={hotspots} onAddLog={(e) => setDiary((d) => [e, ...d])} />}
           {active === "safety" && <Safety />}
           {active === "privacy" && <Privacy hotspots={hotspots} onSetPriv={(i, v: Priv) => setHotspots((hs) => hs.map((h, idx) => idx === i ? { ...h, priv: v } : h))} />}
