@@ -214,7 +214,9 @@ footer small { color: var(--ink-soft); font-size: 13px; }
 /* Mapa Leaflet */
 .lpin { width: 34px; height: 34px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: grid; place-items: center; border: 2px solid #faf5ec; box-shadow: 0 4px 10px rgba(46,35,27,.3); }
 .lpin span { transform: rotate(45deg); color: #fff; font-size: 12px; font-weight: 700; }
-.leaflet-container { background: #ece3d3 !important; font-family: 'Hanken Grotesk', sans-serif; }
+.leaflet-container { background: #eef1e7 !important; font-family: 'Hanken Grotesk', sans-serif; }
+/* armoniza los tiles con la paleta de marca (verdes vegetación + crema) */
+.leaflet-tile { filter: saturate(1.06) brightness(1.02) sepia(0.05); }
 .map { position: relative; height: 320px; border-radius: 14px; overflow: hidden; border: 1px solid var(--sand); background: #ece3d3; }
 .map-zoom { position: absolute; top: 12px; right: 12px; display: flex; flex-direction: column; gap: 4px; z-index: 7; }
 .map-zoom button { width: 30px; height: 30px; border: 1px solid var(--sand); background: rgba(250,245,236,.95); border-radius: 8px; font-size: 18px; font-weight: 600; color: var(--ink); display: grid; place-items: center; transition: all .15s; }

@@ -1,6 +1,19 @@
 "use client";
 import { useEffect, useRef } from "react";
 
+// === Estilo del mapa (cambiar TILE para elegir; todos gratis, sin API key) ===
+const TILES = {
+  // Claro y minimal (CARTO Positron) — limpio y editorial.
+  positron: { url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", sub: "abcd", attr: "© OpenStreetMap · © CARTO", max: 19 },
+  // Claro con parques/bosques en verde y agua azul (CARTO Voyager).
+  voyager: { url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png", sub: "abcd", attr: "© OpenStreetMap · © CARTO", max: 19 },
+  // Topográfico con bosque verde y curvas de nivel (OpenTopoMap).
+  topo: { url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", sub: "abc", attr: "© OpenTopoMap (CC-BY-SA)", max: 17 },
+  // OpenStreetMap estándar (el de antes).
+  osm: { url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", sub: "abc", attr: "© OpenStreetMap", max: 18 },
+};
+const TILE = TILES.voyager; // ← estilo activo
+
 export interface MapHotspot {
   id: string; name: string; species: string; prob: number;
   lat: number; lng: number; alt?: number;
@@ -56,8 +69,8 @@ export default function FungiMap({
 
       if (!mapRef.current) {
         mapRef.current = L.map(ref.current, { zoomControl: true, attributionControl: false }).setView(center, zoom);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18 }).addTo(mapRef.current);
-        L.control.attribution({ prefix: false, position: "bottomright" }).addAttribution("© OpenStreetMap").addTo(mapRef.current);
+        L.tileLayer(TILE.url, { maxZoom: TILE.max, subdomains: TILE.sub }).addTo(mapRef.current);
+        L.control.attribution({ prefix: false, position: "bottomright" }).addAttribution(TILE.attr).addTo(mapRef.current);
         layerRef.current = L.layerGroup().addTo(mapRef.current);
         parcelLayerRef.current = L.layerGroup().addTo(mapRef.current);
         tempLayerRef.current = L.layerGroup().addTo(mapRef.current);
