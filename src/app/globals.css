@@ -486,6 +486,17 @@ footer small { color: var(--ink-soft); font-size: 13px; }
 .explain { border-radius: var(--radius); box-shadow: var(--shadow); }
 .leaflet-container.clickable { cursor: crosshair; }
 
+/* Especímenes fotográficos (landing) */
+.hero-spec { position: absolute; z-index: 2; pointer-events: none; filter: drop-shadow(0 14px 20px rgba(46, 35, 27, .24)); animation: floaty 9s ease-in-out infinite; }
+.specimens { padding: 96px 0; background: var(--cream-2); position: relative; overflow: hidden; }
+.spec-masonry { column-count: 5; column-gap: 24px; margin-top: 52px; }
+.spec-item { break-inside: avoid; margin-bottom: 24px; display: grid; place-items: center; }
+.spec-item img { width: 100%; height: auto; filter: drop-shadow(0 16px 24px rgba(46, 35, 27, .18)); transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.spec-item:nth-child(2n) { margin-top: 12px; }
+.spec-item:hover img { transform: translateY(-8px) rotate(-1.5deg) scale(1.03); }
+@media (max-width: 1024px) { .spec-masonry { column-count: 3; } }
+@media (max-width: 760px) { .spec-masonry { column-count: 2; column-gap: 16px; } .specimens { padding: 64px 0; } .hero-spec { display: none; } }
+
 /* ===================== RESPONSIVE ===================== */
 /* Barra superior móvil (oculta en escritorio) */
 .mobile-bar { display: none; }

@@ -4,8 +4,10 @@ import Logo from "@/components/Logo";
 import LangToggle from "@/components/LangToggle";
 import LandingTools from "@/components/landing/LandingTools";
 import Reveal from "@/components/landing/Reveal";
+import Specimen from "@/components/landing/Specimen";
 import { useT } from "@/lib/i18n";
 import { SPECIES } from "@/lib/species";
+import { SPECIMENS, HERO_SPECIMENS } from "@/data/specimens";
 
 const marquee = SPECIES.slice(0, 8).concat(SPECIES.slice(0, 8));
 const SOURCES = ["Open-Meteo", "GBIF", "Sentinel-2", "OpenStreetMap"];
@@ -69,6 +71,9 @@ export default function Home() {
             <div className="float-tag ft2"><div className="v">{t("landing.tagWindowV")}</div><div className="l">{t("landing.tagWindow")}</div></div>
           </div>
         </div>
+        <Specimen className="hero-spec" src={HERO_SPECIMENS[0]} style={{ bottom: 18, right: "4%", width: 138, animationDelay: ".5s" }} />
+        <Specimen className="hero-spec" src={HERO_SPECIMENS[1]} style={{ top: 24, right: "0%", width: 90, animationDelay: ".2s" }} />
+        <Specimen className="hero-spec" src={HERO_SPECIMENS[2]} style={{ top: "47%", left: "50%", width: 82, animationDelay: ".9s" }} />
       </div></header>
 
       <div className="trust"><div className="wrap">
@@ -80,6 +85,20 @@ export default function Home() {
         <Reveal>
           <div className="statband">
             {STATS.map(([v, l], i) => <div className="st" key={i}><div className="sv">{v}</div><div className="sl">{l}</div></div>)}
+          </div>
+        </Reveal>
+      </div></section>
+
+      {/* ESPECÍMENES FOTOGRÁFICOS */}
+      <section className="specimens"><div className="wrap">
+        <div className="section-head">
+          <div className="k">{t("landing.specKicker")}</div>
+          <h2>{t("landing.specTitle")}</h2>
+          <p>{t("landing.specSub")}</p>
+        </div>
+        <Reveal>
+          <div className="spec-masonry">
+            {SPECIMENS.map((s, i) => <div className="spec-item" key={i}><Specimen src={s} /></div>)}
           </div>
         </Reveal>
       </div></section>
