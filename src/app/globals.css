@@ -81,7 +81,7 @@ nav.land .wrap { display: flex; align-items: center; justify-content: space-betw
 .hero-mockup { position: relative; z-index: 1; width: 100%; max-width: 540px; }
 .mock-window { background: var(--card); border: 1px solid var(--sand); border-radius: 18px; overflow: hidden; box-shadow: 0 30px 70px rgba(46,35,27,.22); }
 .mock-bar { display: flex; align-items: center; gap: 6px; padding: 12px 16px; background: #efe6d8; border-bottom: 1px solid var(--sand); }
-.md { width: 10px; height: 10px; border-radius: 50%; } .md.r { background: #c87a5e } .md.y { background: #d9b06a } .md.g { background: #a3b487 }
+.md { width: 11px; height: 11px; border-radius: 50%; } .md.r { background: #ff5f57 } .md.y { background: #febc2e } .md.g { background: #28c840 }
 .mock-title { margin-left: 10px; font-size: 11.5px; color: var(--stone); font-weight: 600; }
 .mock-body { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
 .mock-map { position: relative; height: 200px; border-radius: 12px; overflow: hidden; border: 1px solid var(--sand); background: linear-gradient(160deg, #eef1e7, #e9e1cf 55%, #e2d4bb); }
@@ -101,8 +101,9 @@ nav.land .wrap { display: flex; align-items: center; justify-content: space-betw
 .float-tag { position: absolute; z-index: 5; background: var(--cream); border-radius: 14px; padding: 13px 16px; box-shadow: var(--shadow); animation: rise 1s ease backwards; }
 .float-tag .v { font-family: 'Fraunces'; font-weight: 700; font-size: 24px; color: var(--terracotta); }
 .float-tag .l { font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
-.ft1 { top: 30px; right: 0; animation-delay: .3s; }
-.ft2 { bottom: 54px; left: -10px; animation-delay: .5s; }
+.float-tag { z-index: 6; }
+.ft1 { top: -18px; right: 14px; animation-delay: .3s; }
+.ft2 { bottom: -16px; left: 14px; animation-delay: .5s; }
 
 .marquee { background: var(--umber); color: var(--cream); padding: 16px 0; overflow: hidden; white-space: nowrap; }
 .marquee-track { display: inline-block; animation: scroll 30s linear infinite; }

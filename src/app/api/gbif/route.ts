@@ -13,9 +13,10 @@ export async function GET(req: NextRequest) {
   const lat = sp.get("lat") ? parseFloat(sp.get("lat")!) : undefined;
   const lng = sp.get("lng") ? parseFloat(sp.get("lng")!) : undefined;
   const radiusKm = sp.get("radius") ? parseFloat(sp.get("radius")!) : undefined;
+  const limit = sp.get("limit") ? Math.min(300, parseInt(sp.get("limit")!) || 20) : undefined;
 
   try {
-    const summary = await gbifOccurrences(species, { lat, lng, radiusKm });
+    const summary = await gbifOccurrences(species, { lat, lng, radiusKm, limit });
     return NextResponse.json(summary);
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "error";

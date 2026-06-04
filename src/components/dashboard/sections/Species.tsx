@@ -5,6 +5,7 @@ import { spIllust } from "@/lib/illustrations";
 import { useI18n, tx } from "@/lib/i18n";
 import { Illu } from "../shared";
 import GbifBadge from "../GbifBadge";
+import GbifDistribution from "../GbifDistribution";
 import { IconBasket } from "@/components/icons";
 
 const FILTERS = ["all", "choice", "edible", "toxic", "deadly"] as const;
@@ -100,6 +101,8 @@ function SpeciesModal({ s, onClose, onCompare, onAsk }: { s: Sp; onClose: () => 
       <div className="sp-meta" style={{ margin: "14px 0", fontSize: 14 }}>
         <b>{t("species.habitat")}</b> {tx(s.hab, locale)}<br /><b>{t("species.season")}</b> {tx(s.season, locale)}<br /><b>{t("species.id")}</b> {tx(s.note, locale)}<br /><b>{t("species.confusion")}</b> {tx(s.twin, locale)}<br /><b>{t("species.byRegion")}</b> {tx(s.region, locale)}
       </div>
+      <GbifBadge species={s.n} variant="line" />
+      <GbifDistribution species={s.n} />
       {g && (
         <div style={{ margin: "14px 0", padding: 14, background: "var(--cream-2)", borderRadius: 12 }}>
           <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px", color: "var(--terracotta)", marginBottom: 10, display: "inline-flex", alignItems: "center", gap: 7 }}><IconBasket size={14} /> {t("species.fieldGuide")}</div>

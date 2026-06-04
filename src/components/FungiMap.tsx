@@ -23,11 +23,12 @@ export interface MapParcel {
 }
 
 export default function FungiMap({
-  hotspots, parcels = [], center = [45.85, 9.15], zoom = 10,
+  hotspots, parcels = [], dots, center = [45.85, 9.15], zoom = 10,
   onSelect, onMapClick, drawMode = false, onParcelComplete, onSelectParcel,
 }: {
   hotspots: MapHotspot[];
   parcels?: MapParcel[];
+  dots?: { lat: number; lng: number }[];   // puntos de avistamientos (GBIF)
   center?: [number, number];
   zoom?: number;
   onSelect?: (id: string) => void;
@@ -40,6 +41,7 @@ export default function FungiMap({
   const mapRef = useRef<any>(null);
   const layerRef = useRef<any>(null);       // marcadores (pines)
   const parcelLayerRef = useRef<any>(null); // polígonos guardados
+  const dotsLayerRef = useRef<any>(null);   // puntos de avistamientos
   const tempLayerRef = useRef<any>(null);   // dibujo en curso
   const LRef = useRef<any>(null);
 
@@ -73,6 +75,7 @@ export default function FungiMap({
         L.control.attribution({ prefix: false, position: "bottomright" }).addAttribution(TILE.attr).addTo(mapRef.current);
         layerRef.current = L.layerGroup().addTo(mapRef.current);
         parcelLayerRef.current = L.layerGroup().addTo(mapRef.current);
+        dotsLayerRef.current = L.layerGroup().addTo(mapRef.current);
         tempLayerRef.current = L.layerGroup().addTo(mapRef.current);
 
         mapRef.current.on("click", (e: any) => {
@@ -114,9 +117,18 @@ export default function FungiMap({
         const label = L.divIcon({ className: "", html: `<div class="parcel-label" style="border-color:${col}"><b>${p.prob}%</b> ${p.name}</div>`, iconSize: [0, 0] });
         L.marker(c, { icon: label, interactive: false }).addTo(parcelLayerRef.current);
       });
+
+      // puntos de avistamientos reales (GBIF) en verde de marca
+      dotsLayerRef.current.clearLayers();
+      (dots || []).forEach((p) => {
+        L.circleMarker([p.lat, p.lng], { radius: 4, color: "#0e9b3d", weight: 1, fillColor: "#52c871", fillOpacity: 0.7 }).addTo(dotsLayerRef.current);
+      });
+      if (dots && dots.length) {
+        try { mapRef.current.fitBounds(L.latLngBounds(dots.map((p) => [p.lat, p.lng])), { padding: [22, 22], maxZoom: 5 }); } catch { /* noop */ }
+      }
     })();
     return () => { cancelled = true; };
-  }, [hotspots, parcels, center, zoom, onSelect, onMapClick, drawMode, onSelectParcel]);
+  }, [hotspots, parcels, dots, center, zoom, onSelect, onMapClick, drawMode, onSelectParcel]);
 
   // al salir del modo dibujo, limpia el trazo en curso
   useEffect(() => { if (!drawMode) resetTemp(); }, [drawMode]);
