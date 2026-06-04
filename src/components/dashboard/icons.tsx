@@ -12,6 +12,7 @@ export const NAV_ICONS: Record<string, ReactNode> = {
   diary: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><rect x="3" y="3" width="12" height="12" rx="2" /><path d="M3 7 L15 7 M7 7 L7 15" /></svg>,
   safety: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><path d="M9 2 L15 5 V9 C15 13 12 15 9 16 C6 15 3 13 3 9 V5 Z" /><path d="M9 7 V11 M9 13 h.01" strokeLinecap="round" /></svg>,
   privacy: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6}><rect x="4" y="8" width="10" height="7" rx="1.5" /><path d="M6 8 V6 A3 3 0 0 1 12 6 V8" /></svg>,
+  settings: <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="9" r="2.6" /><path d="M9 1.6v2M9 14.4v2M1.6 9h2M14.4 9h2M3.8 3.8l1.4 1.4M12.8 12.8l1.4 1.4M14.2 3.8l-1.4 1.4M5.2 12.8l-1.4 1.4" /></svg>,
 };
 
 export const INSIGHT_ICON = (

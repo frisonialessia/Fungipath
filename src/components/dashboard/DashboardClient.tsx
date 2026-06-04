@@ -21,12 +21,14 @@ import Soil from "./sections/Soil";
 import Diary from "./sections/Diary";
 import Safety from "./sections/Safety";
 import Privacy from "./sections/Privacy";
+import Settings from "./sections/Settings";
 
-type SectionId = "overview" | "predict" | "species" | "identify" | "routes" | "climate" | "soil" | "diary" | "safety" | "privacy";
+type SectionId = "overview" | "predict" | "species" | "identify" | "routes" | "climate" | "soil" | "diary" | "safety" | "privacy" | "settings";
 
-const NAV: { group: "explore" | "data"; items: SectionId[] }[] = [
+const NAV: { group: "explore" | "data" | "account"; items: SectionId[] }[] = [
   { group: "explore", items: ["overview", "predict", "species", "identify", "routes"] },
   { group: "data", items: ["climate", "soil", "diary", "safety", "privacy"] },
+  { group: "account", items: ["settings"] },
 ];
 
 interface PredResult {
@@ -194,7 +196,7 @@ export default function DashboardClient() {
             </div>
           ))}
           <div style={{ marginTop: 16 }}><LangToggle variant="dark" /></div>
-          <div className="sidebar-foot">
+          <div className="sidebar-foot" style={{ cursor: "pointer" }} onClick={() => go("settings")} title={t("nav.settings")}>
             <div className="avatar">{t("nav.user").charAt(0)}</div>
             <div><strong style={{ fontSize: 13 }}>{t("nav.user")}</strong><small>{t("nav.plan")}</small></div>
           </div>
@@ -213,6 +215,7 @@ export default function DashboardClient() {
           {active === "diary" && <Diary diary={diary} hotspots={hotspots} onAddLog={(e) => setDiary((d) => [e, ...d])} />}
           {active === "safety" && <Safety />}
           {active === "privacy" && <Privacy hotspots={hotspots} onSetPriv={(i, v: Priv) => setHotspots((hs) => hs.map((h, idx) => idx === i ? { ...h, priv: v } : h))} />}
+          {active === "settings" && <Settings hotspots={hotspots} />}
         </main>
       </div>
 
