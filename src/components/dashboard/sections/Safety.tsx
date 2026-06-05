@@ -75,9 +75,9 @@ export default function Safety() {
               <button className="btn-ghost2" style={{ flex: "none", padding: "12px 18px", display: "inline-flex", alignItems: "center", gap: 8 }} onClick={() => toast(t("safety.shared"))}><IconShare size={15} />{t("safety.shareLoc")}</button>
             </div>
             <div style={{ display: "flex", gap: 24, marginTop: 14 }}>
-              <div><div style={{ fontFamily: "Fraunces", fontWeight: 700, fontSize: 22 }}>{km} km</div><div style={{ fontSize: 11, color: "var(--stone)", textTransform: "uppercase", letterSpacing: ".5px" }}>{t("safety.traveled")}</div></div>
-              <div><div style={{ fontFamily: "Fraunces", fontWeight: 700, fontSize: 22 }}>{pts.length}</div><div style={{ fontSize: 11, color: "var(--stone)", textTransform: "uppercase", letterSpacing: ".5px" }}>{t("safety.points")}</div></div>
-              <div><div style={{ fontFamily: "Fraunces", fontWeight: 700, fontSize: 22 }}>{Math.floor(minutes)} min</div><div style={{ fontSize: 11, color: "var(--stone)", textTransform: "uppercase", letterSpacing: ".5px" }}>{t("safety.onTrail")}</div></div>
+              <div><div style={{ fontFamily: "Plus Jakarta Sans", fontWeight: 700, fontSize: 22 }}>{km} km</div><div style={{ fontSize: 11, color: "var(--stone)", textTransform: "uppercase", letterSpacing: ".5px" }}>{t("safety.traveled")}</div></div>
+              <div><div style={{ fontFamily: "Plus Jakarta Sans", fontWeight: 700, fontSize: 22 }}>{pts.length}</div><div style={{ fontSize: 11, color: "var(--stone)", textTransform: "uppercase", letterSpacing: ".5px" }}>{t("safety.points")}</div></div>
+              <div><div style={{ fontFamily: "Plus Jakarta Sans", fontWeight: 700, fontSize: 22 }}>{Math.floor(minutes)} min</div><div style={{ fontSize: 11, color: "var(--stone)", textTransform: "uppercase", letterSpacing: ".5px" }}>{t("safety.onTrail")}</div></div>
             </div>
           </div>
           <div className="card">
@@ -89,7 +89,7 @@ export default function Safety() {
                 : finds.map((f, i) => (
                   <div className="gps-find" key={i}>
                     <Illu html={spIllust(SPECIES.find((s) => s.n === f.sp) || SPECIES[0], 24)} />
-                    <div><div style={{ fontStyle: "italic", fontFamily: "Fraunces" }}>{f.sp}</div><div style={{ fontSize: 11, color: "var(--stone)" }}>{f.t} h</div></div>
+                    <div><div style={{ fontStyle: "italic", fontFamily: "Plus Jakarta Sans" }}>{f.sp}</div><div style={{ fontSize: 11, color: "var(--stone)" }}>{f.t} h</div></div>
                     <span className="gf-co">{f.co}</span>
                   </div>
                 ))}

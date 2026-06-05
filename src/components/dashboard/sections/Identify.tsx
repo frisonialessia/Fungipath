@@ -84,7 +84,7 @@ export default function Identify({ onAskGuide }: { onAskGuide: (name: string) =>
                 <div className="panel-head"><h3 className="serif">{t("identify.how")}</h3></div>
                 {[t("identify.s1"), t("identify.s2"), t("identify.s3")].map((s, i) => (
                   <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start", padding: "12px 0", borderBottom: i < 2 ? "1px solid var(--sand)" : "none" }}>
-                    <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--terracotta)", color: "#fff", display: "grid", placeItems: "center", fontFamily: "Fraunces", fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
+                    <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--terracotta)", color: "#fff", display: "grid", placeItems: "center", fontFamily: "Plus Jakarta Sans", fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
                     <div style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.5, paddingTop: 3 }}>{s}</div>
                   </div>
                 ))}
@@ -104,7 +104,7 @@ export default function Identify({ onAskGuide }: { onAskGuide: (name: string) =>
                 <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                   <Illu style={{ filter: "drop-shadow(0 5px 7px rgba(46,35,27,.2))" }} html={spIllust(best.sp, 64)} />
                   <div style={{ flex: 1 }}><div className="serif" style={{ fontStyle: "italic", fontSize: 20 }}>{best.sp.n}</div><div style={{ fontSize: 13, color: "var(--stone)", marginBottom: 8 }}>{tx(best.sp.com, locale)}</div><span className={`edib ${best.sp.edib}`}>{t(`edib.${best.sp.edib}`)}</span></div>
-                  <div style={{ textAlign: "right" }}><div style={{ fontFamily: "Fraunces", fontWeight: 700, fontSize: 30, color: "var(--terracotta)" }}>{best.conf}%</div><div style={{ fontSize: 10, color: "var(--stone)", textTransform: "uppercase", letterSpacing: ".5px" }}>{t("identify.confidence")}</div></div>
+                  <div style={{ textAlign: "right" }}><div style={{ fontFamily: "Plus Jakarta Sans", fontWeight: 700, fontSize: 30, color: "var(--terracotta)" }}>{best.conf}%</div><div style={{ fontSize: 10, color: "var(--stone)", textTransform: "uppercase", letterSpacing: ".5px" }}>{t("identify.confidence")}</div></div>
                 </div>
                 {matches.length > 1 && (
                   <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid var(--sand)" }}>

@@ -8,7 +8,7 @@ const config: Config = {
         terracotta: "#a86543", clay: "#8b3f29", umber: "#6d482b", ink: "#2e231b",
         moss: "#0e9b3d", leaf: "#52c871", leaf2: "#85df42",
       },
-      fontFamily: { serif: ["Fraunces", "serif"], sans: ["Hanken Grotesk", "sans-serif"] },
+      fontFamily: { serif: ["Plus Jakarta Sans", "sans-serif"], sans: ["Plus Jakarta Sans", "sans-serif"] },
     },
   },
   plugins: [],

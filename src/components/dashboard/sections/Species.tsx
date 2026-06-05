@@ -69,10 +69,10 @@ export default function Species({ onAskGuide }: { onAskGuide: (name: string) => 
             <p className="sub">{t("species.cmpSub")}</p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, margin: "16px 0" }}>
               <div style={{ background: "rgba(109,138,75,.12)", borderRadius: 14, padding: 16, textAlign: "center", border: "1.5px solid rgba(109,138,75,.3)" }}>
-                <Illu html={spIllust(compare[0], 54)} /><div style={{ fontFamily: "Fraunces", fontStyle: "italic", fontSize: 15, marginTop: 8 }}>{compare[0].n}</div><span className={`edib ${compare[0].edib}`} style={{ marginTop: 8 }}>{t(`edib.${compare[0].edib}`)}</span>
+                <Illu html={spIllust(compare[0], 54)} /><div style={{ fontFamily: "Plus Jakarta Sans", fontStyle: "italic", fontSize: 15, marginTop: 8 }}>{compare[0].n}</div><span className={`edib ${compare[0].edib}`} style={{ marginTop: 8 }}>{t(`edib.${compare[0].edib}`)}</span>
               </div>
               <div style={{ background: "rgba(139,63,41,.1)", borderRadius: 14, padding: 16, textAlign: "center", border: "1.5px solid rgba(139,63,41,.3)" }}>
-                <Illu html={spIllust(compare[1], 54)} /><div style={{ fontFamily: "Fraunces", fontStyle: "italic", fontSize: 15, marginTop: 8 }}>{compare[1].n}</div><span className={`edib ${compare[1].edib}`} style={{ marginTop: 8 }}>{t(`edib.${compare[1].edib}`)}</span>
+                <Illu html={spIllust(compare[1], 54)} /><div style={{ fontFamily: "Plus Jakarta Sans", fontStyle: "italic", fontSize: 15, marginTop: 8 }}>{compare[1].n}</div><span className={`edib ${compare[1].edib}`} style={{ marginTop: 8 }}>{t(`edib.${compare[1].edib}`)}</span>
               </div>
             </div>
             <div className="sp-meta" style={{ fontSize: 13 }}><b>{tx(compare[0].com, locale)}:</b> {tx(compare[0].note, locale)}<br /><br /><b>{tx(compare[1].com, locale)}:</b> {tx(compare[1].note, locale)}</div>

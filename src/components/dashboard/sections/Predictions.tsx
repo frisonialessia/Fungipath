@@ -23,7 +23,7 @@ export default function Predictions({ hotspots }: { hotspots: Hotspot[] }) {
                   <div style={{ fontSize: 13, color: "var(--stone)" }}>{h.species} · {h.habitat} · {h.alt} m</div>
                 </div>
                 <div style={{ textAlign: "right", minWidth: 120 }}>
-                  <div style={{ fontFamily: "Fraunces", fontWeight: 700, fontSize: 28, color: h.prob < 50 ? "var(--clay)" : "var(--terracotta)" }}>{h.prob}%</div>
+                  <div style={{ fontFamily: "Plus Jakarta Sans", fontWeight: 700, fontSize: 28, color: h.prob < 50 ? "var(--clay)" : "var(--terracotta)" }}>{h.prob}%</div>
                   <div className="prob" style={{ margin: 0 }}><div className="bar" style={{ width: 120 }}><i style={{ width: `${h.prob}%` }} /></div></div>
                 </div>
               </div>
