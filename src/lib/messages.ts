@@ -112,6 +112,8 @@ export const MESSAGES = {
       lookalike: "⚠️ Watch its dangerous look-alike", ask: "Ask the guide about this", again: "Try another photo",
       demo: "Demo identification (visual color match). Plug a vision model (Claude Vision, a classifier) for real accuracy — the code seam is marked in /api/identify.",
       safety: "Educational only and NEVER a confirmation. A photo is not enough to identify safely — confirm with a mycologist before any consumption.",
+      how: "How it works", s1: "Upload a clear photo of the whole mushroom — cap, gills, stem and base.", s2: "FungiPath suggests candidates and always shows the toxic look-alikes.", s3: "Confirm with a mycologist before any consumption. Never eat on a guess.",
+      learnTitle: "Edibles to know", learnSub: "From the catalog — open Species for full field sheets, guides and look-alikes.",
     },
     species: {
       title: "Species", sub: "{n} illustrated species from a catalog of {total}+. Tap one for its sheet, edibility and look-alikes.",
@@ -362,6 +364,8 @@ export const MESSAGES = {
       lookalike: "⚠️ Cuidado con su sosias peligroso", ask: "Preguntar al guía sobre esto", again: "Probar otra foto",
       demo: "Identificación de demostración (coincidencia visual por color). Conecta un modelo de visión (Claude Vision, un clasificador) para precisión real — la costura está marcada en /api/identify.",
       safety: "Solo educativo y NUNCA una confirmación. Una foto no basta para identificar con seguridad — confirma con un micólogo antes de cualquier consumo.",
+      how: "Cómo funciona", s1: "Sube una foto nítida de toda la seta — sombrero, láminas, pie y base.", s2: "FungiPath sugiere candidatas y siempre muestra los sosias tóxicos.", s3: "Confirma con un micólogo antes de cualquier consumo. Nunca comas por intuición.",
+      learnTitle: "Comestibles a conocer", learnSub: "Del catálogo — abre Especies para fichas de campo completas, guías y sosias.",
     },
     species: {
       title: "Especies", sub: "{n} especies ilustradas de un catálogo de {total}+. Toca una para ver su ficha, comestibilidad y sosias.",
