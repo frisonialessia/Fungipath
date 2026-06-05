@@ -27,6 +27,7 @@ export default function Climate({ hotspots }: { hotspots: Hotspot[] }) {
   const spot = hotspots[0];
   const [days, setDays] = useState<Day[]>(MOCK);
   const [live, setLive] = useState(false);
+  const [meta, setMeta] = useState<{ soilTemp?: number; daysSinceRain?: number }>({});
 
   // Clima REAL a 7 días (Open-Meteo) para el primer hotspot.
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function Climate({ hotspots }: { hotspots: Hotspot[] }) {
     let cancelled = false;
     fetch(`/api/forecast?lat=${spot.lat}&lng=${spot.lng}`)
       .then((r) => r.json())
-      .then((d) => { if (!cancelled && Array.isArray(d.daily) && d.daily.length) { setDays(d.daily); setLive(true); } })
+      .then((d) => { if (cancelled) return; if (Array.isArray(d.daily) && d.daily.length) { setDays(d.daily); setLive(true); } setMeta({ soilTemp: d.soilTemp, daysSinceRain: d.daysSinceRain }); })
       .catch(() => {});
     return () => { cancelled = true; };
   }, [spot?.lat, spot?.lng]);
@@ -49,13 +50,23 @@ export default function Climate({ hotspots }: { hotspots: Hotspot[] }) {
   const [temp, setTemp] = useState(14);
   const sim = calcProbability({ rainMm: rain, soilTemp: temp, aspect: "N" });
   const delta = sim - base;
+  const optimalDays = days.filter(isOptimal);
+  const accumRain = Math.round(days.reduce((s, d) => s + d.rain, 0));
 
   return (
     <div>
       <div className="topbar"><div>
         <span className="demo-flag">{live ? t("overview.flagLive") : t("overview.flagDemo")}</span>
-        <h1 className="serif">{t("climate.title")}</h1><p>{t("climate.sub")}</p>
+        <h1 className="serif">{t("climate.title")}</h1><p>{t("climate.sub")}{spot ? ` · ${spot.name}` : ""}</p>
       </div></div>
+
+      <div className="metrics" style={{ marginBottom: 15 }}>
+        <div className="card reveal"><div className="k-label">{t("climate.mSoil")}</div><div className="k-value">{meta.soilTemp ?? 14}<span className="u"> °C</span></div></div>
+        <div className="card reveal"><div className="k-label">{t("climate.mSinceRain")}</div><div className="k-value">{meta.daysSinceRain ?? 9}</div></div>
+        <div className="card reveal"><div className="k-label">{t("climate.mOptimal")}</div><div className="k-value">{optimalDays.length}</div><span className="chip up">{t("climate.optimal").toLowerCase()}</span></div>
+        <div className="card reveal"><div className="k-label">{t("climate.mAccum")}</div><div className="k-value">{accumRain}<span className="u"> mm</span></div></div>
+      </div>
+
       <div className="card" style={{ marginBottom: 15 }}>
         <div className="climate-grid">
           {days.map((d, i) => (
@@ -68,14 +79,27 @@ export default function Climate({ hotspots }: { hotspots: Hotspot[] }) {
           ))}
         </div>
       </div>
-      <div className="card" style={{ background: "var(--ink)", color: "var(--cream)" }}>
-        <div className="panel-head"><h3 className="serif" style={{ color: "var(--cream)" }}>{t("climate.simTitle")}</h3><span style={{ color: "#b0a392" }}>{t("climate.simAside")}</span></div>
-        <p style={{ fontSize: 13, color: "#cabdac", marginBottom: 18 }}>{t("climate.simIntro")}</p>
-        <div className="sim-row"><label>{t("climate.simRain")} <b>{rain} mm</b></label><input type="range" min={0} max={80} value={rain} onChange={(e) => setRain(+e.target.value)} /></div>
-        <div className="sim-row"><label>{t("climate.simTemp")} <b>{temp} °C</b></label><input type="range" min={4} max={28} value={temp} onChange={(e) => setTemp(+e.target.value)} /></div>
-        <div className="sim-result">
-          <div><div className="sim-big">{sim}%</div><div style={{ fontSize: 11, color: "#9c8f7d", textTransform: "uppercase", letterSpacing: ".5px" }}>{t("climate.simResult")}</div></div>
-          <div className={`sim-delta ${delta >= 0 ? "pos" : "neg"}`}>{delta >= 0 ? "▲ +" : "▼ "}{delta} {t("climate.simVs")}</div>
+      <div className="grid-2" style={{ gridTemplateColumns: "1.4fr 1fr", alignItems: "start" }}>
+        <div className="card" style={{ background: "var(--ink)", color: "var(--cream)" }}>
+          <div className="panel-head"><h3 className="serif" style={{ color: "var(--cream)" }}>{t("climate.simTitle")}</h3><span style={{ color: "#b0a392" }}>{t("climate.simAside")}</span></div>
+          <p style={{ fontSize: 13, color: "#cabdac", marginBottom: 18 }}>{t("climate.simIntro")}</p>
+          <div className="sim-row"><label>{t("climate.simRain")} <b>{rain} mm</b></label><input type="range" min={0} max={80} value={rain} onChange={(e) => setRain(+e.target.value)} /></div>
+          <div className="sim-row"><label>{t("climate.simTemp")} <b>{temp} °C</b></label><input type="range" min={4} max={28} value={temp} onChange={(e) => setTemp(+e.target.value)} /></div>
+          <div className="sim-result">
+            <div><div className="sim-big">{sim}%</div><div style={{ fontSize: 11, color: "#9c8f7d", textTransform: "uppercase", letterSpacing: ".5px" }}>{t("climate.simResult")}</div></div>
+            <div className={`sim-delta ${delta >= 0 ? "pos" : "neg"}`}>{delta >= 0 ? "▲ +" : "▼ "}{delta} {t("climate.simVs")}</div>
+          </div>
+        </div>
+        <div className="card">
+          <div className="panel-head"><h3 className="serif">{t("climate.bestDays")}</h3></div>
+          {optimalDays.length ? optimalDays.map((d, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 0", borderBottom: "1px solid var(--sand)" }}>
+              <div style={{ color: "var(--terracotta)", display: "grid", placeItems: "center" }}>{weatherIcon(iconFor(d.rain, d.temp), { size: 24 })}</div>
+              <div style={{ flex: 1, fontWeight: 600, fontSize: 14, textTransform: "capitalize" }}>{dayName(d, days.indexOf(d))}</div>
+              <div style={{ fontSize: 13, color: "var(--stone)" }}>{d.temp}° · {d.rain}mm</div>
+              <span className="priv-tag shared">{t("climate.optimal")}</span>
+            </div>
+          )) : <p style={{ fontSize: 13, color: "var(--stone)" }}>{t("climate.noOptimal")}</p>}
         </div>
       </div>
     </div>

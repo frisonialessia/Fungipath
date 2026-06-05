@@ -166,6 +166,8 @@ export const MESSAGES = {
       simIntro: "Move the sliders and watch the model recompute the average probability of your hotspots live.",
       simRain: "Rain next week", simTemp: "Average temperature", simResult: "estimated avg. prob.", simVs: "pts vs today",
       daysCsv: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
+      mSoil: "Soil temp", mSinceRain: "Days since rain", mOptimal: "Optimal days", mAccum: "Rain (7d)",
+      bestDays: "Best days to go", noOptimal: "No standout day this week — watch for rain.",
     },
     soil: {
       title: "Soil & terrain", sub: "Real soil and terrain science (SoilGrids + DEM + Open-Meteo). The base that determines which species thrives where.",
@@ -180,6 +182,7 @@ export const MESSAGES = {
     },
     diary: {
       title: "Harvest journal", sub: "Log what you find. The model recalibrates with every entry.",
+      mTrips: "Trips", mFinds: "Finds", mKg: "Total", mHit: "Hit rate", bySite: "Yield by site", recent: "Recent trips",
       add: "+ Log a trip", hit: "Found · {q} kg", none: "No find",
       learning: "Model learning:", learningBody: "with {n} confirmed finds, FungiPath has recalibrated your beech-wood prediction +6% this season.",
       mTitle: "Log a trip", mSub: "What did you find? This helps the model learn your terrain.",
@@ -209,6 +212,11 @@ export const MESSAGES = {
       shareComarca: "Share district activity (anonymous)", shareComarcaSub: "Shows aggregate signal without revealing your exact points.",
       alerts: "Optimal-window alerts", alertsSub: "Push alert when your zones hit their optimum.",
       toggledOn: "{n} enabled", toggledOff: "{n} disabled",
+      howTitle: "How privacy works", perSite: "Per site", more: "More options",
+      pPrivateD: "Only you see the exact point. Default for every new site.",
+      pFuzzyD: "Others see a blurred zone — coordinates shifted ~1 km.",
+      pSharedD: "Counts toward district-level activity, never the exact point.",
+      principle: "Privacy by design (F4): your best spots never leak. You choose, per site.",
     },
     settings: {
       title: "Settings", sub: "Tune FungiPath to how you forage. Your profile sharpens predictions and alerts.",
@@ -418,6 +426,8 @@ export const MESSAGES = {
       simIntro: "Mueve los controles y mira cómo el modelo recalcula la probabilidad media de tus hotspots en vivo.",
       simRain: "Lluvia próxima semana", simTemp: "Temperatura media", simResult: "prob. media estimada", simVs: "pts vs hoy",
       daysCsv: "Lun,Mar,Mié,Jue,Vie,Sáb,Dom",
+      mSoil: "Temp suelo", mSinceRain: "Días sin lluvia", mOptimal: "Días óptimos", mAccum: "Lluvia (7d)",
+      bestDays: "Mejores días para salir", noOptimal: "Ningún día destacado esta semana — vigila la lluvia.",
     },
     soil: {
       title: "Suelo & terreno", sub: "Ciencia real de suelo y terreno (SoilGrids + DEM + Open-Meteo). La base que determina qué especie prospera dónde.",
@@ -432,6 +442,7 @@ export const MESSAGES = {
     },
     diary: {
       title: "Diario de cosecha", sub: "Registra lo que encuentras. El modelo recalibra con cada entrada.",
+      mTrips: "Salidas", mFinds: "Hallazgos", mKg: "Total", mHit: "Tasa de acierto", bySite: "Rendimiento por sitio", recent: "Salidas recientes",
       add: "+ Registrar salida", hit: "Encontró · {q} kg", none: "Sin hallazgo",
       learning: "Aprendizaje del modelo:", learningBody: "con {n} hallazgos confirmados, FungiPath ha recalibrado la predicción de tus hayedos +6% esta temporada.",
       mTitle: "Registrar salida", mSub: "¿Qué encontraste? Esto ayuda al modelo a aprender de tu terreno.",
@@ -461,6 +472,11 @@ export const MESSAGES = {
       shareComarca: "Compartir actividad de comarca (anónima)", shareComarcaSub: "Muestra señal agregada sin revelar tus puntos exactos.",
       alerts: "Alertas de ventana óptima", alertsSub: "Aviso push cuando tus zonas entran en óptimo.",
       toggledOn: "{n} activado", toggledOff: "{n} desactivado",
+      howTitle: "Cómo funciona la privacidad", perSite: "Por sitio", more: "Más opciones",
+      pPrivateD: "Solo tú ves el punto exacto. Por defecto en cada sitio nuevo.",
+      pFuzzyD: "Otros ven una zona difusa — coordenadas desplazadas ~1 km.",
+      pSharedD: "Suma a la actividad de comarca, nunca el punto exacto.",
+      principle: "Privacidad por diseño (F4): tus mejores puntos nunca se filtran. Tú eliges, por sitio.",
     },
     settings: {
       title: "Ajustes", sub: "Adapta FungiPath a cómo recolectas. Tu perfil afina predicciones y alertas.",

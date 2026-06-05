@@ -17,40 +17,60 @@ export default function Diary({ diary, hotspots, onAddLog }: { diary: DiaryEntry
   const [species, setSpecies] = useState("");
   const [weather, setWeather] = useState("wCloud");
   const [notes, setNotes] = useState("");
-  const foundCount = diary.filter((d) => d.found).length;
 
-  function open() {
-    setSpot(hotspots[0]?.name ?? ""); setFound("yes"); setQty(""); setDate(today);
-    setSpecies(""); setWeather("wCloud"); setNotes(""); setModal(true);
-  }
+  const finds = diary.filter((d) => d.found).length;
+  const totalKg = diary.reduce((s, d) => s + (d.qty || 0), 0);
+  const hitRate = diary.length ? Math.round((finds / diary.length) * 100) : 0;
+  const bySite = Object.entries(diary.reduce<Record<string, number>>((m, d) => { m[d.spot] = (m[d.spot] || 0) + (d.qty || 0); return m; }, {})).sort((a, b) => b[1] - a[1]);
+  const maxSite = Math.max(1, ...bySite.map((s) => s[1]));
+
+  function open() { setSpot(hotspots[0]?.name ?? ""); setFound("yes"); setQty(""); setDate(today); setSpecies(""); setWeather("wCloud"); setNotes(""); setModal(true); }
   function save() {
-    onAddLog({
-      spot: spot || hotspots[0]?.name || "Site", found: found === "yes", qty: parseFloat(qty) || 0,
-      date, species: species || undefined, notes: notes || undefined, weather: t(`diary.${weather}`),
-    });
+    onAddLog({ spot: spot || hotspots[0]?.name || "Site", found: found === "yes", qty: parseFloat(qty) || 0, date, species: species || undefined, notes: notes || undefined, weather: t(`diary.${weather}`) });
     setModal(false); toast(t("diary.saved"));
   }
 
   return (
     <div>
       <div className="topbar"><div><h1 className="serif">{t("diary.title")}</h1><p>{t("diary.sub")}</p></div><button className="btn" onClick={open}>{t("diary.add")}</button></div>
-      <div className="card">
-        <div>
-          {diary.map((l, i) => (
-            <div key={i} style={{ padding: "13px 0", borderBottom: "1px solid var(--sand)", display: "flex", alignItems: "center", gap: 12 }}>
-              <span className={`log-dot ${l.found ? "ok" : "no"}`} style={{ flexShrink: 0 }} />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 14 }}>{l.spot}{l.species ? <span style={{ fontStyle: "italic", color: "var(--stone)", fontWeight: 400 }}> · {l.species}</span> : null}</div>
-                <div style={{ fontSize: 12, color: "var(--stone)", marginTop: 2 }}>
-                  {l.date ? l.date + " · " : ""}{l.weather ? l.weather + " · " : ""}{l.found ? t("diary.hit", { q: l.qty }) : t("diary.none")}
-                  {l.notes ? <span> · “{l.notes}”</span> : null}
+
+      <div className="metrics" style={{ marginBottom: 15 }}>
+        <div className="card reveal"><div className="k-label">{t("diary.mTrips")}</div><div className="k-value">{diary.length}</div></div>
+        <div className="card reveal"><div className="k-label">{t("diary.mFinds")}</div><div className="k-value">{finds}</div></div>
+        <div className="card reveal"><div className="k-label">{t("diary.mKg")}</div><div className="k-value">{totalKg.toFixed(1)}<span className="u"> kg</span></div></div>
+        <div className="card reveal"><div className="k-label">{t("diary.mHit")}</div><div className="k-value">{hitRate}<span className="u">%</span></div></div>
+      </div>
+
+      <div className="grid-2" style={{ gridTemplateColumns: "1.4fr 1fr", alignItems: "start" }}>
+        <div className="card" style={{ display: "flex", flexDirection: "column" }}>
+          <div className="panel-head"><h3 className="serif">{t("diary.recent")}</h3><span>{diary.length}</span></div>
+          <div style={{ maxHeight: 460, overflowY: "auto", marginRight: -6, paddingRight: 6 }}>
+            {diary.map((l, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "13px 0", borderBottom: "1px solid var(--sand)" }}>
+                <span className={`log-dot ${l.found ? "ok" : "no"}`} style={{ flexShrink: 0 }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>{l.spot}{l.species ? <span style={{ fontStyle: "italic", color: "var(--stone)", fontWeight: 400 }}> · {l.species}</span> : null}</div>
+                  <div style={{ fontSize: 12, color: "var(--stone)", marginTop: 2 }}>{l.date ? l.date + " · " : ""}{l.weather ? l.weather + " · " : ""}{l.found ? t("diary.hit", { q: l.qty }) : t("diary.none")}{l.notes ? <span> · “{l.notes}”</span> : null}</div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--sand)", fontSize: 13, color: "var(--ink-soft)" }}>
-          <b>{t("diary.learning")}</b> {t("diary.learningBody", { n: foundCount })}
+
+        <div>
+          <div className="card" style={{ marginBottom: 15 }}>
+            <div className="panel-head"><h3 className="serif">{t("diary.bySite")}</h3></div>
+            {bySite.length ? bySite.map(([name, kg]) => (
+              <div key={name} style={{ marginBottom: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 4 }}><span style={{ fontWeight: 500 }}>{name}</span><span style={{ color: "var(--stone)" }}>{kg.toFixed(1)} kg</span></div>
+                <div style={{ width: "100%", height: 6, background: "var(--sand)", borderRadius: 3, overflow: "hidden" }}><i style={{ display: "block", height: "100%", width: `${(kg / maxSite) * 100}%`, background: "var(--terracotta)" }} /></div>
+              </div>
+            )) : <p style={{ fontSize: 13, color: "var(--stone)" }}>—</p>}
+          </div>
+          <div className="card" style={{ background: "var(--ink)", color: "var(--cream)" }}>
+            <div className="panel-head"><h3 className="serif" style={{ color: "var(--cream)" }}>{t("diary.learning")}</h3></div>
+            <p style={{ fontSize: 13.5, color: "#cabdac", lineHeight: 1.6 }}>{t("diary.learningBody", { n: finds })}</p>
+          </div>
         </div>
       </div>
 
