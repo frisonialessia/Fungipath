@@ -182,3 +182,27 @@ El PoC tiene éxito si alguien que lo prueba entiende en 30 segundos: *"veo un m
 ---
 
 **Aviso permanente**: FungiPath es educativo. No autoriza el consumo de setas. Toda identificación debe confirmarse con un experto presencial. El agente IA y la UI deben reflejar esto siempre.
+
+---
+
+## 9. Estado del PoC (actualizado · jun 2026)
+
+> El roadmap detallado, la lista completa de features y la **guía de integración
+> (cómo conectar Supabase / APIs / un modelo real)** viven ahora en el **README.md**.
+
+**Filosofía:** la app funciona **sin backend, sin claves y sin coste** (guía local,
+persistencia local, APIs gratis sin key con *fallback* a mock). Cada integración tiene
+una **costura documentada** (`src/lib/config.ts` es la fuente de verdad de los flags).
+
+**Construido (PoC, gratis):** dashboard de 15 secciones bilingüe/responsive; predicción
+real (Open-Meteo) en lote; datos reales GBIF (registros + mapa de distribución) y
+SoilGrids+DEM (suelo/terreno); identificación por foto (local, enchufable); mapa mundial
+real; calendario + vedas/permisos; diario; modelo que aprende (F3, simulado); comunidad
+con consenso (simulado); trazabilidad/ventas (CSV); ajustes.
+
+**Planificado (sigue siendo gratis/sin backend):** persistencia local total, PWA offline
+instalable, identificación guiada (clave dicotómica), optimizador de rutas + juego de
+sosias, kit de difusión LinkedIn (Open Graph + tour).
+
+**Producción (requiere infra/decisión):** auth Supabase multiusuario, modelo ML entrenado
+con el diario (el foso F3), NDVI real Sentinel-2, app móvil (GPS/SOS/offline), planes+Stripe.

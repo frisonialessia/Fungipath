@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import LangToggle from "@/components/LangToggle";
@@ -64,6 +64,12 @@ function dbToHotspot(r: DbRow): Hotspot {
   return { name: r.name, species: r.species, alt: r.altitude ?? 0, aspect: r.aspect, habitat: r.habitat ?? "", prob: 0, lat: r.lat, lng: r.lng, priv: r.privacy ?? "private", why: "", factors: [] };
 }
 
+// Persistencia local (sin backend): la app recuerda todo en el navegador.
+const ls = {
+  get<T>(k: string): T | null { try { if (typeof window === "undefined") return null; const v = localStorage.getItem(k); return v ? JSON.parse(v) as T : null; } catch { return null; } },
+  set(k: string, v: unknown) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* noop */ } },
+};
+
 export default function DashboardClient() {
   const { locale, t } = useI18n();
   const [hotspots, setHotspots] = useState<Hotspot[]>(() => localizedHotspots(locale));
@@ -83,6 +89,15 @@ export default function DashboardClient() {
   const [pendingParcel, setPendingParcel] = useState<[number, number][] | null>(null);
   const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
 
+  // Persistencia local: solo guardamos tras la primera acción del usuario, para que
+  // un visitante nuevo siga viendo el seed traducido al cambiar de idioma.
+  const touchedRef = useRef(false);
+  useEffect(() => { touchedRef.current = !!ls.get("fp_touched"); }, []);
+  function markTouched() { touchedRef.current = true; ls.set("fp_touched", 1); }
+  useEffect(() => { if (touchedRef.current) ls.set("fp_hotspots", hotspots); }, [hotspots]);
+  useEffect(() => { if (touchedRef.current) ls.set("fp_diary", diary); }, [diary]);
+  useEffect(() => { if (touchedRef.current) ls.set("fp_parcels", parcels); }, [parcels]);
+
   // Motor de datos + predicción. Al cargar y al cambiar idioma:
   // 1) intenta leer hotspots de Supabase; si no hay, cae al seed mock localizado.
   // 2) predice EN LOTE con clima real de Open-Meteo en el idioma activo.
@@ -99,10 +114,18 @@ export default function DashboardClient() {
           base = hd.hotspots.map(dbToHotspot); setSource("db");
         }
       } catch { /* sin red: fallback abajo */ }
-      if (!base) { base = localizedHotspots(locale); setSource("mock"); }
+      if (!base) {
+        // si el usuario ya tocó algo, restauramos lo guardado; si no, seed localizado
+        const saved = ls.get<boolean>("fp_touched") ? ls.get<Hotspot[]>("fp_hotspots") : null;
+        base = saved && saved.length ? saved : localizedHotspots(locale);
+        setSource("mock");
+      }
       if (cancelled) return;
       setHotspots(base);
-      setDiary(localizedDiary(locale));
+      const savedDiary = ls.get<boolean>("fp_touched") ? ls.get<DiaryEntry[]>("fp_diary") : null;
+      setDiary(savedDiary && savedDiary.length ? savedDiary : localizedDiary(locale));
+      const savedParcels = ls.get<boolean>("fp_touched") ? ls.get<Parcel[]>("fp_parcels") : null;
+      if (savedParcels && savedParcels.length) setParcels(savedParcels);
       // 2) predicción en lote con clima real
       try {
         const r = await fetch("/api/predict/batch", {
@@ -128,6 +151,7 @@ export default function DashboardClient() {
   function openMapCreate(lat: number, lng: number) { setPendingCoords({ lat, lng }); setNewModal(true); }
 
   function handleCreate(h: Hotspot, enrich: boolean) {
+    markTouched();
     let newIndex = 0;
     setHotspots((hs) => { const next = [...hs, h]; newIndex = next.length - 1; return next; });
     setSelectedIdx(hotspots.length);
@@ -153,6 +177,7 @@ export default function DashboardClient() {
   // Crear parcela dibujada: centroide → predicción real (Open-Meteo).
   function handleCreateParcel(name: string, species: string, notes: string) {
     if (!pendingParcel || pendingParcel.length < 3) { setPendingParcel(null); return; }
+    markTouched();
     const [lat, lng] = centroid(pendingParcel);
     const id = "p" + Date.now();
     const parcel: Parcel = { id, name, species, notes, points: pendingParcel, lat, lng, aspect: "N", prob: 0, why: t("modal.calcReal"), live: false };
@@ -222,9 +247,9 @@ export default function DashboardClient() {
           {active === "climate" && <Climate hotspots={hotspots} />}
           {active === "soil" && <Soil hotspots={hotspots} />}
           {active === "calendar" && <Calendar />}
-          {active === "diary" && <Diary diary={diary} hotspots={hotspots} onAddLog={(e) => setDiary((d) => [e, ...d])} />}
+          {active === "diary" && <Diary diary={diary} hotspots={hotspots} onAddLog={(e) => { markTouched(); setDiary((d) => [e, ...d]); }} />}
           {active === "safety" && <Safety />}
-          {active === "privacy" && <Privacy hotspots={hotspots} onSetPriv={(i, v: Priv) => setHotspots((hs) => hs.map((h, idx) => idx === i ? { ...h, priv: v } : h))} />}
+          {active === "privacy" && <Privacy hotspots={hotspots} onSetPriv={(i, v: Priv) => { markTouched(); setHotspots((hs) => hs.map((h, idx) => idx === i ? { ...h, priv: v } : h)); }} />}
           {active === "traceability" && <Business hotspots={hotspots} />}
           {active === "settings" && <Settings hotspots={hotspots} />}
         </main>

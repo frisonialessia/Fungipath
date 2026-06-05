@@ -5,6 +5,13 @@ import Providers from "@/components/Providers";
 export const metadata: Metadata = {
   title: "FungiPath · Predictive forest intelligence",
   description: "Know where and when the forest will bloom. Mushroom prediction crossing weather, satellite and your terrain.",
+  metadataBase: new URL("https://fungipath.vercel.app"),
+  openGraph: {
+    title: "FungiPath · Predictive forest intelligence",
+    description: "Know where and when the forest will bloom — predict mushrooms with weather, terrain and biodiversity data.",
+    type: "website",
+  },
+  twitter: { card: "summary_large_image", title: "FungiPath", description: "Know where and when the forest will bloom." },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
