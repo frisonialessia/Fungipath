@@ -582,3 +582,72 @@ footer small { color: var(--ink-soft); font-size: 13px; }
   .statband { grid-template-columns: 1fr; }
   .route-info { gap: 16px; }
 }
+
+/* ===================== DISEÑO v3 · fotográfico (bosque real) ===================== */
+
+/* HERO a sangre sobre fotografía de bosque */
+.hero {
+  background-image:
+    linear-gradient(180deg, rgba(16,24,15,.78) 0%, rgba(16,24,15,.42) 40%, rgba(16,24,15,.66) 100%),
+    url('/forest/hero.jpg');
+  background-size: cover; background-position: center; color: var(--cream);
+}
+.hero::after { display: none; }            /* la foto sustituye a la aurora */
+.hero .wrap { padding-top: 84px; padding-bottom: 96px; }
+.hero .eyebrow { color: #cfe9b6; }
+.hero .eyebrow::before { background: #cfe9b6; }
+.hero h1 { color: #f5f8ee; text-shadow: 0 2px 36px rgba(0,0,0,.5); }
+.hero h1 em { color: #bfe7a2; }
+.hero p.lede { color: rgba(245,248,238,.88); }
+.hero .btn-g { color: #f5f8ee; border-color: rgba(245,248,238,.5); background: rgba(255,255,255,.04); }
+.hero .btn-g:hover { background: rgba(245,248,238,.92); color: var(--ink); border-color: transparent; }
+.hero-visual::before { background: radial-gradient(circle, rgba(133,223,66,.18), transparent 70%); }
+
+/* Banda inmersiva · parcelas de predicción brillando sobre el bosque (estilo Bomon) */
+.immersive { position: relative; overflow: hidden; min-height: 560px; display: grid; align-items: center;
+  background-image: url('/forest/map.jpg'); background-size: cover; background-position: center; }
+.immersive .im-scrim { position: absolute; inset: 0; z-index: 1;
+  background:
+    linear-gradient(105deg, rgba(12,20,12,.92) 0%, rgba(12,20,12,.72) 42%, rgba(12,20,12,.30) 100%),
+    radial-gradient(120% 90% at 80% 50%, transparent 40%, rgba(12,20,12,.55) 100%); }
+.im-poly { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; opacity: .92; }
+.im-poly .poly { animation: polyPulse 5.5s ease-in-out infinite; transform-origin: center; }
+.im-poly .p2 { animation-delay: 1.3s; } .im-poly .p3 { animation-delay: 2.6s; }
+@keyframes polyPulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+.im-content { position: relative; z-index: 3; display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; padding-top: 90px; padding-bottom: 90px; }
+.im-copy .k { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2.5px; color: #bfe7a2; margin-bottom: 16px; }
+.im-copy h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: clamp(34px, 4.4vw, 58px); line-height: 1.02; letter-spacing: -1.6px; color: #f5f8ee; }
+.im-copy p { color: rgba(245,248,238,.82); font-size: 17px; line-height: 1.6; margin: 20px 0 30px; max-width: 460px; }
+.im-cards { display: flex; flex-direction: column; gap: 14px; }
+.im-card { display: flex; align-items: baseline; gap: 16px; padding: 18px 22px; border-radius: 16px;
+  background: rgba(248,250,243,.10); border: 1px solid rgba(245,248,238,.18);
+  backdrop-filter: blur(14px) saturate(1.1); -webkit-backdrop-filter: blur(14px) saturate(1.1); }
+.im-card .v { font-family: 'Fraunces', serif; font-weight: 700; font-size: 38px; line-height: 1; color: #bfe7a2; min-width: 86px; }
+.im-card.hi .v { color: #d6f7a8; }
+.im-card .l { font-size: 14px; color: rgba(245,248,238,.86); line-height: 1.4; }
+
+/* Divisor oscuro botánico · estilo Ephemeral */
+.ephemeral { position: relative; overflow: hidden; text-align: left;
+  background-image: url('/forest/divider.jpg'); background-size: cover; background-position: center; }
+.ephemeral .ep-scrim { position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg, rgba(10,14,9,.78), rgba(10,14,9,.62)); }
+.ephemeral .wrap { position: relative; z-index: 2; padding: 96px 0 100px; }
+.ep-no { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: #bfe7a2; margin-bottom: 14px; }
+.ep-word { font-family: 'Hanken Grotesk', sans-serif; font-weight: 800; font-size: clamp(72px, 13vw, 200px);
+  line-height: .9; letter-spacing: -4px; color: #f2f4e9; margin: 0; }
+.ep-body { font-family: 'Fraunces', serif; font-style: italic; font-size: clamp(18px, 2.2vw, 26px);
+  line-height: 1.45; color: rgba(242,244,233,.86); max-width: 620px; margin-top: 26px; }
+
+/* Textura fotográfica sutil en secciones claras */
+.specimens::before, .cycle::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url('/forest/moss.jpg'); background-size: cover; background-position: center; opacity: .05; }
+.cycle { position: relative; }
+.specimens > .wrap, .cycle > .wrap { position: relative; z-index: 1; }
+.final { background: radial-gradient(ellipse at 50% 0%, var(--cream-2), var(--cream)); }
+
+@media (max-width: 760px) {
+  .im-content { grid-template-columns: 1fr; gap: 28px; padding-top: 60px; padding-bottom: 60px; }
+  .immersive { min-height: 0; }
+  .ephemeral .wrap { padding: 64px 0 68px; }
+  .specimens::before, .cycle::before { display: none; }
+}

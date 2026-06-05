@@ -88,6 +88,39 @@ export default function Home() {
         </Reveal>
       </div></section>
 
+      {/* BANDA INMERSIVA · bosque real con parcelas de predicción (estilo Bomon) */}
+      <section className="immersive">
+        <div className="im-scrim" />
+        <svg className="im-poly" viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid slice" aria-hidden>
+          <defs>
+            <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="6" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <linearGradient id="pfill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#85df42" stopOpacity=".30" /><stop offset="100%" stopColor="#0e9b3d" stopOpacity=".06" />
+            </linearGradient>
+          </defs>
+          <g filter="url(#glow)" fill="url(#pfill)" stroke="#a5f56b" strokeWidth="2" strokeLinejoin="round">
+            <polygon className="poly p1" points="120,150 330,110 430,230 300,330 140,290" />
+            <polygon className="poly p2" points="520,90 760,130 800,300 600,340 500,210" />
+            <polygon className="poly p3" points="860,250 1080,210 1140,400 940,460 840,360" />
+          </g>
+        </svg>
+        <div className="wrap im-content">
+          <div className="im-copy">
+            <div className="k">{t("landing.imKicker")}</div>
+            <h2>{t("landing.imTitle")}</h2>
+            <p>{t("landing.imSub")}</p>
+            <Link href="/dashboard" className="btn-p">{t("landing.ctaPredict")}</Link>
+          </div>
+          <div className="im-cards">
+            <div className="im-card hi"><div className="v">91%</div><div className="l">{t("landing.imC1")}</div></div>
+            <div className="im-card"><div className="v">74%</div><div className="l">{t("landing.imC2")}</div></div>
+            <div className="im-card"><div className="v">58%</div><div className="l">{t("landing.imC3")}</div></div>
+          </div>
+        </div>
+      </section>
+
       {/* ESPECÍMENES FOTOGRÁFICOS */}
       <section className="specimens"><div className="wrap">
         <div className="section-head">
@@ -119,6 +152,16 @@ export default function Home() {
         </div></Reveal>
         <p className="cycle-note">{t("landing.cycleNote1")} <b>{t("landing.cycleNoteB")}</b>{t("landing.cycleNote2")}</p>
       </div></section>
+
+      {/* DIVISOR OSCURO BOTÁNICO · estilo Ephemeral */}
+      <section className="ephemeral">
+        <div className="ep-scrim" />
+        <div className="wrap">
+          <div className="ep-no">{t("landing.epNo")}</div>
+          <h2 className="ep-word">{t("landing.epWord")}</h2>
+          <p className="ep-body">{t("landing.epBody")}</p>
+        </div>
+      </section>
 
       <section className="tools" id="tools"><div className="wrap">
         <div className="section-head">
