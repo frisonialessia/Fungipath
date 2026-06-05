@@ -12,7 +12,7 @@ const TILES = {
   // OpenStreetMap estándar (el de antes).
   osm: { url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", sub: "abc", attr: "© OpenStreetMap", max: 18 },
 };
-const TILE = TILES.topo; // ← estilo activo (topográfico: bosque verde + curvas de nivel, forager pro)
+const TILE = TILES.positron; // ← estilo activo (blanco limpio; el color de marca lo ponen pines y parcelas)
 
 export interface MapHotspot {
   id: string; name: string; species: string; prob: number;

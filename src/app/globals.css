@@ -16,6 +16,7 @@
   --ink-soft: #41513b; --card: #f8faf3;
   --danger: #8b3f29; --ok: #5f7d3f;
   --moss: #0e9b3d; --leaf: #52c871; --leaf2: #85df42;
+  --g-accent: #52ac4d; /* verde natural del dashboard (interino; ajustar con paleta definitiva) */
   --line: rgba(30, 42, 28, .13);           /* borde hairline verdoso */
   --glass: rgba(248, 250, 243, .60);       /* superficie de cristal */
   --shadow-lg: 0 24px 60px -18px rgba(20, 30, 18, .30);
@@ -183,8 +184,8 @@ footer small { color: var(--ink-soft); font-size: 13px; }
 .nav-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #8c7d6b; margin: 16px 6px 6px; font-weight: 600; }
 .nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 13px; border-radius: 11px; color: #c9bba9; font-size: 14px; font-weight: 500; transition: all .16s; cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; }
 .nav-item:hover { background: rgba(255,255,255,.06); color: var(--cream); }
-.nav-item.active { background: rgba(133,223,66,.13); color: #eef7e3; box-shadow: inset 3px 0 0 0 var(--leaf2); }
-.nav-item.active .ic { opacity: 1; color: var(--leaf2); }
+.nav-item.active { background: rgba(82,172,77,.14); color: #eef7e3; box-shadow: inset 3px 0 0 0 var(--g-accent); }
+.nav-item.active .ic { opacity: 1; color: var(--g-accent); }
 .nav-item .ic { width: 18px; height: 18px; opacity: .85; flex-shrink: 0; }
 .nav-item .ic svg { width: 100%; height: 100%; }
 .sidebar-foot { margin-top: auto; display: flex; align-items: center; gap: 11px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.08); }
@@ -652,3 +653,32 @@ footer small { color: var(--ink-soft); font-size: 13px; }
   .ephemeral .wrap { padding: 64px 0 68px; }
   .specimens::before, .cycle::before { display: none; }
 }
+
+/* ===================== DISEÑO v3 · pulido del dashboard ===================== */
+
+/* Sidebar: glow de marca arriba + degradado de musgo abajo */
+.sidebar { position: relative; }
+.sidebar::before { content: ''; position: absolute; top: -50px; left: -40px; width: 240px; height: 240px; z-index: 0; pointer-events: none;
+  background: radial-gradient(circle, rgba(82,172,77,.15), transparent 70%); filter: blur(8px); }
+.sidebar::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 220px; z-index: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(82,172,77,.06)); }
+.sidebar > * { position: relative; z-index: 1; }
+.sidebar .brand svg { filter: drop-shadow(0 0 14px rgba(82,172,77,.3)); }
+.nav-label { color: #93a182; }
+.nav-label::after { content: ''; display: inline-block; width: 18px; height: 1px; background: rgba(147,161,130,.4); margin-left: 9px; vertical-align: middle; }
+
+/* Tarjetas de métrica con más cuerpo: marcador verde + lift al hover */
+.metrics .card { position: relative; overflow: hidden; transition: transform .2s, box-shadow .2s, border-color .2s; }
+.metrics .card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--sand); }
+.metrics .k-label { display: flex; align-items: center; gap: 8px; }
+.metrics .k-label::before { content: ''; width: 7px; height: 7px; border-radius: 2px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--g-accent), var(--ok)); box-shadow: 0 0 0 3px rgba(95,125,63,.12); }
+
+/* Paneles (cards grandes) con hover sutil y cabecera con filete */
+.grid-2 > .card, .grid-3 > .card { transition: box-shadow .2s, border-color .2s; }
+.grid-2 > .card:hover, .grid-3 > .card:hover { box-shadow: var(--shadow); border-color: var(--sand); }
+.panel-head h3 { position: relative; padding-left: 13px; }
+.panel-head h3::before { content: ''; position: absolute; left: 0; top: 52%; transform: translateY(-50%); width: 4px; height: 17px; border-radius: 2px;
+  background: linear-gradient(180deg, var(--g-accent), var(--ok)); }
+/* no aplicar el filete sobre paneles oscuros (texto claro) */
+.card[style*="--ink"] .panel-head h3::before, .insight .panel-head h3::before { background: var(--g-accent); }
