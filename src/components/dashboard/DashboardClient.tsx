@@ -17,6 +17,7 @@ import Model from "./sections/Model";
 import Species from "./sections/Species";
 import Identify from "./sections/Identify";
 import Routes from "./sections/Routes";
+import Community from "./sections/Community";
 import Climate from "./sections/Climate";
 import Soil from "./sections/Soil";
 import Calendar from "./sections/Calendar";
@@ -26,10 +27,10 @@ import Privacy from "./sections/Privacy";
 import Business from "./sections/Business";
 import Settings from "./sections/Settings";
 
-type SectionId = "overview" | "predict" | "model" | "species" | "identify" | "routes" | "climate" | "soil" | "calendar" | "diary" | "safety" | "privacy" | "traceability" | "settings";
+type SectionId = "overview" | "predict" | "model" | "species" | "identify" | "routes" | "community" | "climate" | "soil" | "calendar" | "diary" | "safety" | "privacy" | "traceability" | "settings";
 
 const NAV: { group: "explore" | "data" | "business" | "account"; items: SectionId[] }[] = [
-  { group: "explore", items: ["overview", "predict", "model", "species", "identify", "routes"] },
+  { group: "explore", items: ["overview", "predict", "model", "species", "identify", "routes", "community"] },
   { group: "data", items: ["climate", "soil", "calendar", "diary", "safety", "privacy"] },
   { group: "business", items: ["traceability"] },
   { group: "account", items: ["settings"] },
@@ -217,6 +218,7 @@ export default function DashboardClient() {
           {active === "species" && <Species onAskGuide={askGuide} />}
           {active === "identify" && <Identify onAskGuide={askGuide} />}
           {active === "routes" && <Routes />}
+          {active === "community" && <Community />}
           {active === "climate" && <Climate hotspots={hotspots} />}
           {active === "soil" && <Soil hotspots={hotspots} />}
           {active === "calendar" && <Calendar />}

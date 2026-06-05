@@ -5,7 +5,7 @@ export const MESSAGES = {
   en: {
     nav: {
       explore: "Exploration", data: "Data",
-      overview: "Hotspot map", predict: "Predictions", species: "Species", identify: "Identify", routes: "Best routes", model: "Learning model",
+      overview: "Hotspot map", predict: "Predictions", species: "Species", identify: "Identify", routes: "Best routes", model: "Learning model", community: "Community",
       climate: "Weather", soil: "Soil & terrain", calendar: "Season & rules", diary: "Harvest journal", safety: "Trail safety", privacy: "Privacy",
       user: "Explorer", plan: "Demo plan", back: "← Back to landing", account: "Account", settings: "Settings", business: "Business", traceability: "Traceability",
     },
@@ -97,6 +97,13 @@ export const MESSAGES = {
       rFound: "{found}/{total} finds logged here", rNone: "no validations yet — log trips to teach it",
       moat: "Your defensive moat", moatBody: "Every logged trip trains a model that predicts better — and those data are yours and your community's. Harder to copy with each user.",
       demo: "Simulated learning (PoC) — recalibration runs locally from your harvest journal, no API, no cost.",
+    },
+    community: {
+      title: "Community", sub: "Shared sightings, expert-style consensus and anonymous district activity — your exact spots stay private.",
+      district: "District activity", districtAside: "Anonymous · privacy by design", finds: "finds",
+      feed: "Community sightings", needsId: "Needs ID", research: "Research grade", agree: "Agree", agreed: "Agreed", ago: "{h}h ago", by: "by",
+      leaderboard: "Top foragers", validations: "finds",
+      demo: "Simulated community (PoC) — no accounts or APIs. Exact locations are never shown, only the district (F4).",
     },
     identify: {
       title: "Identify a mushroom", sub: "Upload a photo and FungiPath suggests candidates — always shown with their toxic look-alikes. Never eat on a guess.",
@@ -248,7 +255,7 @@ export const MESSAGES = {
   es: {
     nav: {
       explore: "Exploración", data: "Datos",
-      overview: "Mapa de hotspots", predict: "Predicciones", species: "Especies", identify: "Identificar", routes: "Rutas óptimas", model: "Modelo que aprende",
+      overview: "Mapa de hotspots", predict: "Predicciones", species: "Especies", identify: "Identificar", routes: "Rutas óptimas", model: "Modelo que aprende", community: "Comunidad",
       climate: "Clima", soil: "Suelo & terreno", calendar: "Temporada y normas", diary: "Diario de cosecha", safety: "Seguridad en ruta", privacy: "Privacidad",
       user: "Explorador", plan: "Plan Demo", back: "← Volver a la landing", account: "Cuenta", settings: "Ajustes", business: "Negocio", traceability: "Trazabilidad",
     },
@@ -340,6 +347,13 @@ export const MESSAGES = {
       rFound: "{found}/{total} hallazgos registrados aquí", rNone: "sin validaciones aún — registra salidas para enseñarle",
       moat: "Tu foso defensivo", moatBody: "Cada salida registrada entrena un modelo que predice mejor — y esos datos son tuyos y de tu comunidad. Más difícil de copiar con cada usuario.",
       demo: "Aprendizaje simulado (PoC) — la recalibración corre localmente desde tu diario de cosecha, sin API ni coste.",
+    },
+    community: {
+      title: "Comunidad", sub: "Avistamientos compartidos, consenso tipo experto y actividad anónima por comarca — tus puntos exactos siguen privados.",
+      district: "Actividad por comarca", districtAside: "Anónima · privacidad por diseño", finds: "hallazgos",
+      feed: "Avistamientos de la comunidad", needsId: "Por identificar", research: "Grado científico", agree: "De acuerdo", agreed: "Confirmado", ago: "hace {h}h", by: "por",
+      leaderboard: "Top recolectores", validations: "hallazgos",
+      demo: "Comunidad simulada (PoC) — sin cuentas ni APIs. Las ubicaciones exactas nunca se muestran, solo la comarca (F4).",
     },
     identify: {
       title: "Identificar una seta", sub: "Sube una foto y FungiPath sugiere candidatas — siempre junto a sus sosias tóxicos. Nunca comas por intuición.",
