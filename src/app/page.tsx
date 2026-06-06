@@ -174,7 +174,7 @@ export default function Home() {
 
       <section className="safety" id="safety"><div className="wrap">
         <div>
-          <div className="badge"><Logo /></div>
+          <div className="badge"><Logo size={56} /></div>
           <h2>{t("landing.safetyTitleA")}<br />{t("landing.safetyTitleB")} <em>{t("landing.safetyTitleEm")}</em> {t("landing.safetyTitleC")}</h2>
           <p>{t("landing.safetyLede")}</p>
         </div>
