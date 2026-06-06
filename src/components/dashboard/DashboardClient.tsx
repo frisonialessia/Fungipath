@@ -8,6 +8,7 @@ import { useI18n } from "@/lib/i18n";
 import { ToastProvider } from "./shared";
 import { NAV_ICONS } from "./icons";
 import ForestAgent from "./ForestAgent";
+import OnboardingTour from "./OnboardingTour";
 import NewHotspotModal from "./NewHotspotModal";
 import ParcelModal from "./ParcelModal";
 import { centroid, type Parcel } from "@/data/parcels";
@@ -277,6 +278,7 @@ export default function DashboardClient() {
       </div>
 
       <ForestAgent hotspots={agentHotspots} locale={locale} open={agentOpen} setOpen={setAgentOpen} pendingAsk={agentAsk} onAsked={() => setAgentAsk(null)} />
+      <OnboardingTour />
 
       {newModal && (
         <NewHotspotModal coords={pendingCoords ?? undefined} onClose={() => { setNewModal(false); setPendingCoords(null); }} onCreate={handleCreate} />

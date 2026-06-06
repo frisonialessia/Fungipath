@@ -60,6 +60,13 @@ export const MESSAGES = {
       epWord: "Ephemeral",
       epBody: "The harvest window opens and closes in a handful of days. FungiPath counts the hours since the rain so you arrive at the peak — not a week late.",
     },
+    onb: {
+      kicker: "Welcome to FungiPath",
+      t1: "Your forest, as a map", b1: "Each pin shows the appearance probability at that spot, crossing real weather and terrain.",
+      t2: "Always the why", b2: "Every prediction explains itself in plain words — rain, soil temperature, slope. Never a black box.",
+      t3: "It learns with you", b3: "Log your trips in the journal (found / empty, kg). The model recalibrates and predicts better for your zones.",
+      skip: "Skip", next: "Next", start: "Start exploring",
+    },
     tools: {
       c1: "Explainable hotspot", c1d: "Every prediction with its why in plain language. Never a black box.",
       c2: "Fruiting clock", c2d: "Counts the days since the last useful rain. You know when to head out.",
@@ -328,6 +335,13 @@ export const MESSAGES = {
       epNo: "F2 · El reloj de fructificación",
       epWord: "Efímero",
       epBody: "La ventana de recolección se abre y se cierra en pocos días. FungiPath cuenta las horas desde la lluvia para que llegues en el punto justo — no una semana tarde.",
+    },
+    onb: {
+      kicker: "Bienvenido a FungiPath",
+      t1: "Tu bosque, como un mapa", b1: "Cada pin muestra la probabilidad de aparición en ese punto, cruzando clima y terreno reales.",
+      t2: "Siempre el porqué", b2: "Cada predicción se explica en lenguaje llano — lluvia, temperatura del suelo, ladera. Nunca una caja negra.",
+      t3: "Aprende contigo", b3: "Registra tus salidas en el diario (encontrado / vacío, kg). El modelo recalibra y predice mejor en tus zonas.",
+      skip: "Saltar", next: "Siguiente", start: "Empezar a explorar",
     },
     tools: {
       c1: "Hotspot explicable", c1d: "Cada predicción con su porqué en lenguaje claro. Nunca una caja negra.",
