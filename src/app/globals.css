@@ -664,8 +664,11 @@ footer small { color: var(--ink-soft); font-size: 13px; }
 
 /* ===================== DISEÑO v3 · pulido del dashboard ===================== */
 
-/* Sidebar: glow de marca arriba + degradado de musgo abajo (mantiene sticky de línea 177) */
-.sidebar { position: sticky; overflow: hidden; }
+/* Sidebar: glow de marca arriba + degradado de musgo abajo.
+   OJO: no redefinir 'position' aquí — en móvil el drawer usa position:fixed y este
+   override (posterior al media query) lo pisaba, dejando el sidebar 100vh en flujo
+   (hueco en blanco arriba). Solo recortamos el glow. */
+.sidebar { overflow: hidden; }
 .sidebar::before { content: ''; position: absolute; top: -50px; left: -40px; width: 240px; height: 240px; z-index: 0; pointer-events: none;
   background: radial-gradient(circle, rgba(82,172,77,.15), transparent 70%); filter: blur(8px); }
 .sidebar::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 220px; z-index: 0; pointer-events: none;
