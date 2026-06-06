@@ -421,10 +421,12 @@ footer small { color: var(--ink-soft); font-size: 13px; }
 .toast .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--terracotta); }
 
 /* Agente IA */
-.agent-fab { position: fixed; bottom: 26px; right: 26px; width: 60px; height: 60px; border-radius: 50%; background: var(--umber); border: none; box-shadow: var(--shadow); z-index: 1500; display: grid; place-items: center; transition: all .2s; }
-.agent-fab:hover { transform: scale(1.08); background: var(--clay); }
-.agent-fab svg { width: 30px; height: 30px; }
-.agent-fab .ping { position: absolute; top: 8px; right: 8px; width: 12px; height: 12px; border-radius: 50%; background: var(--terracotta); border: 2px solid var(--cream); }
+.agent-fab { position: fixed; bottom: 26px; right: 26px; height: 56px; padding: 0 20px 0 9px; border-radius: 30px; background: var(--forest); border: none; box-shadow: var(--shadow); z-index: 1500; display: inline-flex; align-items: center; gap: 10px; transition: transform .2s, background .2s; cursor: pointer; }
+.agent-fab:hover { transform: translateY(-2px) scale(1.03); background: #3f6831; }
+.agent-fab .fab-mark { width: 38px; height: 38px; border-radius: 12px; overflow: hidden; display: grid; place-items: center; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,.28); }
+.agent-fab .fab-mark svg { width: 100%; height: 100%; display: block; }
+.agent-fab .fab-label { color: #fff; font-weight: 700; font-size: 15px; letter-spacing: .2px; }
+.agent-fab .ping { position: absolute; top: 6px; right: 8px; width: 11px; height: 11px; border-radius: 50%; background: var(--orange); border: 2px solid var(--card); }
 .agent-panel { position: fixed; bottom: 26px; right: 26px; width: 380px; max-width: calc(100vw - 40px); height: 560px; max-height: calc(100vh - 52px); background: var(--cream); border-radius: 22px; box-shadow: 0 30px 70px rgba(46,35,27,.3); z-index: 1600; display: none; flex-direction: column; overflow: hidden; border: 1px solid var(--sand); }
 .agent-panel.show { display: flex; animation: pop .25s ease; }
 .agent-head { background: var(--ink); color: var(--cream); padding: 18px 20px; display: flex; align-items: center; gap: 12px; }

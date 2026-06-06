@@ -6,10 +6,6 @@ import { config } from "@/lib/config";
 
 interface Msg { role: "user" | "assistant"; content: string; }
 
-const FAB_ICON = (
-  <svg viewBox="0 0 30 30" fill="none" stroke="#f1e7db" strokeWidth={1.8}><path d="M15 4 C8 4 4 9 4 14 C4 17 6 19 6 19 L6 24 L11 21 C12 21 13 22 15 22 C22 22 26 17 26 13 C26 8 22 4 15 4 Z" /><circle cx="11" cy="13" r="1.2" fill="#f1e7db" /><circle cx="15" cy="13" r="1.2" fill="#f1e7db" /><circle cx="19" cy="13" r="1.2" fill="#f1e7db" /></svg>
-);
-
 export default function ForestAgent({
   hotspots, locale, open, setOpen, pendingAsk, onAsked,
 }: {
@@ -56,7 +52,13 @@ export default function ForestAgent({
   return (
     <>
       {!open && (
-        <button className="agent-fab" onClick={() => setOpen(true)} aria-label={t("agent.title")}><span className="ping" />{FAB_ICON}</button>
+        <button className="agent-fab" onClick={() => setOpen(true)} aria-label={t("agent.title")}>
+          <span className="ping" />
+          <span className="fab-mark" aria-hidden>
+            <svg viewBox="0 0 120 120"><rect width="120" height="120" rx="28" fill="#241a12" /><path d="M24 72 A36 36 0 0 1 96 72 Z" fill="#9cd147" /><g fill="#52c871"><circle cx="44" cy="94" r="6" /><circle cx="60" cy="103" r="6.5" /><circle cx="76" cy="94" r="6" /></g></svg>
+          </span>
+          <span className="fab-label">{locale === "en" ? "Guide" : "Guía"}</span>
+        </button>
       )}
       <div className={`agent-panel${open ? " show" : ""}`}>
         <div className="agent-head">
