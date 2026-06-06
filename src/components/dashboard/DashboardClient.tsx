@@ -243,7 +243,10 @@ export default function DashboardClient() {
                 ))}
               </div>
             ))}
-            <div style={{ marginTop: 16 }}><LangToggle variant="dark" /></div>
+          </div>
+          <div className="sidebar-lang">
+            <span className="sl-label">{locale === "en" ? "Language" : "Idioma"}</span>
+            <LangToggle variant="dark" />
           </div>
           <div className="sidebar-foot" style={{ cursor: "pointer" }} onClick={() => go("settings")} title={t("nav.settings")}>
             <div className="avatar">{t("nav.user").charAt(0)}</div>

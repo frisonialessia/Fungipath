@@ -6,6 +6,7 @@ import LangToggle from "@/components/LangToggle";
 import LandingTools from "@/components/landing/LandingTools";
 import Reveal from "@/components/landing/Reveal";
 import Specimen, { SpecimenCell } from "@/components/landing/Specimen";
+import LandingGuide from "@/components/landing/LandingGuide";
 import { useT } from "@/lib/i18n";
 import { SPECIES } from "@/lib/species";
 import { SPECIMENS, HERO_SPECIMENS } from "@/data/specimens";
@@ -200,6 +201,8 @@ export default function Home() {
         <div className="brand"><Logo /><b>FungiPath</b></div>
         <small>{t("landing.footer")}</small>
       </div></footer>
+
+      <LandingGuide />
     </>
   );
 }

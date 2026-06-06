@@ -53,7 +53,6 @@ export default function ForestAgent({
     <>
       {!open && (
         <button className="agent-fab" onClick={() => setOpen(true)} aria-label={t("agent.title")}>
-          <span className="ping" />
           <span className="fab-mark" aria-hidden>
             <svg viewBox="0 0 120 120"><rect width="120" height="120" rx="28" fill="#241a12" /><path d="M24 72 A36 36 0 0 1 96 72 Z" fill="#9cd147" /><g fill="#52c871"><circle cx="44" cy="94" r="6" /><circle cx="60" cy="103" r="6.5" /><circle cx="76" cy="94" r="6" /></g></svg>
           </span>
