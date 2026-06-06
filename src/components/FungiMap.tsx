@@ -56,8 +56,8 @@ export default function FungiMap({
     tempLayerRef.current.clearLayers();
     const pts = drawPtsRef.current;
     if (pts.length) {
-      L.polyline(pts, { color: "#8b3f29", weight: 2, dashArray: "4 5" }).addTo(tempLayerRef.current);
-      pts.forEach((p) => L.circleMarker(p, { radius: 4, color: "#8b3f29", fillColor: "#fff", fillOpacity: 1, weight: 2 }).addTo(tempLayerRef.current));
+      L.polyline(pts, { color: "#2e9e57", weight: 2, dashArray: "4 5" }).addTo(tempLayerRef.current);
+      pts.forEach((p) => L.circleMarker(p, { radius: 4, color: "#2e9e57", fillColor: "#fff", fillOpacity: 1, weight: 2 }).addTo(tempLayerRef.current));
     }
   }
   function resetTemp() { drawPtsRef.current = []; if (tempLayerRef.current) tempLayerRef.current.clearLayers(); }
@@ -100,7 +100,7 @@ export default function FungiMap({
       // pines
       layerRef.current.clearLayers();
       hotspots.forEach((h) => {
-        const col = h.prob >= 80 ? "#8b3f29" : h.prob >= 55 ? "#a86543" : "#c08a5e";
+        const col = h.prob >= 80 ? "#2e9e57" : h.prob >= 55 ? "#ffa143" : "#fc3a3a";
         const icon = L.divIcon({ className: "", html: `<div class="lpin" style="background:${col}"><span>${h.prob}</span></div>`, iconSize: [34, 34], iconAnchor: [17, 34] });
         const m = L.marker([h.lat, h.lng], { icon }).addTo(layerRef.current);
         m.bindTooltip(`<b>${h.name}</b> · ${h.prob}%<br>${h.species}${h.alt ? " · " + h.alt + "m" : ""}`, { direction: "top", offset: [0, -30] });
@@ -110,7 +110,7 @@ export default function FungiMap({
       // parcelas (polígonos)
       parcelLayerRef.current.clearLayers();
       parcels.forEach((p) => {
-        const col = p.prob >= 80 ? "#8b3f29" : p.prob >= 55 ? "#a86543" : "#c08a5e";
+        const col = p.prob >= 80 ? "#2e9e57" : p.prob >= 55 ? "#ffa143" : "#fc3a3a";
         const poly = L.polygon(p.points, { color: col, weight: 2, fillColor: col, fillOpacity: 0.25 }).addTo(parcelLayerRef.current);
         if (onSelectParcel) poly.on("click", (ev: any) => { ev.originalEvent?.stopPropagation?.(); onSelectParcel(p.id); });
         const c = poly.getBounds().getCenter();

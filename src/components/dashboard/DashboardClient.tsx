@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import LangToggle from "@/components/LangToggle";
@@ -35,6 +35,14 @@ const NAV: { group: "explore" | "data" | "business" | "account"; items: SectionI
   { group: "business", items: ["traceability"] },
   { group: "account", items: ["settings"] },
 ];
+
+// Acento de color por sección (espectro de esporas — sidebar multicolor)
+const SECTION_ACCENT: Record<SectionId, string> = {
+  overview: "#52c871", predict: "#507d3e", model: "#318c6f", species: "#ed9fe4",
+  identify: "#d19eef", routes: "#ffa143", community: "#9cd147", climate: "#318c6f",
+  soil: "#8b3f29", calendar: "#ffa143", diary: "#9cd147", safety: "#fc3a3a",
+  privacy: "#d19eef", traceability: "#8b3f29", settings: "#52c871",
+};
 
 interface PredResult {
   probability: number; explanation: string; windowDays: number; elevation: number;
@@ -220,8 +228,9 @@ export default function DashboardClient() {
               <div key={g.group}>
                 <div className="nav-label">{t(`nav.${g.group}`)}</div>
                 {g.items.map((id) => (
-                  <button key={id} className={`nav-item${active === id ? " active" : ""}`} onClick={() => go(id)}>
+                  <button key={id} className={`nav-item${active === id ? " active" : ""}`} onClick={() => go(id)} style={{ "--acc": SECTION_ACCENT[id] } as CSSProperties}>
                     <span className="ic">{NAV_ICONS[id]}</span>{t(`nav.${id}`)}
+                    <span className="nav-dot" />
                   </button>
                 ))}
               </div>

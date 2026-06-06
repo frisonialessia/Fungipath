@@ -163,7 +163,7 @@ export default function Overview({
           <div style={{ flex: 1, overflowY: "auto", maxHeight: 560, marginRight: -6, paddingRight: 6 }}>
             {visible.map((h) => {
               const i = hotspots.indexOf(h);
-              const c = SPECIES.find((s) => s.n.includes(h.species.split(" ")[0]))?.cap || "#a86543";
+              const c = SPECIES.find((s) => s.n.includes(h.species.split(" ")[0]))?.cap || "#318c6f";
               return (
                 <div key={i} className={`row${i === selectedIdx ? " sel" : ""}`} onClick={() => setSelectedIdx(i)}>
                   <Illu className="badge" html={mushIcon(h.species, SPECIES, c)} />
@@ -181,7 +181,7 @@ export default function Overview({
           <div className="panel-head"><h3 className="serif">{t("overview.clockTitle")}</h3></div>
           <div className="clock-wrap">
             <div className="clock">
-              <svg width="84" height="84"><circle cx="42" cy="42" r="36" fill="none" stroke="#d6c4ac" strokeWidth="8" /><circle cx="42" cy="42" r="36" fill="none" stroke="#a86543" strokeWidth="8" strokeLinecap="round" strokeDasharray={CIRC} strokeDashoffset={dashOffset} /></svg>
+              <svg width="84" height="84"><circle cx="42" cy="42" r="36" fill="none" stroke="#e4ddd0" strokeWidth="8" /><circle cx="42" cy="42" r="36" fill="none" stroke="#318c6f" strokeWidth="8" strokeLinecap="round" strokeDasharray={CIRC} strokeDashoffset={dashOffset} /></svg>
               <div className="cv">{windowDays <= 0 ? (locale === "en" ? "Now" : "Ya") : `~${windowDays}d`}</div>
             </div>
             <div className="clock-info"><h4>{sel?.name}</h4><p>{t("overview.clockBodyDays", { d: daysSinceRain })} {windowDays <= 0 ? t("overview.clockOpen") : t("overview.clockSoon", { w: windowDays })}</p></div>
@@ -189,9 +189,9 @@ export default function Overview({
           <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid var(--sand)" }}>
             <div style={{ fontSize: 11, color: "var(--stone)", textTransform: "uppercase", letterSpacing: ".5px", fontWeight: 600, marginBottom: 8 }}>{t("overview.trendTitle")}</div>
             <svg viewBox="0 0 260 60" style={{ width: "100%", height: 54 }}>
-              <defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#a86543" stopOpacity=".3" /><stop offset="100%" stopColor="#a86543" stopOpacity="0" /></linearGradient></defs>
-              <path d={area} fill="url(#tg)" /><path d={line} fill="none" stroke="#a86543" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              <circle cx={pts[pts.length - 1][0].toFixed(1)} cy={pts[pts.length - 1][1].toFixed(1)} r="3.5" fill="#8b3f29" />
+              <defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#318c6f" stopOpacity=".3" /><stop offset="100%" stopColor="#318c6f" stopOpacity="0" /></linearGradient></defs>
+              <path d={area} fill="url(#tg)" /><path d={line} fill="none" stroke="#318c6f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx={pts[pts.length - 1][0].toFixed(1)} cy={pts[pts.length - 1][1].toFixed(1)} r="3.5" fill="#318c6f" />
             </svg>
           </div>
         </div>

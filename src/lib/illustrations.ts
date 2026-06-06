@@ -62,7 +62,7 @@ export function spIllust(sp: Species, size = 88): string {
 }
 
 // Icono mini para listas: reusa spIllust si encuentra la especie, fallback a un hongo genérico.
-export function mushIcon(species: string, all: Species[], color = "#a86543"): string {
+export function mushIcon(species: string, all: Species[], color = "#ffa143"): string {
   const sp = all.find(s => species && s.n.split(" ")[0] === species.split(" ")[0]);
   if (sp) return spIllust(sp, 30);
   return `<svg viewBox="0 0 24 24"><path d="M3 11 C3 7 7 4 12 4 C17 4 21 7 21 11 C21 12.5 17 13 12 13 C7 13 3 12.5 3 11 Z" fill="${color}"/><path d="M9 13 C8.5 17 8.5 19 9 21 Q12 22 15 21 C15.5 19 15.5 17 15 13 Z" fill="#d6c4ac"/></svg>`;

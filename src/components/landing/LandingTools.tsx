@@ -4,7 +4,7 @@ import { useT } from "@/lib/i18n";
 import { IconBasket, IconLens } from "@/components/icons";
 
 const TICON = (
-  <svg viewBox="0 0 26 26" fill="none" stroke="#a86543" strokeWidth={2}>
+  <svg viewBox="0 0 26 26" fill="none" stroke="#ffa143" strokeWidth={2}>
     <circle cx="13" cy="13" r="10" /><path d="M13 8 L13 13 L17 16" strokeLinecap="round" />
   </svg>
 );

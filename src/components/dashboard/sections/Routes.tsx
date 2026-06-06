@@ -110,7 +110,7 @@ export default function Routes() {
             <div className="panel-head"><h3 className="serif">{t("routes.best")}</h3><span>{avg ? `${avg}% ${t("routes.avgProb")}` : ""}</span></div>
             <div>
               {ranked.slice(0, 6).map(({ f, prob }, i) => {
-                const c = SPECIES.find((s) => s.n.includes(f.species.split(" ")[0]))?.cap || "#a86543";
+                const c = SPECIES.find((s) => s.n.includes(f.species.split(" ")[0]))?.cap || "#ffa143";
                 return (
                   <div className="route-stop-item" key={f.id} style={{ cursor: "pointer" }} onClick={() => { setSelId(f.id); setView({ center: [f.lat, f.lng], zoom: 6 }); }}>
                     <div className="route-num">{i + 1}</div>

@@ -13,7 +13,7 @@ export default function Predictions({ hotspots }: { hotspots: Hotspot[] }) {
       <div className="topbar"><div><h1 className="serif">{t("predict.title")}</h1><p>{t("predict.sub")}</p></div></div>
       <div>
         {sorted.map((h, i) => {
-          const c = SPECIES.find((s) => s.n.includes(h.species.split(" ")[0]))?.cap || "#a86543";
+          const c = SPECIES.find((s) => s.n.includes(h.species.split(" ")[0]))?.cap || "#ffa143";
           return (
             <div className="card" style={{ marginBottom: 12 }} key={i}>
               <div style={{ display: "flex", alignItems: "center", gap: 14 }}>

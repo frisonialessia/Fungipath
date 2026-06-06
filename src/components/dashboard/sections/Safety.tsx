@@ -56,7 +56,7 @@ export default function Safety() {
 
   const km = (pts.length * 0.18).toFixed(1);
   const path = pts.length > 1 ? `<polyline points="${pts.map((p) => p[0] + "," + p[1]).join(" ")}" fill="none" stroke="#8b3f29" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round"/>` : "";
-  const dots = pts.map((p, i) => `<circle cx="${p[0]}" cy="${p[1]}" r="${i === pts.length - 1 ? 4 : 2.5}" fill="${i === pts.length - 1 ? "#8b3f29" : "#a86543"}"/>`).join("");
+  const dots = pts.map((p, i) => `<circle cx="${p[0]}" cy="${p[1]}" r="${i === pts.length - 1 ? 4 : 2.5}" fill="${i === pts.length - 1 ? "#8b3f29" : "#ffa143"}"/>`).join("");
   const offItems = [t("safety.offMap"), t("safety.offSheets"), t("safety.offGuides")];
 
   return (
