@@ -84,7 +84,7 @@ export const MESSAGES = {
     overview: {
       greeting: "Hi, Explorer", subtitle: "{n} hotspots enter their growth window this week.",
       newHotspot: "+ New hotspot",
-      flagDemo: "● Demo data", flagCalc: "◷ Computing live weather…", flagLive: "● Live weather · Open-Meteo",
+      flagDemo: "● Demo data", flagCalc: "◷ Computing live weather…", flagLive: "● Live weather · Open-Meteo", flagSim: "◷ Simulated · PoC",
       allSpecies: "All species",
       insightPrefix: "Insight of the day ·",
       insightBody: "Your best zone right now is {name} ({prob}% for {sp}). There are {opening} hotspots above 70%. The beech wood window closes in ~4 days — prioritize that trip.",
@@ -361,7 +361,7 @@ export const MESSAGES = {
     overview: {
       greeting: "Buenas, Explorador", subtitle: "{n} hotspots entran en ventana de crecimiento esta semana.",
       newHotspot: "+ Nuevo hotspot",
-      flagDemo: "● Datos de demostración", flagCalc: "◷ Calculando clima en vivo…", flagLive: "● Clima en vivo · Open-Meteo",
+      flagDemo: "● Datos de demostración", flagCalc: "◷ Calculando clima en vivo…", flagLive: "● Clima en vivo · Open-Meteo", flagSim: "◷ Simulado · PoC",
       allSpecies: "Todas las especies",
       insightPrefix: "Insight del día ·",
       insightBody: "Tu mejor zona ahora es {name} ({prob}% para {sp}). Hay {opening} hotspots por encima del 70%. La ventana del hayedo cierra en ~4 días — prioriza esa salida.",

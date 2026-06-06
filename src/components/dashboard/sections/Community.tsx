@@ -26,7 +26,7 @@ export default function Community() {
 
   return (
     <div>
-      <div className="topbar"><div><h1 className="serif">{t("community.title")}</h1><p>{t("community.sub")}</p></div></div>
+      <div className="topbar"><div><span className="sim-flag">{t("overview.flagSim")}</span><h1 className="serif">{t("community.title")}</h1><p>{t("community.sub")}</p></div></div>
 
       <div className="grid-2" style={{ gridTemplateColumns: "1.5fr 1fr", alignItems: "start" }}>
         {/* FEED */}

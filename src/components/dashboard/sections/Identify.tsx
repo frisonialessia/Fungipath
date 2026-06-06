@@ -55,7 +55,7 @@ export default function Identify({ onAskGuide }: { onAskGuide: (name: string) =>
 
   return (
     <div>
-      <div className="topbar"><div><h1 className="serif">{t("identify.title")}</h1><p>{t("identify.sub")}</p></div></div>
+      <div className="topbar"><div><span className="sim-flag">{t("overview.flagSim")}</span><h1 className="serif">{t("identify.title")}</h1><p>{t("identify.sub")}</p></div></div>
 
       <div className="grid-2" style={{ gridTemplateColumns: "1fr 1.15fr", alignItems: "stretch", marginBottom: 15 }}>
         {/* subida / preview */}
