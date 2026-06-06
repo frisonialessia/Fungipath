@@ -101,6 +101,7 @@ export default function DashboardClient() {
   const [live, setLive] = useState(false);
   const [source, setSource] = useState<"db" | "mock">("mock");
   const [navOpen, setNavOpen] = useState(false); // drawer móvil
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({ data: true, business: true }); // grupos plegados por defecto
   const [parcels, setParcels] = useState<Parcel[]>([]);
   const [mapMode, setMapMode] = useState<"pin" | "parcel">("pin");
   const [pendingParcel, setPendingParcel] = useState<[number, number][] | null>(null);
@@ -233,17 +234,25 @@ export default function DashboardClient() {
         <aside className={`sidebar${navOpen ? " open" : ""}`}>
           <div className="brand"><Logo /><b>FungiPath</b></div>
           <div className="nav-scroll">
-            {NAV.map((g) => (
-              <div key={g.group}>
-                <div className="nav-label">{t(`nav.${g.group}`)}</div>
-                {g.items.map((id) => (
-                  <button key={id} className={`nav-item${active === id ? " active" : ""}`} onClick={() => go(id)} style={{ "--acc": SECTION_ACCENT[id] } as CSSProperties}>
-                    <span className="ic">{NAV_ICONS[id]}</span>{t(`nav.${id}`)}
-                    <span className="nav-dot" />
+            {NAV.map((g) => {
+              const hasActive = g.items.includes(active);
+              const open = hasActive || !collapsed[g.group];
+              return (
+                <div key={g.group} className="nav-group">
+                  <button className="nav-label nav-label-btn" aria-expanded={open}
+                    onClick={() => setCollapsed((c) => ({ ...c, [g.group]: !(c[g.group] ?? false) }))}>
+                    {t(`nav.${g.group}`)}
+                    <span className={`nav-caret${open ? " open" : ""}`} aria-hidden>▾</span>
                   </button>
-                ))}
-              </div>
-            ))}
+                  {open && g.items.map((id) => (
+                    <button key={id} className={`nav-item${active === id ? " active" : ""}`} onClick={() => go(id)} style={{ "--acc": SECTION_ACCENT[id] } as CSSProperties}>
+                      <span className="ic">{NAV_ICONS[id]}</span>{t(`nav.${id}`)}
+                      <span className="nav-dot" />
+                    </button>
+                  ))}
+                </div>
+              );
+            })}
           </div>
           <div className="sidebar-lang">
             <span className="sl-label">{locale === "en" ? "Language" : "Idioma"}</span>

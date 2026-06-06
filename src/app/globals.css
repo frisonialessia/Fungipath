@@ -709,6 +709,12 @@ footer small { color: var(--ink-soft); font-size: 13px; }
 .sidebar .brand svg { filter: drop-shadow(0 0 14px rgba(82,172,77,.3)); }
 .nav-label { color: #93a182; }
 .nav-label::after { content: ''; display: inline-block; width: 18px; height: 1px; background: rgba(147,161,130,.4); margin-left: 9px; vertical-align: middle; }
+/* Grupos colapsables del sidebar */
+.nav-label-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; background: none; border: none; cursor: pointer; text-align: left; }
+.nav-label-btn::after { display: none; }
+.nav-label-btn:hover { color: var(--cream); }
+.nav-caret { font-size: 9px; opacity: .55; transition: transform .18s; transform: rotate(-90deg); }
+.nav-caret.open { transform: rotate(0deg); }
 
 /* Tarjetas de métrica con más cuerpo: marcador verde + lift al hover */
 .metrics .card { position: relative; overflow: hidden; transition: transform .2s, box-shadow .2s, border-color .2s; }
