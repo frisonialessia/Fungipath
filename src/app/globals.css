@@ -682,3 +682,32 @@ footer small { color: var(--ink-soft); font-size: 13px; }
   background: linear-gradient(180deg, var(--g-accent), var(--ok)); }
 /* no aplicar el filete sobre paneles oscuros (texto claro) */
 .card[style*="--ink"] .panel-head h3::before, .insight .panel-head h3::before { background: var(--g-accent); }
+
+/* Hero inmersivo del dashboard · bosque real + parcelas brillantes + datos reales (verde suave) */
+.dash-hero { position: relative; overflow: hidden; border-radius: 22px; margin-bottom: 18px; min-height: 300px; display: grid;
+  background-image: url('/forest/map.jpg'); background-size: cover; background-position: center 42%; box-shadow: var(--shadow); }
+.dh-scrim { position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(100deg, rgba(12,20,12,.93) 0%, rgba(12,20,12,.66) 46%, rgba(12,20,12,.30) 100%); }
+.dh-poly { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; opacity: .9; }
+.dh-poly .poly { animation: polyPulse 5.5s ease-in-out infinite; transform-origin: center; }
+.dh-poly .p2 { animation-delay: 1.3s; } .dh-poly .p3 { animation-delay: 2.6s; }
+.dh-inner { position: relative; z-index: 3; display: grid; grid-template-columns: 1.2fr .8fr; gap: 34px; align-items: center; padding: 30px 34px; }
+.dh-flag { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: #bfe7c8; background: rgba(115,197,122,.16); padding: 5px 12px; border-radius: 30px; }
+.dh-copy h1 { font-size: clamp(30px, 4vw, 46px); font-weight: 800; letter-spacing: -1.8px; color: #f5f8ee; margin: 16px 0 8px; line-height: 1; }
+.dh-sub { color: rgba(245,248,238,.84); font-size: 15px; margin-bottom: 14px; }
+.dh-insight { color: rgba(245,248,238,.70); font-size: 13.5px; line-height: 1.55; max-width: 440px; margin-bottom: 22px; }
+.dh-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-hero { background: #eef7e3; color: #1e2a1c; border: none; padding: 12px 22px; border-radius: 30px; font-size: 14px; font-weight: 700; cursor: pointer; transition: transform .15s, background .15s; }
+.btn-hero:hover { transform: translateY(-2px); background: #fff; }
+.btn-hero.ghost { background: rgba(245,248,238,.07); color: #f5f8ee; border: 1px solid rgba(245,248,238,.38); }
+.btn-hero.ghost:hover { background: rgba(245,248,238,.16); }
+.dh-cards { display: flex; flex-direction: column; gap: 11px; }
+.dh-card { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 15px; text-align: left; cursor: pointer; width: 100%;
+  background: rgba(248,250,243,.10); border: 1px solid rgba(245,248,238,.18);
+  backdrop-filter: blur(14px) saturate(1.1); -webkit-backdrop-filter: blur(14px) saturate(1.1); transition: border-color .15s, transform .15s, background .15s; }
+.dh-card:hover { border-color: rgba(191,231,200,.65); transform: translateX(3px); background: rgba(248,250,243,.14); }
+.dh-card .v { font-weight: 800; font-size: 30px; line-height: 1; color: #bfe7c8; min-width: 72px; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
+.dh-card.hi .v { color: #d7f3c1; }
+.dh-card .nm { font-weight: 700; font-size: 14px; color: #f5f8ee; }
+.dh-card .st { font-size: 12px; color: rgba(245,248,238,.72); margin-top: 2px; }
+@media (max-width: 760px) { .dh-inner { grid-template-columns: 1fr; gap: 22px; padding: 24px 20px; } .dash-hero { min-height: 0; } }

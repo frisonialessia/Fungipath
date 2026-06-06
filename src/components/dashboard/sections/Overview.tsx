@@ -8,7 +8,6 @@ import { SPECIES } from "@/lib/species";
 import { mushIcon } from "@/lib/illustrations";
 import { useI18n, tx } from "@/lib/i18n";
 import { Illu, useToast } from "../shared";
-import { INSIGHT_ICON } from "../icons";
 import GbifBadge from "../GbifBadge";
 import { IconPin, IconParcel } from "@/components/icons";
 import type { MapHotspot, MapParcel } from "@/components/FungiMap";
@@ -35,6 +34,12 @@ export default function Overview({
   const avg = Math.round(hotspots.reduce((s, h) => s + h.prob, 0) / hotspots.length);
   const top = [...hotspots].sort((a, b) => b.prob - a.prob)[0];
   const opening = hotspots.filter((h) => h.prob >= 70).length;
+  const top3 = [...hotspots].sort((a, b) => b.prob - a.prob).slice(0, 3);
+  const heroStatus = (h: Hotspot) => {
+    const w = h.windowDays;
+    if (typeof w !== "number") return t("overview.heroWatch");
+    return w <= 0 ? t("overview.heroOpen") : t("overview.heroSoon", { w });
+  };
 
   const windowDays = sel?.windowDays ?? 4;
   const daysSinceRain = sel?.daysSinceRain ?? 9;
@@ -60,14 +65,41 @@ export default function Overview({
 
   return (
     <div>
-      <div className="topbar">
-        <div>
-          <span className="demo-flag">{flag}</span>
-          <h1 className="serif">{t("overview.greeting")}</h1>
-          <p>{t("overview.subtitle", { n: opening })}</p>
+      {/* Hero inmersivo · bosque real + parcelas brillantes + tus 3 mejores hotspots (datos reales) */}
+      <section className="dash-hero">
+        <div className="dh-scrim" />
+        <svg className="dh-poly" viewBox="0 0 1000 340" preserveAspectRatio="xMidYMid slice" aria-hidden>
+          <defs>
+            <filter id="dhglow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+            <linearGradient id="dhfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#52ac4d" stopOpacity=".30" /><stop offset="100%" stopColor="#52ac4d" stopOpacity=".05" /></linearGradient>
+          </defs>
+          <g filter="url(#dhglow)" fill="url(#dhfill)" stroke="#73c57a" strokeWidth="2" strokeLinejoin="round">
+            <polygon className="poly p1" points="470,70 660,50 720,180 560,250 440,180" />
+            <polygon className="poly p2" points="700,150 900,120 960,290 770,320 690,230" />
+            <polygon className="poly p3" points="540,210 700,250 660,330 500,320" />
+          </g>
+        </svg>
+        <div className="dh-inner">
+          <div className="dh-copy">
+            <span className="dh-flag">{flag}</span>
+            <h1>{t("overview.greeting")}</h1>
+            <p className="dh-sub">{t("overview.subtitle", { n: opening })}</p>
+            <p className="dh-insight">{t("overview.insightBody", { name: top.name, prob: top.prob, sp: top.species.split(" ")[0], opening })}</p>
+            <div className="dh-actions">
+              <button className="btn-hero" onClick={onNewHotspot}>{t("overview.newHotspot")}</button>
+              <button className="btn-hero ghost" onClick={onAskGuide}>{t("overview.askGuide")}</button>
+            </div>
+          </div>
+          <div className="dh-cards">
+            {top3.map((h, k) => (
+              <button key={k} className={`dh-card${k === 0 ? " hi" : ""}`} onClick={() => setSelectedIdx(hotspots.indexOf(h))}>
+                <div className="v">{h.prob}%</div>
+                <div className="meta"><div className="nm">{h.name}</div><div className="st">{heroStatus(h)}</div></div>
+              </button>
+            ))}
+          </div>
         </div>
-        <button className="btn" onClick={onNewHotspot}>{t("overview.newHotspot")}</button>
-      </div>
+      </section>
 
       <div className="pills">
         {filterOptions.map((s) => (
@@ -75,12 +107,6 @@ export default function Overview({
             {s === "all" ? t("overview.allSpecies") : s}
           </button>
         ))}
-      </div>
-
-      <div className="insight" onClick={onAskGuide}>
-        <div className="ins-ic">{INSIGHT_ICON}</div>
-        <div className="ins-txt"><b>{t("overview.insightPrefix")}</b> {t("overview.insightBody", { name: top.name, prob: top.prob, sp: top.species.split(" ")[0], opening })}</div>
-        <div className="ins-cta">{t("overview.askGuide")}</div>
       </div>
 
       <div className="metrics">
