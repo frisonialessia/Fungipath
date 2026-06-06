@@ -36,12 +36,13 @@ const NAV: { group: "explore" | "data" | "business" | "account"; items: SectionI
   { group: "account", items: ["settings"] },
 ];
 
-// Acento de color por sección (espectro de esporas — sidebar multicolor)
+// Acento de color por sección · Opción 4 "familia verde sutil"
+// (casi todo verde; color fuerte solo en Identify/Routes/Safety)
 const SECTION_ACCENT: Record<SectionId, string> = {
-  overview: "#52c871", predict: "#507d3e", model: "#318c6f", species: "#ed9fe4",
-  identify: "#d19eef", routes: "#ffa143", community: "#9cd147", climate: "#318c6f",
-  soil: "#8b3f29", calendar: "#ffa143", diary: "#9cd147", safety: "#fc3a3a",
-  privacy: "#d19eef", traceability: "#8b3f29", settings: "#52c871",
+  overview: "#52c871", predict: "#507d3e", model: "#318c6f", species: "#9cd147",
+  identify: "#d19eef", routes: "#ffa143", community: "#b4e8c5", climate: "#318c6f",
+  soil: "#507d3e", calendar: "#9cd147", diary: "#52c871", safety: "#fc3a3a",
+  privacy: "#318c6f", traceability: "#6d482b", settings: "#52c871",
 };
 
 interface PredResult {
