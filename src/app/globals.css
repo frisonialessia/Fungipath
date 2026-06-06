@@ -741,3 +741,39 @@ footer small { color: var(--ink-soft); font-size: 13px; }
 .dh-card .nm { font-weight: 700; font-size: 14px; color: #f5f8ee; }
 .dh-card .st { font-size: 12px; color: rgba(245,248,238,.72); margin-top: 2px; }
 @media (max-width: 760px) { .dh-inner { grid-template-columns: 1fr; gap: 22px; padding: 24px 20px; } .dash-hero { min-height: 0; } }
+
+/* ===================== DISEÑO v3 · calidad (estados + accesibilidad) ===================== */
+
+/* Foco visible por teclado — anillo en verde de marca */
+:focus-visible { outline: 2px solid var(--forest); outline-offset: 2px; border-radius: 4px; }
+/* sobre superficies oscuras (sidebar, FAB, paneles oscuros) el anillo va en lima */
+.sidebar :focus-visible, .agent-fab:focus-visible, .agent-panel :focus-visible, .dash-hero :focus-visible,
+.statband :focus-visible, .immersive :focus-visible { outline-color: #9cd147; }
+/* inputs/selects/textarea: anillo suave en color de página */
+.main input:focus-visible, .main select:focus-visible, .main textarea:focus-visible,
+.modal input:focus-visible, .modal select:focus-visible, .modal textarea:focus-visible {
+  outline: none; border-color: var(--page, var(--forest));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--page, var(--forest)) 22%, transparent);
+}
+
+/* Estados deshabilitados consistentes */
+button:disabled, .btn:disabled, .btn-p:disabled, .btn-hero:disabled,
+button[aria-disabled="true"] { opacity: .5; cursor: not-allowed; transform: none !important; box-shadow: none; }
+
+/* Filas interactivas: hover uniforme con el color de la página */
+.row { transition: background .15s, border-color .15s; }
+.row:hover { background: color-mix(in srgb, var(--page, var(--forest)) 7%, var(--card)); }
+
+/* Selección de texto en verde de marca */
+::selection { background: rgba(80,125,62,.22); }
+
+/* Scrollbars sutiles y coherentes (el sidebar ya tiene el suyo) */
+.main *::-webkit-scrollbar, .agent-panel *::-webkit-scrollbar { width: 8px; height: 8px; }
+.main *::-webkit-scrollbar-thumb, .agent-panel *::-webkit-scrollbar-thumb { background: rgba(36,26,18,.18); border-radius: 6px; }
+.main *::-webkit-scrollbar-thumb:hover { background: rgba(36,26,18,.32); }
+
+/* Respeta "reduce motion": apaga animaciones decorativas */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  .loadbar { display: none !important; }
+}
