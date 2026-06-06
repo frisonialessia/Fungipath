@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { hotspotCalibration } from "@/lib/learn";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import LangToggle from "@/components/LangToggle";
@@ -160,7 +161,14 @@ export default function DashboardClient() {
     return () => { cancelled = true; };
   }, [locale]);
 
-  const agentHotspots = hotspots.map((h) => ({ name: h.name, species: h.species, prob: h.prob, why: h.why, alt: h.alt, aspect: h.aspect }));
+  // F3 (foso): el diario recalibra la probabilidad mostrada en mapa/hero/Predictions.
+  // base = predicción (clima); display = base + ajuste por validaciones de campo de esa zona.
+  const viewHotspots = useMemo(() => hotspots.map((h) => {
+    const d = hotspotCalibration(h.name, diary).delta;
+    return d ? { ...h, prob: Math.max(8, Math.min(97, h.prob + d)) } : h;
+  }), [hotspots, diary]);
+
+  const agentHotspots = viewHotspots.map((h) => ({ name: h.name, species: h.species, prob: h.prob, why: h.why, alt: h.alt, aspect: h.aspect }));
 
   function askGuide(name?: string) {
     if (name) setAgentAsk(t("agent.askAbout", { name }));
@@ -267,9 +275,9 @@ export default function DashboardClient() {
 
         <main className="main" style={{ "--page": SECTION_PAGE[active] } as CSSProperties}>
           <div className="loadbar" data-on={predicting} aria-hidden />
-          {active === "overview" && <Overview hotspots={hotspots} selectedIdx={selectedIdx} setSelectedIdx={(i) => { setSelectedIdx(i); setSelectedParcelId(null); }} diary={diary} onNewHotspot={() => { setPendingCoords(null); setNewModal(true); }} onAskGuide={() => askGuide()} onMapCreate={openMapCreate} predicting={predicting} live={live} source={source}
+          {active === "overview" && <Overview hotspots={viewHotspots} selectedIdx={selectedIdx} setSelectedIdx={(i) => { setSelectedIdx(i); setSelectedParcelId(null); }} diary={diary} onNewHotspot={() => { setPendingCoords(null); setNewModal(true); }} onAskGuide={() => askGuide()} onMapCreate={openMapCreate} predicting={predicting} live={live} source={source}
             parcels={parcels} mapMode={mapMode} setMapMode={setMapMode} onParcelComplete={(pts) => setPendingParcel(pts)} selectedParcelId={selectedParcelId} onSelectParcel={setSelectedParcelId} />}
-          {active === "predict" && <Predictions hotspots={hotspots} />}
+          {active === "predict" && <Predictions hotspots={viewHotspots} />}
           {active === "model" && <Model hotspots={hotspots} diary={diary} />}
           {active === "species" && <Species onAskGuide={askGuide} />}
           {active === "identify" && <Identify onAskGuide={askGuide} />}
