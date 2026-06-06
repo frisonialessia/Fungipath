@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { Hotspot, DiaryEntry } from "@/data/hotspots";
 import { SPECIES } from "@/lib/species";
 import { useI18n, tx } from "@/lib/i18n";
-import { useToast } from "../shared";
+import { useToast, EmptyState } from "../shared";
 
 export default function Diary({ diary, hotspots, onAddLog }: { diary: DiaryEntry[]; hotspots: Hotspot[]; onAddLog: (e: DiaryEntry) => void }) {
   const { t, locale } = useI18n();
@@ -45,7 +45,9 @@ export default function Diary({ diary, hotspots, onAddLog }: { diary: DiaryEntry
         <div className="card" style={{ display: "flex", flexDirection: "column" }}>
           <div className="panel-head"><h3 className="serif">{t("diary.recent")}</h3><span>{diary.length}</span></div>
           <div style={{ maxHeight: 460, overflowY: "auto", marginRight: -6, paddingRight: 6 }}>
-            {diary.map((l, i) => (
+            {diary.length === 0 ? (
+              <EmptyState title={t("diary.emptyTitle")} text={t("diary.emptyText")} cta={t("diary.add")} onCta={open} />
+            ) : diary.map((l, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "13px 0", borderBottom: "1px solid var(--sand)" }}>
                 <span className={`log-dot ${l.found ? "ok" : "no"}`} style={{ flexShrink: 0 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
