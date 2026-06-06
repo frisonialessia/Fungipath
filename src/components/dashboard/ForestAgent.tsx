@@ -62,7 +62,7 @@ export default function ForestAgent({
       )}
       <div className={`agent-panel${open ? " show" : ""}`}>
         <div className="agent-head">
-          <div className="ava"><svg viewBox="0 0 22 22" fill="none" stroke="#f1e7db" strokeWidth={1.6}><path d="M11 3 C6 3 3 7 3 10 C3 12 4 13 4 13 L4 17 L8 15 C9 15 10 16 11 16 C16 16 19 12 19 9 C19 6 16 3 11 3 Z" /></svg></div>
+          <div className="ava"><svg viewBox="0 0 120 120"><rect width="120" height="120" rx="28" fill="#241a12" /><path d="M24 72 A36 36 0 0 1 96 72 Z" fill="#9cd147" /><g fill="#52c871"><circle cx="44" cy="94" r="6" /><circle cx="60" cy="103" r="6.5" /><circle cx="76" cy="94" r="6" /></g></svg></div>
           <div><h4>{t("agent.title")}</h4><small>{config.agentMode === "local" ? t("agent.statusLocal") : t("agent.status")}</small></div>
           <button className="agent-close" onClick={() => setOpen(false)}>✕</button>
         </div>

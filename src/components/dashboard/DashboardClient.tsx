@@ -36,13 +36,20 @@ const NAV: { group: "explore" | "data" | "business" | "account"; items: SectionI
   { group: "account", items: ["settings"] },
 ];
 
-// Acento de color por sección · Opción 4 "familia verde sutil"
-// (casi todo verde; color fuerte solo en Identify/Routes/Safety)
+// Acento de color por sección · Opción 4 "familia verde sutil" (punto del sidebar / pill)
 const SECTION_ACCENT: Record<SectionId, string> = {
   overview: "#52c871", predict: "#507d3e", model: "#318c6f", species: "#9cd147",
   identify: "#d19eef", routes: "#ffa143", community: "#b4e8c5", climate: "#318c6f",
   soil: "#507d3e", calendar: "#9cd147", diary: "#52c871", safety: "#fc3a3a",
   privacy: "#318c6f", traceability: "#6d482b", settings: "#52c871",
+};
+// Variante legible del mismo acento para usar DENTRO de la página (texto/bordes/círculos
+// sobre fondo claro). Cada página tiñe sus elementos con su color, sin naranja global.
+const SECTION_PAGE: Record<SectionId, string> = {
+  overview: "#2e9e57", predict: "#507d3e", model: "#318c6f", species: "#6f9e2f",
+  identify: "#9b6fd4", routes: "#e0801f", community: "#2e9e57", climate: "#318c6f",
+  soil: "#6d482b", calendar: "#6f9e2f", diary: "#2e9e57", safety: "#d62f2f",
+  privacy: "#318c6f", traceability: "#6d482b", settings: "#2e9e57",
 };
 
 interface PredResult {
@@ -245,7 +252,7 @@ export default function DashboardClient() {
           <Link href="/" className="back-link">{t("nav.back")}</Link>
         </aside>
 
-        <main className="main">
+        <main className="main" style={{ "--page": SECTION_PAGE[active] } as CSSProperties}>
           {active === "overview" && <Overview hotspots={hotspots} selectedIdx={selectedIdx} setSelectedIdx={(i) => { setSelectedIdx(i); setSelectedParcelId(null); }} diary={diary} onNewHotspot={() => { setPendingCoords(null); setNewModal(true); }} onAskGuide={() => askGuide()} onMapCreate={openMapCreate} predicting={predicting} live={live} source={source}
             parcels={parcels} mapMode={mapMode} setMapMode={setMapMode} onParcelComplete={(pts) => setPendingParcel(pts)} selectedParcelId={selectedParcelId} onSelectParcel={setSelectedParcelId} />}
           {active === "predict" && <Predictions hotspots={hotspots} />}
