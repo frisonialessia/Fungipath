@@ -31,7 +31,7 @@ export default function Home() {
   ];
 
   return (
-    <>
+    <div className="landing-root">
       <nav className="land"><div className="wrap">
         <div className="brand"><Logo /><b>FungiPath</b></div>
         <div className="nav-links"><a href="#cycle">{t("landing.navCycle")}</a><a href="#tools">{t("landing.navTools")}</a><a href="#safety">{t("landing.navSafety")}</a></div>
@@ -203,6 +203,6 @@ export default function Home() {
       </div></footer>
 
       <LandingGuide />
-    </>
+    </div>
   );
 }

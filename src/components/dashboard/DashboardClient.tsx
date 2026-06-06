@@ -256,6 +256,7 @@ export default function DashboardClient() {
         </aside>
 
         <main className="main" style={{ "--page": SECTION_PAGE[active] } as CSSProperties}>
+          <div className="loadbar" data-on={predicting} aria-hidden />
           {active === "overview" && <Overview hotspots={hotspots} selectedIdx={selectedIdx} setSelectedIdx={(i) => { setSelectedIdx(i); setSelectedParcelId(null); }} diary={diary} onNewHotspot={() => { setPendingCoords(null); setNewModal(true); }} onAskGuide={() => askGuide()} onMapCreate={openMapCreate} predicting={predicting} live={live} source={source}
             parcels={parcels} mapMode={mapMode} setMapMode={setMapMode} onParcelComplete={(pts) => setPendingParcel(pts)} selectedParcelId={selectedParcelId} onSelectParcel={setSelectedParcelId} />}
           {active === "predict" && <Predictions hotspots={hotspots} />}

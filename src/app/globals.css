@@ -145,7 +145,17 @@ nav.land .wrap { display: flex; align-items: center; justify-content: space-betw
 .tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .tool { background: var(--cream-2); border: 1px solid rgba(109,72,43,.1); border-radius: 20px; padding: 30px 26px; transition: all .25s; position: relative; overflow: hidden; }
 .tool:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
-.tool .ic { width: 50px; height: 50px; border-radius: 13px; background: rgba(168,101,67,.16); display: grid; place-items: center; margin-bottom: 20px; }
+/* Línea de carga B · barra superior en el color de la página activa */
+.loadbar { position: relative; height: 3px; border-radius: 3px; overflow: hidden; margin: -6px 0 16px; background: rgba(36,26,18,.06); }
+.loadbar::before { content: ''; position: absolute; top: 0; bottom: 0; left: -40%; width: 40%; border-radius: 3px;
+  background: linear-gradient(90deg, transparent, var(--page, var(--forest)), transparent); animation: loadslide 1.05s ease-in-out infinite; }
+.loadbar[data-on="false"] { display: none; }
+@keyframes loadslide { 0% { left: -40%; } 100% { left: 100%; } }
+
+/* Landing A · coherencia verde: el acento de la landing pasa a verde de marca */
+.landing-root { --terracotta: var(--forest); }
+.landing-root .statband .sv { color: var(--lime); }
+.tool .ic { width: 50px; height: 50px; border-radius: 13px; background: rgba(80,125,62,.14); display: grid; place-items: center; margin-bottom: 20px; }
 .tool .ic svg { width: 26px; height: 26px; }
 .tool h3 { font-family: 'Plus Jakarta Sans'; font-weight: 600; font-size: 20px; margin-bottom: 10px; letter-spacing: -.3px; }
 .tool p { font-size: 14px; color: var(--ink-soft); line-height: 1.55; }
