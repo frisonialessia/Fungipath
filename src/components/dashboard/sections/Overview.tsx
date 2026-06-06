@@ -35,6 +35,10 @@ export default function Overview({
   const top = [...hotspots].sort((a, b) => b.prob - a.prob)[0];
   const opening = hotspots.filter((h) => h.prob >= 70).length;
   const top3 = [...hotspots].sort((a, b) => b.prob - a.prob).slice(0, 3);
+  // Zonas que entran (o están) en su ventana de fructificación → "qué hacer ahora" + retención
+  const alertSpots = hotspots
+    .filter((h) => typeof h.windowDays === "number" && (h.windowDays as number) <= 4)
+    .sort((a, b) => (a.windowDays as number) - (b.windowDays as number));
   const heroStatus = (h: Hotspot) => {
     const w = h.windowDays;
     if (typeof w !== "number") return t("overview.heroWatch");
@@ -100,6 +104,17 @@ export default function Overview({
           </div>
         </div>
       </section>
+
+      {alertSpots.length > 0 && (
+        <button className="alert-bar" onClick={() => setSelectedIdx(hotspots.indexOf(alertSpots[0]))}>
+          <span className="alert-ic" aria-hidden>◷</span>
+          <span className="alert-txt">
+            <b>{t("overview.alertTitle", { n: alertSpots.length })}</b>{" "}
+            {alertSpots.slice(0, 3).map((h) => h.name).join(" · ")}
+          </span>
+          <span className="alert-cta">{t("overview.alertCta")}</span>
+        </button>
+      )}
 
       <div className="pills">
         {filterOptions.map((s) => (
