@@ -135,6 +135,12 @@ nav.land .wrap { display: flex; align-items: center; justify-content: space-betw
 .cycle-stages::before { content: ''; position: absolute; top: 54px; left: 10%; right: 10%; height: 2px; background: repeating-linear-gradient(90deg, var(--terracotta) 0 8px, transparent 8px 16px); opacity: .4; }
 .stage { text-align: center; padding: 0 14px; position: relative; }
 .stage .disc { width: 108px; height: 108px; margin: 0 auto 22px; border-radius: 50%; background: var(--terracotta); display: grid; place-items: center; position: relative; box-shadow: 0 10px 30px rgba(109,72,43,.18); border: 3px solid var(--cream); transition: transform .3s; }
+/* Ciclo "how it works" · degradado verde de progresión (Opción 2) */
+.cycle-stages .stage:nth-child(1) .disc { background: #6aa84f; }
+.cycle-stages .stage:nth-child(2) .disc { background: #4f9a52; }
+.cycle-stages .stage:nth-child(3) .disc { background: #2e9e57; }
+.cycle-stages .stage:nth-child(4) .disc { background: #318c6f; }
+.cycle-stages .stage:nth-child(5) .disc { background: #2f7d6a; }
 .stage:hover .disc { transform: translateY(-6px) scale(1.04); }
 .stage .disc svg { width: 62px; height: 62px; }
 .stage .num { position: absolute; top: -6px; right: 18px; width: 26px; height: 26px; background: var(--umber); color: var(--cream); border-radius: 50%; display: grid; place-items: center; font-family: 'Plus Jakarta Sans'; font-weight: 600; font-size: 13px; border: 2px solid var(--cream); }
