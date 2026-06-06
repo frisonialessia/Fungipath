@@ -176,7 +176,7 @@ export default function Overview({
         </div>
       </div>
 
-      <div className="grid-3">
+      <div className="grid-2" style={{ gridTemplateColumns: "1fr 1fr" }}>
         <div className="card">
           <div className="panel-head"><h3 className="serif">{t("overview.clockTitle")}</h3></div>
           <div className="clock-wrap">
@@ -186,31 +186,15 @@ export default function Overview({
             </div>
             <div className="clock-info"><h4>{sel?.name}</h4><p>{t("overview.clockBodyDays", { d: daysSinceRain })} {windowDays <= 0 ? t("overview.clockOpen") : t("overview.clockSoon", { w: windowDays })}</p></div>
           </div>
-          <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid var(--sand)" }}>
-            <div style={{ fontSize: 11, color: "var(--stone)", textTransform: "uppercase", letterSpacing: ".5px", fontWeight: 600, marginBottom: 8 }}>{t("overview.trendTitle")}</div>
-            <svg viewBox="0 0 260 60" style={{ width: "100%", height: 54 }}>
-              <defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#318c6f" stopOpacity=".3" /><stop offset="100%" stopColor="#318c6f" stopOpacity="0" /></linearGradient></defs>
-              <path d={area} fill="url(#tg)" /><path d={line} fill="none" stroke="#318c6f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              <circle cx={pts[pts.length - 1][0].toFixed(1)} cy={pts[pts.length - 1][1].toFixed(1)} r="3.5" fill="#318c6f" />
-            </svg>
-          </div>
         </div>
 
         <div className="card">
-          <div className="panel-head"><h3 className="serif">{t("overview.diaryTitle")}</h3><span>{t("overview.learns")}</span></div>
-          <div>
-            {diary.slice(0, 4).map((l, i) => (
-              <div className="log-item" key={i}><span className={`log-dot ${l.found ? "ok" : "no"}`} /><span className="lt">{l.spot}</span><span className="lq">{l.found ? t("overview.diaryHit", { q: l.qty }) : t("overview.diaryEmpty")}</span></div>
-            ))}
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="panel-head"><h3 className="serif">{t("overview.privacyTitle")}</h3><span>{t("overview.yourSites")}</span></div>
-          {hotspots.slice(0, 2).map((h, i) => (
-            <div className="priv-row" key={i}><div className="pn">{h.name}</div><span className={`priv-tag ${h.priv}`}>{t(`privacy.${h.priv}`)}</span></div>
-          ))}
-          <div className="priv-row"><div className="pn">{t("overview.windowAlerts")}</div><span className="priv-tag shared">{t("overview.on")}</span></div>
+          <div className="panel-head"><h3 className="serif">{t("overview.trendTitle")}</h3></div>
+          <svg viewBox="0 0 260 60" style={{ width: "100%", height: 88 }}>
+            <defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#318c6f" stopOpacity=".3" /><stop offset="100%" stopColor="#318c6f" stopOpacity="0" /></linearGradient></defs>
+            <path d={area} fill="url(#tg)" /><path d={line} fill="none" stroke="#318c6f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx={pts[pts.length - 1][0].toFixed(1)} cy={pts[pts.length - 1][1].toFixed(1)} r="3.5" fill="#318c6f" />
+          </svg>
         </div>
       </div>
     </div>
