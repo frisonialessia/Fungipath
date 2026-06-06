@@ -100,7 +100,7 @@ export default function FungiMap({
       // pines
       layerRef.current.clearLayers();
       hotspots.forEach((h) => {
-        const col = h.prob >= 80 ? "#2e9e57" : h.prob >= 55 ? "#ffa143" : "#fc3a3a";
+        const col = h.prob >= 70 ? "#2e9e57" : h.prob >= 45 ? "#e0a020" : "#9c9283";
         const icon = L.divIcon({ className: "", html: `<div class="lpin" style="background:${col}"><span>${h.prob}</span></div>`, iconSize: [34, 34], iconAnchor: [17, 34] });
         const m = L.marker([h.lat, h.lng], { icon }).addTo(layerRef.current);
         m.bindTooltip(`<b>${h.name}</b> · ${h.prob}%<br>${h.species}${h.alt ? " · " + h.alt + "m" : ""}`, { direction: "top", offset: [0, -30] });
@@ -110,7 +110,7 @@ export default function FungiMap({
       // parcelas (polígonos)
       parcelLayerRef.current.clearLayers();
       parcels.forEach((p) => {
-        const col = p.prob >= 80 ? "#2e9e57" : p.prob >= 55 ? "#ffa143" : "#fc3a3a";
+        const col = p.prob >= 70 ? "#2e9e57" : p.prob >= 45 ? "#e0a020" : "#9c9283";
         const poly = L.polygon(p.points, { color: col, weight: 2, fillColor: col, fillOpacity: 0.25 }).addTo(parcelLayerRef.current);
         if (onSelectParcel) poly.on("click", (ev: any) => { ev.originalEvent?.stopPropagation?.(); onSelectParcel(p.id); });
         const c = poly.getBounds().getCenter();
