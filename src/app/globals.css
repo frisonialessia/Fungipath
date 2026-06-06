@@ -782,6 +782,9 @@ button[aria-disabled="true"] { opacity: .5; cursor: not-allowed; transform: none
 /* Selección de texto en verde de marca */
 ::selection { background: rgba(80,125,62,.22); }
 
+/* Controles nativos (sliders, checkboxes) en el color de la página — fin del azul del navegador */
+input[type="range"], input[type="checkbox"], input[type="radio"], progress { accent-color: var(--page, var(--forest)); }
+
 /* Scrollbars sutiles y coherentes (el sidebar ya tiene el suyo) */
 .main *::-webkit-scrollbar, .agent-panel *::-webkit-scrollbar { width: 8px; height: 8px; }
 .main *::-webkit-scrollbar-thumb, .agent-panel *::-webkit-scrollbar-thumb { background: rgba(36,26,18,.18); border-radius: 6px; }

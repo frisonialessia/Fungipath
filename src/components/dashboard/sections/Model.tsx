@@ -33,10 +33,10 @@ export default function Model({ hotspots, diary }: { hotspots: Hotspot[]; diary:
         <div className="card">
           <div className="panel-head"><h3 className="serif">{t("model.recalTitle")}</h3><span>{t("model.curveAside")}</span></div>
           {/* curva */}
-          <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: 90, marginBottom: 10 }}>
-            <defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ffa143" stopOpacity=".25" /><stop offset="100%" stopColor="#ffa143" stopOpacity="0" /></linearGradient></defs>
-            <path d={area} fill="url(#mg)" /><path d={line} fill="none" stroke="#ffa143" strokeWidth="2" strokeLinecap="round" />
-            <circle cx={pts[pts.length - 1][0].toFixed(1)} cy={pts[pts.length - 1][1].toFixed(1)} r="3.5" fill="#8b3f29" />
+          <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: 90, marginBottom: 10, color: "var(--page, #318c6f)" }}>
+            <defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="currentColor" stopOpacity=".25" /><stop offset="100%" stopColor="currentColor" stopOpacity="0" /></linearGradient></defs>
+            <path d={area} fill="url(#mg)" /><path d={line} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <circle cx={pts[pts.length - 1][0].toFixed(1)} cy={pts[pts.length - 1][1].toFixed(1)} r="3.5" fill="currentColor" />
           </svg>
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 460 }}>

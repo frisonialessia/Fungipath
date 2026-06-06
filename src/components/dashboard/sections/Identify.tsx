@@ -68,7 +68,7 @@ export default function Identify({ onAskGuide }: { onAskGuide: (name: string) =>
               <img src={preview} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
             ) : (
               <div style={{ textAlign: "center", color: "var(--ink-soft)", padding: 30 }}>
-                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--terracotta)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 14 }}><path d="M3 8 V6 A2 2 0 0 1 5 4 H7 L8.5 2 H15.5 L17 4 H19 A2 2 0 0 1 21 6 V18 A2 2 0 0 1 19 20 H5 A2 2 0 0 1 3 18 Z" /><circle cx="12" cy="12" r="3.5" /></svg>
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 14, color: "var(--page, #507d3e)" }}><path d="M3 8 V6 A2 2 0 0 1 5 4 H7 L8.5 2 H15.5 L17 4 H19 A2 2 0 0 1 21 6 V18 A2 2 0 0 1 19 20 H5 A2 2 0 0 1 3 18 Z" /><circle cx="12" cy="12" r="3.5" /></svg>
                 <div style={{ fontWeight: 600, fontSize: 16 }}>{t("identify.drop")}</div>
               </div>
             )}
